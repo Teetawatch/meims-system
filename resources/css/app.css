@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+@theme {
+    /* Healthcare Premium Palette */
+    --color-primary: #0891B2;
+    --color-secondary: #22D3EE;
+    --color-cta: #059669;
+    --color-background: #ECFEFF;
+    --color-text: #164E63;
+    --color-border: #A5F3FC;
+
+    /* Spacing & Utilities */
+    --font-heading: "Outfit", "Anuphan", sans-serif;
+    --font-body: "Outfit", "Anuphan", sans-serif;
+}
+
+/* Base Styles */
+@layer base {
+    body {
+        @apply bg-background text-text font-body;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-heading font-semibold;
+    }
+}
