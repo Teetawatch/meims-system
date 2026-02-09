@@ -1,7 +1,7 @@
 @props(['icon', 'label', 'route', 'active', 'color'])
 
 @php
-    $isActive = request()->routeIs($active);
+    $isActive = is_array($active) ? request()->routeIs($active) : request()->routeIs($active);
     $colorClass = [
         'blue' => 'group-hover:text-blue-500',
         'indigo' => 'group-hover:text-indigo-500',

@@ -1,8 +1,9 @@
 <div class="min-h-screen bg-slate-50 font-['Outfit','Anuphan'] flex">
 
-    <!-- Sidebar (Same as Dashboard for consistency) -->
-    <!-- Sidebar (Same as Dashboard for consistency) -->
-    <x-sidebar />
+    <!-- Sidebar Container -->
+    <aside class="w-72 shrink-0 bg-white border-r border-slate-100 flex flex-col fixed inset-y-0 left-0 z-40 hidden lg:flex">
+        <x-sidebar />
+    </aside>
 
     <!-- Main Content -->
     <main class="flex-1 lg:ml-72 p-8 overflow-y-auto">

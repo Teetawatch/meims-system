@@ -33,10 +33,10 @@
                     </svg>
                 </div>
             </div>
-            <h1 class="text-4xl font-black text-slate-900 tracking-tight">Student Portal</h1>
+            <h1 class="text-4xl font-black text-slate-900 tracking-tight">ระบบบริหารจัดการข้อมูลสารสนเทศด้านการศึกษา : MEIMS</h1>
             <div class="flex items-center justify-center gap-3 mt-3">
                 <span class="h-px w-6 bg-slate-200"></span>
-                <p class="text-slate-500 font-bold uppercase tracking-[0.2em] text-[10px]">Logistics School Portal</p>
+                <p class="text-slate-500 font-bold uppercase tracking-[0.2em] text-[10px]">โรงเรียนพลาธิการ กรมพลาธิการทหารเรือ</p>
                 <span class="h-px w-6 bg-slate-200"></span>
             </div>
         </div>

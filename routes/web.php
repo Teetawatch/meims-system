@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,7 +15,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    if (Auth::guard('student')->check()) {
+        return redirect()->route('student.dashboard');
+    }
+    if (Auth::check()) {
+        return redirect()->route('dashboard');
+    }
+    return redirect()->route('student.login');
 });
 
 Route::get('/student/register', \App\Livewire\StudentRegistration::class)->name('student.register');

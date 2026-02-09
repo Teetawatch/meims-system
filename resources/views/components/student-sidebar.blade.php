@@ -1,5 +1,4 @@
-<aside x-data="{ open: false }"
-    class="fixed top-0 left-0 z-40 w-72 h-screen transition-transform -translate-x-full lg:translate-x-0 bg-white border-r border-slate-100 flex flex-col shadow-sm">
+<div class="w-full h-full flex flex-col bg-white">
     <!-- Profile Section -->
     <div class="p-8 pb-6 text-center border-b border-slate-50">
         <div class="relative inline-block mx-auto mb-4 group">
@@ -42,7 +41,7 @@
             color="amber" />
         <x-student-sidebar-item icon="document" label="ดาวน์โหลดเอกสาร" route="student.documents"
             active="student.documents" color="purple" />
-        <x-student-sidebar-item icon="grades" label="ระบบประเมิน" route="student.evaluation" active="student.evaluation"
+        <x-student-sidebar-item icon="grades" label="ระบบประเมิน" route="student.evaluation" :active="['student.evaluation', 'student.teacher-evaluation', 'student.peer-evaluation']"
             color="rose" />
 
         <div class="pt-6 mt-6 border-t border-slate-50">
@@ -61,7 +60,7 @@
             </button>
         </div>
     </nav>
-</aside>
+</div>
 
 <script>
     function confirmLogout() {

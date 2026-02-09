@@ -8,7 +8,7 @@
 
     <!-- Sidebar Container -->
     <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
-        class="w-72 bg-white/95 backdrop-blur-2xl border-r border-slate-200 flex flex-col fixed inset-y-0 left-0 z-40 transition-transform duration-300 ease-in-out shadow-2xl lg:shadow-none">
+        class="w-72 shrink-0 bg-white/95 backdrop-blur-2xl border-r border-slate-200 flex flex-col fixed inset-y-0 left-0 z-40 transition-transform duration-300 ease-in-out shadow-2xl lg:shadow-none">
         <x-sidebar />
     </aside>
 
