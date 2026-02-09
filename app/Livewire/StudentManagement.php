@@ -33,10 +33,26 @@ class StudentManagement extends Component
             'importFile' => 'required|mimes:xlsx,xls,csv',
         ]);
 
-        Excel::import(new StudentsImport, $this->importFile);
-
-        $this->reset('importFile');
-        session()->flash('message', 'นำเข้าข้อมูลนักเรียนเรียบร้อยแล้ว');
+        try {
+            Excel::import(new StudentsImport, $this->importFile);
+            $this->reset('importFile');
+            
+            $this->dispatch('swal:modal', [
+                'type' => 'success',
+                'title' => 'สำเร็จ!',
+                'text' => 'นำเข้าข้อมูลนักเรียนเรียบร้อยแล้ว'
+            ]);
+            
+            // Close the modal via event if needed, or rely on frontend state reset
+            $this->dispatch('close-import-modal');
+            
+        } catch (\Exception $e) {
+            $this->dispatch('swal:modal', [
+                'type' => 'error',
+                'title' => 'เกิดข้อผิดพลาด!',
+                'text' => 'ไม่สามารถนำเข้าข้อมูลได้: ' . $e->getMessage()
+            ]);
+        }
     }
 
     public function render()

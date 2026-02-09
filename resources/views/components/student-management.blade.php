@@ -1,7 +1,8 @@
 <div class="min-h-screen bg-slate-50 font-['Outfit','Anuphan'] flex">
 
     <!-- Sidebar Container -->
-    <aside class="w-72 shrink-0 bg-white border-r border-slate-100 flex flex-col fixed inset-y-0 left-0 z-40 hidden lg:flex">
+    <aside
+        class="w-72 shrink-0 bg-white border-r border-slate-100 flex flex-col fixed inset-y-0 left-0 z-40 hidden lg:flex">
         <x-sidebar />
     </aside>
 
@@ -25,20 +26,158 @@
                     โหลดไฟล์แบบฟอร์ม
                 </button>
 
-                <div x-data="{ uploading: false, progress: 0 }" x-on:livewire-upload-start="uploading = true"
-                    x-on:livewire-upload-finish="uploading = false" x-on:livewire-upload-error="uploading = false"
-                    x-on:livewire-upload-progress="progress = $event.detail.progress" class="relative">
-                    <input type="file" wire:model="importFile" id="importFile" class="hidden" accept=".xlsx,.xls,.csv"
-                        wire:change="import">
-                    <label for="importFile"
-                        class="inline-flex items-center px-4 py-2 bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 text-sm font-medium rounded-xl transition-all shadow-sm cursor-pointer">
-                        <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <!-- Import Button & Modal -->
+                <div x-data="{ showImportModal: false, uploading: false, progress: 0, fileName: null }">
+                    <!-- Trigger Button -->
+                    <button @click="showImportModal = true"
+                        class="inline-flex items-center px-4 py-2 bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 text-sm font-medium rounded-xl transition-all shadow-sm">
+                        <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
                         </svg>
-                        <span wire:loading.remove wire:target="importFile, import">เลือกไฟล์นำเข้า</span>
-                        <span wire:loading wire:target="importFile, import">กำลังนำเข้า...</span>
-                    </label>
+                        นำเข้าข้อมูล
+                    </button>
+
+                    <!-- Modal Backdrop -->
+                    <div x-show="showImportModal" x-transition.opacity
+                        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+                        style="display: none;">
+                        
+                        <!-- Modal Content -->
+                        <div x-show="showImportModal" 
+                            x-transition:enter="transition ease-out duration-300"
+                            x-transition:enter-start="opacity-0 scale-95"
+                            x-transition:enter-end="opacity-100 scale-100"
+                            x-transition:leave="transition ease-in duration-200"
+                            x-transition:leave-start="opacity-100 scale-100"
+                            x-transition:leave-end="opacity-0 scale-95"
+                            @click.away="if(!uploading) showImportModal = false"
+                            class="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden border border-slate-100">
+                            
+                            <!-- Header -->
+                            <div class="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-white">
+                                <div class="flex items-center space-x-3">
+                                    <div class="p-2 bg-indigo-50 rounded-lg text-indigo-600">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-lg font-bold text-slate-800">นำเข้าข้อมูลนักเรียน</h3>
+                                        <p class="text-sm text-slate-500">อัปโหลดไฟล์ Excel หรือ CSV เพื่อนำเข้า</p>
+                                    </div>
+                                </div>
+                                <button @click="if(!uploading) showImportModal = false" class="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-full hover:bg-slate-100">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <!-- Body -->
+                            <div class="p-6 space-y-4">
+                                <!-- Upload Area -->
+                                <div x-on:livewire-upload-start="uploading = true; progress = 0"
+                                     x-on:livewire-upload-finish="uploading = false"
+                                     x-on:livewire-upload-error="uploading = false; fileName = null"
+                                     x-on:livewire-upload-progress="progress = $event.detail.progress"
+                                     class="relative">
+                                    
+                                    <input type="file" wire:model="importFile" id="modalImportFile" class="hidden" accept=".xlsx,.xls,.csv"
+                                           x-on:change="fileName = $event.target.files[0] ? $event.target.files[0].name : null">
+                                    
+                                    <label for="modalImportFile" 
+                                           class="flex flex-col items-center justify-center w-full h-52 border-2 border-dashed border-slate-300 rounded-2xl hover:bg-indigo-50/50 hover:border-indigo-400 transition-all cursor-pointer group relative overflow-hidden bg-slate-50">
+                                        
+                                        <!-- Default State -->
+                                        <div x-show="!fileName && !uploading" class="flex flex-col items-center text-center p-6 transition-transform duration-300 group-hover:-translate-y-1">
+                                            <div class="w-16 h-16 bg-white shadow-sm border border-slate-100 rounded-2xl flex items-center justify-center mb-4 text-indigo-500 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                                </svg>
+                                            </div>
+                                            <h4 class="text-base font-semibold text-slate-700 mb-1">คลิกเพื่อเลือกไฟล์</h4>
+                                            <p class="text-sm text-slate-500">หรือลากไฟล์มาวางที่นี่</p>
+                                            <p class="text-xs text-slate-400 mt-2 bg-white px-2 py-1 rounded border border-slate-100">.xlsx, .xls, .csv</p>
+                                        </div>
+
+                                        <!-- Selected/Uploading State -->
+                                        <div x-show="fileName || uploading" class="flex flex-col items-center w-full h-full justify-center p-6 bg-white" style="display: none;">
+                                            <div class="w-full max-w-sm bg-slate-50 border border-slate-100 rounded-xl p-4 flex items-center shadow-sm relative overflow-hidden">
+                                                <!-- Progress Bar Background (Fills the card) -->
+                                                <div x-show="uploading" class="absolute bottom-0 left-0 h-1 bg-indigo-500 transition-all duration-300" :style="`width: ${progress}%`"></div>
+
+                                                <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-green-500 shadow-sm border border-green-100 mr-3 shrink-0">
+                                                    <svg x-show="!uploading" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                    </svg>
+                                                    <svg x-show="uploading" class="w-6 h-6 animate-spin text-indigo-500" fill="none" viewBox="0 0 24 24">
+                                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                    </svg>
+                                                </div>
+                                                
+                                                <div class="flex-1 min-w-0">
+                                                    <p class="text-sm font-semibold text-slate-700 truncate" x-text="fileName || 'กำลังเตรียมไฟล์...'">example.xlsx</p>
+                                                    <div class="flex justify-between items-center mt-1">
+                                                        <span x-show="uploading" class="text-xs text-indigo-600 font-medium" x-text="`กำลังอัปโหลด... ${progress}%`"></span>
+                                                        <span x-show="!uploading" class="text-xs text-green-600 font-medium">พร้อมนำเข้า</span>
+                                                        
+                                                        <span x-show="!uploading" @click.prevent="fileName = null; document.getElementById('modalImportFile').value = '';" class="text-xs text-red-400 hover:text-red-600 cursor-pointer hover:underline">เปลี่ยนไฟล์</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <div class="bg-amber-50 border border-amber-100 rounded-xl p-4 flex gap-3">
+                                    <div class="shrink-0 text-amber-500">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="text-sm text-amber-800">
+                                        <p class="font-medium mb-1">คำแนะนำ</p>
+                                        <p class="text-amber-700/80 leading-relaxed text-xs">เพื่อให้การนำเข้าข้อมูลถูกต้อง กรุณาใช้ไฟล์แบบฟอร์มที่ดาวน์โหลดจากระบบ หากมีข้อมูลซ้ำ ระบบจะทำการอัปเดตข้อมูลเดิมให้เป็นปัจจุบัน</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Footer -->
+                            <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end space-x-3">
+                                <button @click="if(!uploading) { showImportModal = false; fileName = null; }" 
+                                    class="px-5 py-2.5 text-slate-600 hover:bg-white hover:border-slate-300 border border-transparent font-medium rounded-xl text-sm transition-all"
+                                    :disabled="uploading">
+                                    ยกเลิก
+                                </button>
+                                <button x-show="fileName && !uploading"
+                                    wire:click="import" 
+                                    class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl text-sm transition-all shadow-lg shadow-indigo-500/30 flex items-center hover:-translate-y-0.5"
+                                    wire:loading.attr="disabled"
+                                    wire:target="import">
+                                    <span wire:loading.remove wire:target="import" class="flex items-center">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        ยืนยันการนำเข้า
+                                    </span>
+                                    <span wire:loading wire:target="import" class="flex items-center">
+                                        <svg class="w-4 h-4 mr-2 animate-spin" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        กำลังนำเข้า...
+                                    </span>
+                                </button>
+                                <button x-show="(!fileName || uploading)" disabled
+                                    class="px-4 py-2 bg-slate-200 text-slate-400 font-medium rounded-lg text-sm cursor-not-allowed">
+                                    <span x-show="uploading">กำลังอัปโหลด...</span>
+                                    <span x-show="!uploading">ยืนยันการนำเข้า</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <a href="{{ route('student.register') }}"

@@ -3,39 +3,32 @@
 namespace App\Imports;
 
 use App\Models\Student;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
-use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class StudentsImport implements ToModel, WithHeadingRow
+class StudentsImport implements ToCollection, WithHeadingRow
 {
     /**
-     * @param array $row
-     *
-     * @return \Illuminate\Database\Eloquent\Model|null
+     * @param Collection $rows
      */
-    public function model(array $row)
+    public function collection(Collection $rows)
     {
-        return Student::firstOrCreate(
-            ['student_id' => $row['student_id']],
-            [
-                'title_th' => $row['title_th'],
-                'first_name_th' => $row['first_name_th'],
-                'last_name_th' => $row['last_name_th'],
-                'title_en' => $row['title_en'],
-                'first_name_en' => $row['first_name_en'],
-                'last_name_en' => $row['last_name_en'],
-                'batch' => $row['batch'],
-                'id_card_number' => $row['id_card_number'],
-                'phone' => $row['phone'],
-                'email' => $row['email'],
-                'username' => $row['student_id'],
-                'password' => Hash::make('password'), // Default password
-                'gender' => 'Not Specified', // Default or add to template
-                // Add defaults for required fields to avoid errors if not in Excel
-                'birth_date' => '2000-01-01',
-                'fiscal_year' => '2567',
-            ]
-        );
+        foreach ($rows as $row) {
+            // Skip if student_id is missing
+            if (!isset($row['student_id']) || empty($row['student_id'])) {
+                continue;
+            }
+
+            Student::updateOrCreate(
+                ['student_id' => $row['student_id']],
+                [
+                'first_name_th'  => $row['first_name_th'] ?? null,
+                'last_name_th'   => $row['last_name_th'] ?? null,
+                'username'       => $row['student_id'],
+                'password'       => Hash::make($row['student_id']),
+            ]);
+        }
     }
 }
