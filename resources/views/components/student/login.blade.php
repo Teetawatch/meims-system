@@ -18,9 +18,9 @@
         </div>
     </div>
 
-    <div class="max-w-xl w-full relative z-10">
+    <div class="max-w-2xl w-full relative z-10">
         <!-- Logo/Header -->
-        <div class="text-center mb-12">
+        <div class="flex flex-col items-center text-center mb-12">
             <div class="inline-flex relative mb-8">
                 <div class="absolute inset-0 bg-blue-500 blur-2xl opacity-20 animate-pulse"></div>
                 <div
@@ -33,10 +33,12 @@
                     </svg>
                 </div>
             </div>
-            <h1 class="text-4xl font-black text-slate-900 tracking-tight">ระบบบริหารจัดการข้อมูลสารสนเทศด้านการศึกษา : MEIMS</h1>
+            <h1 class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 whitespace-nowrap">
+                ระบบบริหารจัดการข้อมูลสารสนเทศด้านการศึกษา : MEIMS</h1>
             <div class="flex items-center justify-center gap-3 mt-3">
                 <span class="h-px w-6 bg-slate-200"></span>
-                <p class="text-slate-500 font-bold uppercase tracking-[0.2em] text-[10px]">โรงเรียนพลาธิการ กรมพลาธิการทหารเรือ</p>
+                <p class="text-slate-500 font-bold uppercase tracking-[0.2em] text-[10px]">โรงเรียนพลาธิการ
+                    กรมพลาธิการทหารเรือ</p>
                 <span class="h-px w-6 bg-slate-200"></span>
             </div>
         </div>
@@ -74,7 +76,7 @@
                     <!-- Password -->
                     <div class="relative group/input">
                         <label
-                            class="absolute -top-3 left-6 px-2 bg-white/50 backdrop-blur-sm text-[10px] font-black text-slate-400 uppercase tracking-widest z-20 group-focus-within/input:text-blue-600 transition-colors">รหัสผ่านลับ</label>
+                            class="absolute -top-3 left-6 px-2 bg-white/50 backdrop-blur-sm text-[10px] font-black text-slate-400 uppercase tracking-widest z-20 group-focus-within/input:text-blue-600 transition-colors">รหัสผ่าน</label>
                         <div class="relative">
                             <div
                                 class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none text-slate-300 group-focus-within/input:text-blue-500 transition-all duration-300">
@@ -122,7 +124,7 @@
                 @endif
 
                 <button type="submit"
-                    class="relative w-full overflow-hidden py-5 bg-slate-900 text-white font-black rounded-3xl shadow-[0_20px_40px_-12px_rgba(15,23,42,0.3)] hover:shadow-[0_25px_50px_-12px_rgba(15,23,42,0.4)] transform hover:-translate-y-1 active:scale-[0.98] transition-all duration-500 group/btn">
+                    class="relative w-full overflow-hidden py-5 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-black rounded-3xl shadow-[0_20px_40px_-12px_rgba(37,99,235,0.35)] hover:shadow-[0_30px_60px_-12px_rgba(37,99,235,0.45)] transform hover:-translate-y-1 active:scale-[0.98] transition-all duration-500 group/btn">
                     <span class="relative z-10 flex items-center justify-center gap-3 text-lg tracking-tight">
                         เข้าสู่ระบบพอร์ทัล
                         <svg class="w-6 h-6 group-hover/btn:translate-x-2 transition-transform duration-500" fill="none"
@@ -132,7 +134,7 @@
                         </svg>
                     </span>
                     <div
-                        class="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-700 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-700">
+                        class="absolute inset-0 bg-gradient-to-r from-indigo-600 to-blue-700 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-700">
                     </div>
                 </button>
             </form>

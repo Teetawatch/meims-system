@@ -55,6 +55,7 @@ Route::middleware(['auth:student'])->prefix('student')->name('student.')->group(
     Route::get('/grades', \App\Livewire\Student\Grades::class)->name('grades');
     Route::get('/conduct', \App\Livewire\Student\Conduct::class)->name('conduct');
     Route::get('/surveys', \App\Livewire\Student\Surveys::class)->name('surveys');
+    Route::get('/surveys/{survey}', \App\Livewire\Student\DoSurvey::class)->name('surveys.do'); // Add this route
     Route::get('/documents', \App\Livewire\Student\Documents::class)->name('documents');
     Route::get('/evaluation', \App\Livewire\Student\Evaluation::class)->name('evaluation');
     Route::get('/evaluation/teacher/{subjectId}', \App\Livewire\Student\TeacherEvaluation::class)->name('teacher-evaluation');

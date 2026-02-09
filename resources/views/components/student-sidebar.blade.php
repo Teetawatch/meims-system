@@ -27,7 +27,7 @@
     <nav class="flex-1 px-4 py-8 space-y-2 overflow-y-auto custom-scrollbar">
         <p class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">เมนูหลัก</p>
 
-        <x-student-sidebar-item icon="dashboard" label="Dashboard" route="student.dashboard" active="student.dashboard"
+        <x-student-sidebar-item icon="dashboard" label="หน้าหลัก" route="student.dashboard" active="student.dashboard"
             color="blue" />
         <x-student-sidebar-item icon="profile" label="ข้อมูลส่วนตัว" route="student.profile" active="student.profile"
             color="indigo" />
@@ -41,8 +41,8 @@
             color="amber" />
         <x-student-sidebar-item icon="document" label="ดาวน์โหลดเอกสาร" route="student.documents"
             active="student.documents" color="purple" />
-        <x-student-sidebar-item icon="grades" label="ระบบประเมิน" route="student.evaluation" :active="['student.evaluation', 'student.teacher-evaluation', 'student.peer-evaluation']"
-            color="rose" />
+        <x-student-sidebar-item icon="grades" label="ระบบประเมิน" route="student.evaluation"
+            :active="['student.evaluation', 'student.teacher-evaluation', 'student.peer-evaluation']" color="rose" />
 
         <div class="pt-6 mt-6 border-t border-slate-50">
             <p class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">ความปลอดภัย</p>

@@ -72,7 +72,8 @@ class StudentRegistration extends Component
         // Education
         'enrollment_date' => '',
         'degree_level' => '',
-        'course_name' => '',
+        'course_name' => '', // Still keeping for display if needed
+        'course_id' => '', // Add this
         'gpa_y1_t1' => '',
         'gpa_y1_t2' => '',
 
@@ -93,6 +94,7 @@ class StudentRegistration extends Component
         'state.student_id' => 'required|unique:students,student_id',
         'state.first_name_th' => 'required',
         'state.last_name_th' => 'required',
+        'state.course_id' => 'required|exists:courses,id',
         'state.email' => 'required|email|unique:students,email',
         // Add more rules as needed...
     ];
@@ -118,6 +120,16 @@ class StudentRegistration extends Component
 
         $data = $this->state;
 
+        // Populate course_name if course_id is set
+        if (!empty($data['course_id'])) {
+            $course = \App\Models\Course::find($data['course_id']);
+            if ($course) {
+                $data['course_name'] = $course->course_name_th;
+            } else {
+                $data['course_id'] = null; // Clean up invalid ID
+            }
+        }
+
         // Handle Password
         $data['password'] = Hash::make($data['password']); // Using generic Hash facade
 
@@ -126,15 +138,66 @@ class StudentRegistration extends Component
             $data['photo_path'] = $this->photo->store('photos', 'public');
         }
 
+        // Remove array fields that cause conversion errors
+        unset($data['siblings_info']);
+
+        // Sanitize numeric fields: Strict check, convert non-numeric (like '-') to null
+        $numericFields = [
+            'father_age',
+            'father_income',
+            'mother_age',
+            'mother_income',
+            'total_family_income',
+            'family_members_count',
+            'gpa_y1_t1',
+            'gpa_y1_t2',
+            'weight',
+            'height'
+        ];
+
+        foreach ($numericFields as $field) {
+            if (array_key_exists($field, $data)) {
+                if ($data[$field] === '' || !is_numeric($data[$field])) {
+                    $data[$field] = null;
+                }
+            }
+        }
+
+        // Sanitize DATE fields: Convert empty strings to null
+        $dateFields = [
+            'birth_date',
+            'enrollment_date'
+        ];
+
+        foreach ($dateFields as $field) {
+            if (array_key_exists($field, $data)) {
+                if (empty($data[$field])) {
+                    $data[$field] = null;
+                }
+            }
+        }
+
+        // Auto-calculate total family income if valid numbers exist
+        if (empty($data['total_family_income'])) {
+            $father = (isset($data['father_income']) && is_numeric($data['father_income'])) ? (float) $data['father_income'] : 0;
+            $mother = (isset($data['mother_income']) && is_numeric($data['mother_income'])) ? (float) $data['mother_income'] : 0;
+
+            if ($father > 0 || $mother > 0) {
+                $data['total_family_income'] = $father + $mother;
+            }
+        }
+
         Student::create($data);
 
-        session()->flash('message', 'Student registered successfully.');
-
-        return redirect()->to('/'); // Redirect somewhere
+        // Dispatch event to show SweetAlert on frontend
+        $this->dispatch('registration-success');
     }
 
     public function render()
     {
-        return view('components.student-registration')->layout('components.layouts.app');
+        $courses = \App\Models\Course::where('is_active', true)->get();
+        return view('components.student-registration', [
+            'courses' => $courses
+        ])->layout('components.layouts.app');
     }
 }
