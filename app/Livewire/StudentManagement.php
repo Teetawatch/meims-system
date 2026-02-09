@@ -16,10 +16,93 @@ class StudentManagement extends Component
 
     public $search = '';
     public $importFile;
+    public $selectedStudents = [];
+    public $selectAll = false;
+    public $courseFilter = '';
+    public $batchFilter = '';
 
     public function updatingSearch()
     {
         $this->resetPage();
+    }
+
+    public function updatingCourseFilter()
+    {
+        $this->resetPage();
+        $this->selectedStudents = [];
+        $this->selectAll = false;
+    }
+
+    public function updatingBatchFilter()
+    {
+        $this->resetPage();
+        $this->selectedStudents = [];
+        $this->selectAll = false;
+    }
+
+    public function updatedSelectAll($value)
+    {
+        if ($value) {
+            $this->selectedStudents = $this->getFilteredQuery()->pluck('id')->map(fn($id) => (string) $id)->toArray();
+        } else {
+            $this->selectedStudents = [];
+        }
+    }
+
+    public function deleteSelected()
+    {
+        if (empty($this->selectedStudents)) {
+            return;
+        }
+
+        $count = count($this->selectedStudents);
+        Student::whereIn('id', $this->selectedStudents)->delete();
+        $this->selectedStudents = [];
+        $this->selectAll = false;
+
+        $this->dispatch('swal:modal', [
+            'type' => 'success',
+            'title' => 'สำเร็จ!',
+            'text' => "ลบข้อมูลนักเรียน {$count} คนเรียบร้อยแล้ว"
+        ]);
+    }
+
+    public function deleteAll()
+    {
+        $query = $this->getFilteredQuery();
+        $count = $query->count();
+
+        if ($count === 0) {
+            return;
+        }
+
+        $query->delete();
+        $this->selectedStudents = [];
+        $this->selectAll = false;
+
+        $this->dispatch('swal:modal', [
+            'type' => 'success',
+            'title' => 'สำเร็จ!',
+            'text' => "ลบข้อมูลนักเรียน {$count} คนเรียบร้อยแล้ว"
+        ]);
+    }
+
+    private function getFilteredQuery()
+    {
+        return Student::query()
+            ->when($this->search, function ($query) {
+                $query->where(function ($q) {
+                    $q->where('first_name_th', 'like', '%' . $this->search . '%')
+                        ->orWhere('last_name_th', 'like', '%' . $this->search . '%')
+                        ->orWhere('student_id', 'like', '%' . $this->search . '%');
+                });
+            })
+            ->when($this->courseFilter, function ($query) {
+                $query->where('course_name', $this->courseFilter);
+            })
+            ->when($this->batchFilter, function ($query) {
+                $query->where('batch', $this->batchFilter);
+            });
     }
 
     public function downloadTemplate()
@@ -57,16 +140,23 @@ class StudentManagement extends Component
 
     public function render()
     {
-        $students = Student::query()
-            ->when($this->search, function ($query) {
-                $query->where('first_name_th', 'like', '%' . $this->search . '%')
-                    ->orWhere('last_name_th', 'like', '%' . $this->search . '%')
-                    ->orWhere('student_id', 'like', '%' . $this->search . '%');
-            })
-            ->paginate(10);
+        $students = $this->getFilteredQuery()->paginate(10);
+
+        $courses = Student::whereNotNull('course_name')
+            ->where('course_name', '!=', '')
+            ->distinct()
+            ->pluck('course_name');
+
+        $batches = Student::whereNotNull('batch')
+            ->where('batch', '!=', '')
+            ->distinct()
+            ->orderBy('batch', 'desc')
+            ->pluck('batch');
 
         return view('components.student-management', [
-            'students' => $students
+            'students' => $students,
+            'courses' => $courses,
+            'batches' => $batches,
         ])->layout('components.layouts.app');
     }
 

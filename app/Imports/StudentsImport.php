@@ -26,8 +26,10 @@ class StudentsImport implements ToCollection, WithHeadingRow
                 [
                 'first_name_th'  => $row['first_name_th'] ?? null,
                 'last_name_th'   => $row['last_name_th'] ?? null,
-                'username'       => $row['student_id'],
-                'password'       => Hash::make($row['student_id']),
+                'batch'          => $row['batch'] ?? null,
+                'course_name'    => $row['course_name'] ?? null,
+                'username'       => $row['username'] ?? $row['student_id'],
+                'password'       => Hash::make($row['password'] ?? $row['student_id']),
             ]);
         }
     }

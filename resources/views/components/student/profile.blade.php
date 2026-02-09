@@ -81,11 +81,11 @@
                     <div class="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
                             <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">เลขประจำตัวประชาชน</p>
-                            <p class="text-md font-bold text-slate-800">{{ $student->id_card_number }}</p>
+                            <p class="text-md font-bold text-slate-800">{{ $student->id_card_number ?? '-' }}</p>
                         </div>
                         <div>
                             <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">วันเกิด</p>
-                            <p class="text-md font-bold text-slate-800">{{ $student->birth_date->format('d/m/Y') }} ({{ $student->birth_date->age }} ปี)</p>
+                            <p class="text-md font-bold text-slate-800">{{ $student->birth_date?->format('d/m/Y') ?? '-' }} @if($student->birth_date)({{ $student->birth_date->age }} ปี)@endif</p>
                         </div>
                         <div>
                             <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">สัญชาติ/ศาสนา</p>
@@ -98,7 +98,7 @@
                         <div class="md:col-span-2">
                              <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">ที่อยู่ปัจจุบัน</p>
                              <p class="text-md font-bold text-slate-800 leading-relaxed">
-                                 {{ $student->current_address }} ต.{{ $student->subdistrict }} อ.{{ $student->district }} จ.{{ $student->province }} {{ $student->zip_code }}
+                                 {{ $student->current_address ?? '-' }} ต.{{ $student->subdistrict ?? '-' }} อ.{{ $student->district ?? '-' }} จ.{{ $student->province ?? '-' }} {{ $student->zip_code ?? '-' }}
                              </p>
                         </div>
                     </div>
@@ -111,7 +111,7 @@
                     <div class="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
                             <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">หลักสูตรที่ศึกษา</p>
-                            <p class="text-md font-bold text-slate-800">{{ $student->course->course_name_th ?? $student->course_name }}</p>
+                            <p class="text-md font-bold text-slate-800">{{ $student->course?->course_name_th ?? $student->course_name ?? '-' }}</p>
                         </div>
                         <div>
                             <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">ปีที่เข้าเรียน / รุ่น</p>

@@ -10,7 +10,7 @@ class Surveys extends Component
 {
     public function render()
     {
-        $surveys = SurveyTopic::where('status', 'Active')->latest()->get();
+        $surveys = SurveyTopic::where('is_active', true)->latest()->get();
 
         return view('components.student.surveys', [
             'surveys' => $surveys

@@ -5,6 +5,7 @@ namespace App\Livewire\Student;
 use Livewire\Component;
 use App\Models\Student;
 use App\Models\PeerEvaluation as PeerEvaluationModel;
+use App\Models\SystemSetting;
 use Illuminate\Support\Facades\Auth;
 
 class PeerEvaluation extends Component
@@ -19,6 +20,12 @@ class PeerEvaluation extends Component
 
     public function mount($studentId)
     {
+        // Check if peer evaluation is enabled by admin
+        if (!SystemSetting::isPeerEvaluationEnabled()) {
+            session()->flash('error', 'ระบบประเมินเพื่อนร่วมห้องยังไม่เปิดให้ใช้งาน');
+            return redirect()->route('student.evaluation');
+        }
+
         $this->targetStudentId = $studentId;
         $this->targetStudent = Student::findOrFail($studentId);
 

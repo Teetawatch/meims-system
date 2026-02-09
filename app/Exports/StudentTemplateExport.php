@@ -14,16 +14,12 @@ class StudentTemplateExport implements WithHeadings, ShouldAutoSize, FromArray, 
     {
         return [
             'student_id',
-            'title_th',       // Required
-            'first_name_th',  // Required
-            'last_name_th',   // Required
-            'title_en',
-            'first_name_en',
-            'last_name_en',
+            'first_name_th',
+            'last_name_th',
             'batch',
-            'id_card_number',
-            'phone',
-            'email'
+            'course_name',
+            'username',
+            'password',
         ];
     }
 
@@ -32,16 +28,12 @@ class StudentTemplateExport implements WithHeadings, ShouldAutoSize, FromArray, 
         return [
             [
                 '66001',           // student_id
-                'นาย',             // title_th
                 'สมชาย',           // first_name_th
                 'ใจดี',             // last_name_th
-                'Mr.',             // title_en
-                'Somchai',         // first_name_en
-                'Jaidee',          // last_name_en
                 '66',              // batch
-                '1234567890123',   // id_card_number
-                '0812345678',      // phone
-                'student@example.com' // email
+                'ช่างอากาศยาน',  // course_name
+                'user66001',       // username
+                'pass1234',        // password
             ]
         ];
     }

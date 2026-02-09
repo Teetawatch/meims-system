@@ -191,8 +191,8 @@
         </header>
 
         <!-- Search & Filter -->
-        <div class="mb-6 flex space-x-4">
-            <div class="relative flex-1 max-w-lg">
+        <div class="mb-6 flex flex-wrap gap-4 items-center">
+            <div class="relative flex-1 min-w-[250px] max-w-lg">
                 <input type="text" wire:model.live="search" placeholder="ค้นหา ชื่อ, นามสกุล, หรือ รหัสนักเรียน..."
                     class="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all shadow-sm">
                 <svg class="w-5 h-5 text-slate-400 absolute left-4 top-3.5" fill="none" stroke="currentColor"
@@ -201,7 +201,49 @@
                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
             </div>
+
+            <select wire:model.live="courseFilter"
+                class="px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-sm">
+                <option value="">ทุกหลักสูตร</option>
+                @foreach($courses as $course)
+                    <option value="{{ $course }}">{{ $course }}</option>
+                @endforeach
+            </select>
+
+            <select wire:model.live="batchFilter"
+                class="px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-sm">
+                <option value="">ทุกรุ่น</option>
+                @foreach($batches as $batch)
+                    <option value="{{ $batch }}">รุ่น {{ $batch }}</option>
+                @endforeach
+            </select>
         </div>
+
+        <!-- Bulk Action Bar -->
+        @if(count($selectedStudents) > 0)
+        <div class="mb-4 flex items-center justify-between bg-red-50 border border-red-200 rounded-xl px-5 py-3 animate-in fade-in">
+            <div class="flex items-center space-x-2 text-sm text-red-700">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span class="font-semibold">เลือกแล้ว {{ count($selectedStudents) }} คน</span>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button wire:click="$set('selectedStudents', []); $set('selectAll', false)"
+                    class="px-4 py-2 text-sm text-slate-600 hover:bg-white border border-slate-200 rounded-xl transition-all">
+                    ยกเลิกการเลือก
+                </button>
+                <button
+                    @click="Swal.fire({ title: 'ยืนยันการลบ?', text: 'คุณต้องการลบนักเรียนที่เลือก {{ count($selectedStudents) }} คน?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', cancelButtonColor: '#d1d5db', confirmButtonText: 'ใช่, ลบเลย!', cancelButtonText: 'ยกเลิก' }).then((result) => { if (result.isConfirmed) { $wire.deleteSelected(); } })"
+                    class="px-4 py-2 text-sm text-white bg-red-600 hover:bg-red-700 rounded-xl transition-all shadow-sm font-medium flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                    ลบที่เลือก
+                </button>
+            </div>
+        </div>
+        @endif
 
         <!-- Table -->
         <div class="bg-white rounded-3xl shadow-[0_2px_20px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden">
@@ -210,6 +252,10 @@
                     <thead class="bg-slate-50">
                         <tr
                             class="text-slate-500 text-sm font-semibold uppercase tracking-wider border-b border-slate-200">
+                            <th class="px-6 py-4 w-12">
+                                <input type="checkbox" wire:model.live="selectAll"
+                                    class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+                            </th>
                             <th class="px-6 py-4">รูปภาพ</th>
                             <th class="px-6 py-4">รหัสนักเรียน</th>
                             <th class="px-6 py-4">ชื่อ - สกุล</th>
@@ -220,7 +266,11 @@
                     </thead>
                     <tbody class="divide-y divide-slate-100">
                         @forelse($students as $student)
-                            <tr class="group hover:bg-slate-50/80 transition-colors">
+                            <tr class="group hover:bg-slate-50/80 transition-colors {{ in_array((string)$student->id, $selectedStudents) ? 'bg-blue-50/50' : '' }}">
+                                <td class="px-6 py-4">
+                                    <input type="checkbox" wire:model.live="selectedStudents" value="{{ $student->id }}"
+                                        class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+                                </td>
                                 <td class="px-6 py-4">
                                     @if($student->photo_path)
                                         <img src="{{ asset('storage/' . $student->photo_path) }}"
@@ -279,7 +329,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-6 py-12 text-center text-slate-400">
+                                <td colspan="7" class="px-6 py-12 text-center text-slate-400">
                                     <div class="flex flex-col items-center">
                                         <svg class="w-12 h-12 mb-3 text-slate-300" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24">

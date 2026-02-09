@@ -7,6 +7,7 @@ use App\Models\Subject;
 use App\Models\TeacherEvaluation;
 use App\Models\PeerEvaluation;
 use App\Models\Student;
+use App\Models\SystemSetting;
 use Illuminate\Support\Facades\Auth;
 
 class Evaluation extends Component
@@ -26,21 +27,30 @@ class Evaluation extends Component
             ->pluck('subject_id')
             ->toArray();
 
-        // Peer evaluation: usually done per semester for all classmates
-        $classmates = Student::where('course_id', $student->course_id)
-            ->where('batch', $student->batch)
-            ->where('id', '!=', $student->id) // Cannot evaluate self
-            ->get();
+        // Check if peer evaluation is enabled by admin
+        $peerEvaluationEnabled = SystemSetting::isPeerEvaluationEnabled();
 
-        $evaluatedPeers = PeerEvaluation::where('student_id', $student->id)
-            ->pluck('target_student_id')
-            ->toArray();
+        $classmates = collect();
+        $evaluatedPeers = [];
+
+        if ($peerEvaluationEnabled) {
+            // Peer evaluation: usually done per semester for all classmates
+            $classmates = Student::where('course_id', $student->course_id)
+                ->where('batch', $student->batch)
+                ->where('id', '!=', $student->id) // Cannot evaluate self
+                ->get();
+
+            $evaluatedPeers = PeerEvaluation::where('student_id', $student->id)
+                ->pluck('target_student_id')
+                ->toArray();
+        }
 
         return view('components.student.evaluation', [
             'subjects' => $subjects,
             'evaluatedTeachers' => $evaluatedTeachers,
             'classmates' => $classmates,
             'evaluatedPeers' => $evaluatedPeers,
+            'peerEvaluationEnabled' => $peerEvaluationEnabled,
         ])->layout('components.layouts.student', ['title' => 'ระบบประเมิน']);
     }
 }

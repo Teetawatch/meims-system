@@ -7,10 +7,23 @@ use App\Models\Teacher;
 use App\Models\TeacherEvaluation;
 use App\Models\PeerEvaluation;
 use App\Models\Student;
+use App\Models\SystemSetting;
 
 class EvaluationReport extends Component
 {
     public $type = 'teacher'; // teacher or peer
+    public $peerEvaluationEnabled = false;
+
+    public function mount()
+    {
+        $this->peerEvaluationEnabled = SystemSetting::isPeerEvaluationEnabled();
+    }
+
+    public function togglePeerEvaluation()
+    {
+        $this->peerEvaluationEnabled = !$this->peerEvaluationEnabled;
+        SystemSetting::set('peer_evaluation_enabled', $this->peerEvaluationEnabled ? '1' : '0');
+    }
 
     public function render()
     {
