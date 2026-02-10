@@ -24,4 +24,9 @@ class Course extends Model
     {
         return $this->hasMany(Subject::class);
     }
+
+    public function surveyTopics()
+    {
+        return $this->belongsToMany(SurveyTopic::class, 'course_survey_topic');
+    }
 }

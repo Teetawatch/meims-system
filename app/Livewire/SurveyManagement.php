@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\SurveyTopic;
 use App\Models\SurveyQuestion;
+use App\Models\Course;
 
 class SurveyManagement extends Component
 {
@@ -21,6 +22,8 @@ class SurveyManagement extends Component
     public $description;
     public $is_active = true;
     public $questions = []; // Array of question strings
+    public $selectedCourses = []; // Array of course IDs
+    public $allCourses = true; // When true, survey is for all courses
 
     // Results View
     public $selectedTopic;
@@ -35,14 +38,16 @@ class SurveyManagement extends Component
 
     public function create()
     {
-        $this->reset(['topicId', 'title', 'description', 'is_active', 'questions']);
+        $this->reset(['topicId', 'title', 'description', 'is_active', 'questions', 'selectedCourses', 'allCourses']);
         $this->questions = ['']; // Start with one empty question
+        $this->allCourses = true;
+        $this->selectedCourses = [];
         $this->viewState = 'create';
     }
 
     public function edit($id)
     {
-        $topic = SurveyTopic::with('questions')->findOrFail($id);
+        $topic = SurveyTopic::with(['questions', 'courses'])->findOrFail($id);
         $this->topicId = $id;
         $this->title = $topic->title;
         $this->description = $topic->description;
@@ -51,6 +56,16 @@ class SurveyManagement extends Component
         $this->questions = $topic->questions->pluck('question_text')->toArray();
         if (empty($this->questions)) {
             $this->questions = [''];
+        }
+
+        // Load assigned courses
+        $courseIds = $topic->courses->pluck('id')->toArray();
+        if (empty($courseIds)) {
+            $this->allCourses = true;
+            $this->selectedCourses = [];
+        } else {
+            $this->allCourses = false;
+            $this->selectedCourses = array_map('strval', $courseIds);
         }
 
         $this->viewState = 'edit';
@@ -69,7 +84,7 @@ class SurveyManagement extends Component
 
     public function cancel()
     {
-        $this->reset(['topicId', 'title', 'description', 'is_active', 'selectedTopic', 'questions']);
+        $this->reset(['topicId', 'title', 'description', 'is_active', 'selectedTopic', 'questions', 'selectedCourses', 'allCourses']);
         $this->viewState = 'list';
     }
 
@@ -92,17 +107,8 @@ class SurveyManagement extends Component
                 'is_active' => $this->is_active,
             ]);
 
-            // Sync questions: Delete old and create new (Simple approach)
-            // Ideally we should update existing IDs to preserve data integrity if questions are just edited.
-            // But for simplicity in this iteration:
-            // Check if we can just update existing ones and add new ones.
-            // If we delete all, we lose connection to answers if logic depends on question_id. 
-            // However, previous prompt implies this is a new feature request so old data might not be compatible anyway.
-            // Let's try to be smart: Get existing questions.
-
             $existingQuestions = $topic->questions;
 
-            // Loop through input questions
             foreach ($this->questions as $index => $qText) {
                 if (isset($existingQuestions[$index])) {
                     $existingQuestions[$index]->update(['question_text' => $qText]);
@@ -111,7 +117,6 @@ class SurveyManagement extends Component
                 }
             }
 
-            // Delete extra questions if any
             if ($existingQuestions->count() > count($this->questions)) {
                 $toDelete = $existingQuestions->slice(count($this->questions));
                 foreach ($toDelete as $model) {
@@ -132,6 +137,13 @@ class SurveyManagement extends Component
             }
 
             $message = 'สร้างแบบสอบถามใหม่เรียบร้อยแล้ว';
+        }
+
+        // Sync courses
+        if ($this->allCourses) {
+            $topic->courses()->detach(); // No restriction = all courses
+        } else {
+            $topic->courses()->sync(array_map('intval', $this->selectedCourses));
         }
 
         $this->dispatch('swal:modal', [
@@ -182,12 +194,16 @@ class SurveyManagement extends Component
             ->when($this->search, function ($query) {
                 $query->where('title', 'like', '%' . $this->search . '%');
             })
-            ->withCount('responses') // Optimization
+            ->with('courses')
+            ->withCount('responses')
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
+        $courses = Course::where('is_active', true)->orderBy('course_name_th')->get();
+
         return view('components.survey-management', [
-            'topics' => $topics
+            'topics' => $topics,
+            'courses' => $courses,
         ])->layout('components.layouts.app');
     }
 }

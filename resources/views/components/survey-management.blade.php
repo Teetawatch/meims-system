@@ -51,7 +51,28 @@
                         </div>
                         
                         <h3 class="text-xl font-bold text-slate-800 mb-2 line-clamp-2">{{ $topic->title }}</h3>
-                        <p class="text-slate-500 text-sm mb-6 flex-1 line-clamp-3">{{ $topic->description ?? 'ไม่มีคำอธิบาย' }}</p>
+                        <p class="text-slate-500 text-sm mb-3 flex-1 line-clamp-3">{{ $topic->description ?? 'ไม่มีคำอธิบาย' }}</p>
+
+                        {{-- Course Badges --}}
+                        <div class="mb-4 flex flex-wrap gap-1">
+                            @if($topic->courses->isEmpty())
+                                <span class="inline-flex items-center px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-50 text-emerald-600 ring-1 ring-emerald-500/20">
+                                    <svg class="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    ทุกหลักสูตร
+                                </span>
+                            @else
+                                @foreach($topic->courses->take(3) as $course)
+                                    <span class="inline-flex items-center px-2 py-0.5 text-[10px] font-bold rounded-full bg-indigo-50 text-indigo-600 ring-1 ring-indigo-500/20">
+                                        {{ $course->course_code }}
+                                    </span>
+                                @endforeach
+                                @if($topic->courses->count() > 3)
+                                    <span class="inline-flex items-center px-2 py-0.5 text-[10px] font-bold rounded-full bg-slate-50 text-slate-500">
+                                        +{{ $topic->courses->count() - 3 }}
+                                    </span>
+                                @endif
+                            @endif
+                        </div>
 
                         <div class="pt-4 border-t border-slate-50 flex items-center justify-between">
                             <div class="text-center">
@@ -124,6 +145,51 @@
                     <div class="pt-4 border-t border-slate-100 flex items-center">
                          <input type="checkbox" wire:model="is_active" id="active_status" class="w-5 h-5 text-blue-600 border-slate-300 rounded focus:ring-blue-500">
                          <label for="active_status" class="ml-3 block text-sm font-medium text-slate-700">เปิดให้นักเรียนประเมิน (Active)</label>
+                    </div>
+
+                    {{-- Course Assignment Section --}}
+                    <div class="pt-4 border-t border-slate-100">
+                        <label class="block text-lg font-bold text-slate-800 mb-4">
+                            <svg class="w-5 h-5 inline-block mr-1 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                            กำหนดหลักสูตรที่สามารถประเมินได้
+                        </label>
+                        
+                        <div class="mb-4">
+                            <label class="inline-flex items-center cursor-pointer group">
+                                <input type="checkbox" wire:model.live="allCourses" class="w-5 h-5 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500">
+                                <span class="ml-3 text-sm font-medium text-slate-700 group-hover:text-slate-900">ทุกหลักสูตร (ไม่จำกัดหลักสูตร)</span>
+                            </label>
+                        </div>
+
+                        @if(!$allCourses)
+                            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-2 animate-fade-in">
+                                <p class="text-xs text-slate-500 mb-3 font-medium">เลือกหลักสูตรที่ต้องการให้ประเมิน:</p>
+                                @if($courses->count() > 0)
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                        @foreach($courses as $course)
+                                            <label class="flex items-center px-4 py-3 bg-white rounded-xl border border-slate-200 hover:border-indigo-300 hover:bg-indigo-50/30 cursor-pointer transition-all group {{ in_array((string)$course->id, $selectedCourses) ? 'border-indigo-400 bg-indigo-50 ring-1 ring-indigo-200' : '' }}">
+                                                <input type="checkbox" wire:model="selectedCourses" value="{{ $course->id }}" class="w-4 h-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500">
+                                                <div class="ml-3">
+                                                    <span class="text-sm font-semibold text-slate-700 group-hover:text-indigo-700">{{ $course->course_code }}</span>
+                                                    <span class="text-xs text-slate-500 block">{{ $course->course_name_th }}</span>
+                                                </div>
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <p class="text-sm text-slate-400 text-center py-4">ยังไม่มีหลักสูตรในระบบ</p>
+                                @endif
+
+                                @if(!$allCourses && count($selectedCourses) > 0)
+                                    <div class="pt-3 border-t border-slate-200 mt-3">
+                                        <p class="text-xs text-indigo-600 font-semibold">
+                                            <svg class="w-4 h-4 inline-block mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            เลือกแล้ว {{ count($selectedCourses) }} หลักสูตร
+                                        </p>
+                                    </div>
+                                @endif
+                            </div>
+                        @endif
                     </div>
 
                     <div class="flex justify-end space-x-3 pt-6 border-t border-slate-50">

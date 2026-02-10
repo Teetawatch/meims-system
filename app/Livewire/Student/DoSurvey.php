@@ -30,6 +30,16 @@ class DoSurvey extends Component
             return redirect()->route('student.surveys');
         }
 
+        // Check course access
+        $assignedCourses = $this->survey->courses;
+        if ($assignedCourses->isNotEmpty()) {
+            $studentCourseId = $this->student->course_id;
+            if (!$assignedCourses->contains('id', $studentCourseId)) {
+                session()->flash('error', 'แบบสอบถามนี้ไม่ได้กำหนดให้หลักสูตรของคุณ');
+                return redirect()->route('student.surveys');
+            }
+        }
+
         // Initialize answers
         foreach ($this->survey->questions as $question) {
             $this->answers[$question->id] = '';

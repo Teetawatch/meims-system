@@ -16,6 +16,11 @@ class SurveyTopic extends Model
         return $this->hasMany(SurveyQuestion::class);
     }
 
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'course_survey_topic');
+    }
+
     public function responses()
     {
         return $this->hasMany(SurveyResponse::class);
