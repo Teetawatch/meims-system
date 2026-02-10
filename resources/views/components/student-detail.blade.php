@@ -22,7 +22,7 @@
                 </div>
             </div>
 
-            <a href="#"
+            <a href="{{ route('students.edit', $student->id) }}"
                 class="inline-flex items-center px-4 py-2 bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:text-blue-600 font-medium rounded-xl transition-all shadow-sm">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

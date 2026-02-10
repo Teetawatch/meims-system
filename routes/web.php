@@ -30,6 +30,7 @@ Route::get('/login', \App\Livewire\Auth\Login::class)->name('login')->middleware
 Route::get('/dashboard', \App\Livewire\Dashboard::class)->name('dashboard')->middleware('auth');
 Route::get('/students', \App\Livewire\StudentManagement::class)->name('students.index')->middleware('auth');
 Route::get('/students/conduct', \App\Livewire\StudentConduct::class)->name('students.conduct')->middleware('auth');
+Route::get('/students/{student}/edit', \App\Livewire\StudentEdit::class)->name('students.edit')->middleware('auth');
 Route::get('/students/{student}', \App\Livewire\StudentDetail::class)->name('students.show')->middleware('auth');
 Route::get('/surveys', \App\Livewire\SurveyManagement::class)->name('surveys.index')->middleware('auth');
 Route::get('/subjects', \App\Livewire\SubjectManagement::class)->name('subjects.index')->middleware('auth');
