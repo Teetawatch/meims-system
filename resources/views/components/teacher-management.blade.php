@@ -13,6 +13,14 @@
             </div>
 
             <div class="flex gap-3">
+                <button wire:click="openImportModal"
+                    class="inline-flex items-center px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-black rounded-2xl transition-all shadow-lg shadow-emerald-600/20 transform active:scale-95">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                    </svg>
+                    นำเข้า Excel
+                </button>
                 <button wire:click="openModal"
                     class="inline-flex items-center px-6 py-3 bg-slate-900 hover:bg-black text-white text-sm font-black rounded-2xl transition-all shadow-lg shadow-slate-900/20 transform active:scale-95">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -205,6 +213,88 @@
                             บันทึกข้อมูล
                         </button>
                         <button type="button" wire:click="$set('isModalOpen', false)"
+                            class="w-full sm:w-auto px-8 py-3 bg-white border border-slate-200 text-sm font-bold text-slate-500 rounded-2xl hover:bg-slate-50 transition-all">
+                            ยกเลิก
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <!-- Import Modal -->
+    @if($isImportModalOpen)
+        <div class="fixed inset-0 z-[100] overflow-y-auto">
+            <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+                <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
+                    wire:click="closeImportModal"></div>
+                <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+
+                <div
+                    class="inline-block align-bottom bg-white rounded-[2.5rem] text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md w-full relative z-[101]">
+                    <div class="px-8 pt-10 pb-6 text-center">
+                        <div
+                            class="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 mx-auto mb-6">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-black text-slate-800 tracking-tight mb-2">นำเข้าข้อมูลอาจารย์</h3>
+                        <p class="text-sm text-slate-500 mb-6 font-medium">เลือกไฟล์ Excel (.xlsx) เพื่อนำเข้าข้อมูลอาจารย์</p>
+
+                        <div class="mb-8">
+                            <button wire:click="downloadTemplate"
+                                class="w-full text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center justify-center gap-2 bg-blue-50 hover:bg-blue-100 px-4 py-3 rounded-xl transition-all">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                </svg>
+                                ดาวน์โหลดไฟล์เทมเพลต (.xlsx)
+                            </button>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="p-6 bg-slate-50 border-2 border-slate-200 border-dashed rounded-2xl relative hover:bg-slate-100 transition-colors group">
+                                <input type="file" wire:model="importFile"
+                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                <div class="flex flex-col items-center">
+                                    <svg class="w-10 h-10 text-slate-300 group-hover:text-slate-400 mb-3 transition-colors" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12">
+                                        </path>
+                                    </svg>
+                                    <span class="text-sm font-bold text-slate-600 group-hover:text-slate-800">
+                                        @if($importFile)
+                                            {{ $importFile->getClientOriginalName() }}
+                                        @else
+                                            เลือกไฟล์ข้อมูลอาจารย์
+                                        @endif
+                                    </span>
+                                </div>
+                            </div>
+
+                            @error('importFile') <p class="text-red-500 text-xs font-bold mt-2">{{ $message }}</p> @enderror
+
+                            <div class="text-left bg-blue-50 p-4 rounded-xl border border-blue-100/50">
+                                <h4 class="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-2">คอลัมน์ที่จำเป็น</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-2 py-1 bg-white rounded-md text-[10px] font-bold text-slate-600 border border-slate-100">teacher_code</span>
+                                    <span class="px-2 py-1 bg-white rounded-md text-[10px] font-bold text-slate-600 border border-slate-100">first_name_th</span>
+                                    <span class="px-2 py-1 bg-white rounded-md text-[10px] font-bold text-slate-600 border border-slate-100">last_name_th</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50/50 px-8 py-6 flex flex-col sm:flex-row-reverse gap-3">
+                        <button type="button" wire:click="import" wire:loading.attr="disabled"
+                            class="w-full sm:w-auto px-8 py-3 bg-emerald-600 text-white text-sm font-black rounded-2xl hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-600/20 disabled:opacity-50 transform active:scale-95">
+                            <span wire:loading.remove>เริ่มนำเข้า</span>
+                            <span wire:loading>กำลังประมวลผล...</span>
+                        </button>
+                        <button type="button" wire:click="closeImportModal"
                             class="w-full sm:w-auto px-8 py-3 bg-white border border-slate-200 text-sm font-bold text-slate-500 rounded-2xl hover:bg-slate-50 transition-all">
                             ยกเลิก
                         </button>

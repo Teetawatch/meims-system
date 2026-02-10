@@ -79,6 +79,7 @@ Route::middleware(['auth:guardian'])->prefix('guardian')->name('guardian.')->gro
 });
 
 Route::get('/reports/students', \App\Livewire\StudentReport::class)->name('reports.students')->middleware('auth');
+Route::get('/reports/students/pdf', [\App\Http\Controllers\ReportController::class, 'exportStudentPdf'])->name('reports.students.pdf')->middleware('auth');
 Route::get('/courses', \App\Livewire\CourseManagement::class)->name('courses.index')->middleware('auth');
 
 Route::post('/logout', function () {

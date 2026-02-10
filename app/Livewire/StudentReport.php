@@ -51,7 +51,7 @@ class StudentReport extends Component
         return Excel::download(new StudentReportExport($filters), 'student_report_' . date('Y-m-d') . '.xlsx');
     }
 
-    public function render()
+    private function getFilteredQuery()
     {
         $query = Student::query();
 
@@ -67,7 +67,12 @@ class StudentReport extends Component
             $query->where('course_name', $this->course_name);
         }
 
-        $students = $query->paginate(10);
+        return $query;
+    }
+
+    public function render()
+    {
+        $students = $this->getFilteredQuery()->paginate(10);
 
         return view('components.student-report', [
             'students' => $students

@@ -63,6 +63,7 @@
                             <th class="px-6 py-4">รหัสวิชา</th>
                             <th class="px-6 py-4">ชื่อวิชา</th>
                             <th class="px-6 py-4">หน่วยกิต</th>
+                            <th class="px-6 py-4">อาจารย์ผู้สอน</th>
                             <th class="px-6 py-4">หลักสูตร</th>
                             <th class="px-6 py-4">สถานะ</th>
                             <th class="px-6 py-4 text-right">จัดการ</th>
@@ -80,11 +81,26 @@
                                         <div class="text-xs text-slate-400 capitalize">{{ $subject->subject_name_en }}</div>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4">
                                     <div
                                         class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 ring-1 ring-blue-600/10">
                                         {{ $subject->credits }} หน่วยกิต
                                     </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    @if($subject->teacher->count() > 0)
+                                        <div class="flex flex-col space-y-1 items-start">
+                                            @foreach($subject->teacher->take(2) as $teacher)
+                                                <span class="text-xs font-medium text-slate-600 bg-white px-2 py-1 rounded-lg border border-slate-200 shadow-sm">
+                                                    {{ $teacher->first_name_th }} {{ $teacher->last_name_th }}
+                                                </span>
+                                            @endforeach
+                                            @if($subject->teacher->count() > 2)
+                                                <span class="text-[10px] text-slate-400 pl-1 font-medium">+{{ $subject->teacher->count() - 2 }} ท่าน</span>
+                                            @endif
+                                        </div>
+                                    @else
+                                        <span class="text-xs text-slate-400 italic">-</span>
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4">
                                     <div
@@ -233,6 +249,34 @@
                             </div>
 
                             <div class="col-span-2">
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">อาจารย์ผู้สอน</label>
+                                <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                                    <input type="text" wire:model.live.debounce.300ms="teacherSearch" placeholder="ค้นหาชื่ออาจารย์..."
+                                        class="w-full mb-3 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400">
+                                    
+                                    <div class="max-h-40 overflow-y-auto space-y-1 pr-2 custom-scrollbar">
+                                        @foreach($teachers as $teacher)
+                                            <label class="flex items-center space-x-3 p-2 hover:bg-white rounded-lg cursor-pointer transition-colors group">
+                                                <div class="relative flex items-center">
+                                                    <input type="checkbox" wire:model="selectedTeachers" value="{{ $teacher->id }}" 
+                                                        class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 transition-all">
+                                                </div>
+                                                <span class="text-sm text-slate-600 group-hover:text-slate-900 transition-colors">
+                                                    {{ $teacher->first_name_th }} {{ $teacher->last_name_th }}
+                                                </span>
+                                            </label>
+                                        @endforeach
+                                        
+                                        @if($teachers->isEmpty())
+                                            <div class="text-center py-4 text-slate-400 text-xs">
+                                                ไม่พบรายชื่ออาจารย์เริ่มต้นด้วย "{{ $teacherSearch }}"
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-span-2">
                                 <label class="block text-sm font-semibold text-slate-700 mb-2">คำอธิบายรายวิชา
                                     (เพิ่มเติม)</label>
                                 <textarea wire:model="description" rows="3"
@@ -327,9 +371,10 @@
                                 <ul class="text-xs text-blue-600 space-y-1 list-disc pl-4">
                                     <li>ต้องมีหัวตาราง (Heading Row) ในบรรทัดแรก</li>
                                     <li>ชื่อคอลัมน์: <b>subject_code</b>, <b>subject_name_th</b>, <b>subject_name_en</b>,
-                                        <b>credits</b>, <b>course_code</b>
+                                        <b>credits</b>, <b>course_code</b>, <b>teacher_codes</b>
                                     </li>
                                     <li><b>course_code</b> ต้องมีอยู่ในระบบแล้ว</li>
+                                    <li><b>teacher_codes</b> (ระบุรหัสอาจารย์ คั่นด้วยเครื่องหมายจุลภาค ,)</li>
                                 </ul>
                             </div>
                         </div>

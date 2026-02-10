@@ -7,6 +7,7 @@ use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Models\Subject;
 use App\Models\Course;
+use App\Models\Teacher;
 use App\Imports\SubjectsImport;
 use App\Exports\SubjectTemplateExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -17,6 +18,7 @@ class SubjectManagement extends Component
 
     public $search = '';
     public $searchCourse = '';
+    public $teacherSearch = '';
 
     public $isModalOpen = false;
     public $isEditMode = false;
@@ -38,6 +40,7 @@ class SubjectManagement extends Component
     public $course_id;
     public $description;
     public $is_active = true;
+    public $selectedTeachers = [];
 
     // Import fields
     public $importFile;
@@ -57,7 +60,7 @@ class SubjectManagement extends Component
     public function openModal()
     {
         $this->resetValidation();
-        $this->reset(['subjectId', 'subject_code', 'subject_name_th', 'subject_name_en', 'credits', 'course_id', 'description', 'is_active']);
+        $this->reset(['subjectId', 'subject_code', 'subject_name_th', 'subject_name_en', 'credits', 'course_id', 'description', 'is_active', 'selectedTeachers']);
         $this->isEditMode = false;
         $this->isModalOpen = true;
     }
@@ -90,6 +93,7 @@ class SubjectManagement extends Component
         $this->course_id = $subject->course_id;
         $this->description = $subject->description;
         $this->is_active = $subject->is_active;
+        $this->selectedTeachers = $subject->teacher->pluck('id')->toArray();
 
         $this->isEditMode = true;
         $this->isModalOpen = true;
@@ -104,6 +108,7 @@ class SubjectManagement extends Component
             'course_id' => 'required|exists:courses,id',
             'description' => 'nullable|string',
             'is_active' => 'boolean',
+            'selectedTeachers' => 'nullable|array',
         ];
 
         if ($this->isEditMode) {
@@ -125,9 +130,10 @@ class SubjectManagement extends Component
                 'description' => $this->description,
                 'is_active' => $this->is_active,
             ]);
+            $subject->teacher()->sync($this->selectedTeachers);
             $message = 'อัปเดตข้อมูลรายวิชาเรียบร้อยแล้ว';
         } else {
-            Subject::create([
+            $subject = Subject::create([
                 'subject_code' => $this->subject_code,
                 'subject_name_th' => $this->subject_name_th,
                 'subject_name_en' => $this->subject_name_en,
@@ -136,6 +142,7 @@ class SubjectManagement extends Component
                 'description' => $this->description,
                 'is_active' => $this->is_active,
             ]);
+            $subject->teacher()->sync($this->selectedTeachers);
             $message = 'เพิ่มรายวิชาใหม่เรียบร้อยแล้ว';
         }
 
@@ -212,10 +219,17 @@ class SubjectManagement extends Component
             ->paginate(10);
 
         $courses = Course::where('is_active', true)->orderBy('course_name_th')->get();
+        $teachers = Teacher::where('is_active', true)
+            ->when($this->teacherSearch, function ($query) {
+                $query->where('first_name_th', 'like', '%' . $this->teacherSearch . '%')
+                      ->orWhere('last_name_th', 'like', '%' . $this->teacherSearch . '%');
+            })
+            ->orderBy('first_name_th')->get();
 
         return view('components.subject-management', [
             'subjects' => $subjects,
             'courses' => $courses,
+            'teachers' => $teachers,
         ])->layout('components.layouts.app');
     }
 }

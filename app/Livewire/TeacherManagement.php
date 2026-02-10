@@ -4,14 +4,20 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\WithFileUploads;
 use App\Models\Teacher;
+use App\Imports\TeachersImport;
+use App\Exports\TeacherTemplateExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TeacherManagement extends Component
 {
-    use WithPagination;
+    use WithPagination, WithFileUploads;
 
     public $search = '';
     public $isModalOpen = false;
+    public $isImportModalOpen = false;
+    public $importFile;
     public $teacherId, $teacher_code, $title_th, $first_name_th, $last_name_th, $title_en, $first_name_en, $last_name_en, $position, $email, $phone, $is_active = true;
 
     protected $listeners = ['deleteTeacher' => 'delete'];
@@ -19,6 +25,48 @@ class TeacherManagement extends Component
     public function updatingSearch()
     {
         $this->resetPage();
+    }
+
+    public function openImportModal()
+    {
+        $this->resetValidation();
+        $this->reset(['importFile']);
+        $this->isImportModalOpen = true;
+    }
+
+    public function closeImportModal()
+    {
+        $this->isImportModalOpen = false;
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new TeacherTemplateExport, 'teacher_template.xlsx');
+    }
+
+    public function import()
+    {
+        $this->validate([
+            'importFile' => 'required|mimes:xlsx,xls,csv|max:10240',
+        ]);
+
+        try {
+            Excel::import(new TeachersImport, $this->importFile->getRealPath());
+
+            $this->dispatch('swal:modal', [
+                'type' => 'success',
+                'title' => 'สำเร็จ!',
+                'text' => 'นำเข้าข้อมูลอาจารย์เรียบร้อยแล้ว'
+            ]);
+
+            $this->closeImportModal();
+        } catch (\Exception $e) {
+            $this->dispatch('swal:modal', [
+                'type' => 'error',
+                'title' => 'เกิดข้อผิดพลาด!',
+                'text' => 'ไม่สามารถนำเข้าข้อมูลได้ กรุณาตรวจสอบไฟล์ (' . $e->getMessage() . ')'
+            ]);
+        }
     }
 
     public function openModal()
