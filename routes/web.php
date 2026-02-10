@@ -41,6 +41,8 @@ Route::get('/transcripts', \App\Livewire\TranscriptManagement::class)->name('tra
 Route::get('/transcripts/download', [\App\Http\Controllers\TranscriptController::class, 'download'])->name('transcripts.download')->middleware('auth');
 Route::get('/teachers', \App\Livewire\TeacherManagement::class)->name('teachers.index')->middleware('auth');
 Route::get('/reports/evaluations', \App\Livewire\EvaluationReport::class)->name('reports.evaluations')->middleware('auth');
+Route::get('/guardians', \App\Livewire\GuardianManagement::class)->name('guardians.index')->middleware('auth');
+Route::get('/announcements', \App\Livewire\AnnouncementManagement::class)->name('announcements.index')->middleware('auth');
 
 // Student Portal
 Route::get('/student/login', \App\Livewire\Student\Login::class)->name('student.login');
@@ -63,6 +65,19 @@ Route::middleware(['auth:student'])->prefix('student')->name('student.')->group(
     Route::get('/evaluation/peer/{studentId}', \App\Livewire\Student\PeerEvaluation::class)->name('peer-evaluation');
     Route::get('/change-password', \App\Livewire\Student\ChangePassword::class)->name('change-password');
 });
+
+// Guardian Portal
+Route::get('/guardian/login', \App\Livewire\Guardian\Login::class)->name('guardian.login');
+Route::get('/guardian/logout', function () {
+    Auth::guard('guardian')->logout();
+    return redirect()->route('guardian.login');
+})->name('guardian.logout');
+
+Route::middleware(['auth:guardian'])->prefix('guardian')->name('guardian.')->group(function () {
+    Route::get('/dashboard', \App\Livewire\Guardian\Dashboard::class)->name('dashboard');
+    Route::get('/student/{student}', \App\Livewire\Guardian\StudentInfo::class)->name('student');
+});
+
 Route::get('/reports/students', \App\Livewire\StudentReport::class)->name('reports.students')->middleware('auth');
 Route::get('/courses', \App\Livewire\CourseManagement::class)->name('courses.index')->middleware('auth');
 

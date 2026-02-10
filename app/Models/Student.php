@@ -60,4 +60,9 @@ class Student extends Authenticatable
     {
         return $this->hasMany(PeerEvaluation::class, 'target_student_id');
     }
+
+    public function guardians()
+    {
+        return $this->belongsToMany(Guardian::class, 'guardian_student');
+    }
 }

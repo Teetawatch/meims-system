@@ -10,7 +10,8 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('students', function (Blueprint $table) {
+        if (!Schema::hasTable('students')) {
+            Schema::create('students', function (Blueprint $table) {
             $table->id();
 
             // Account Info
@@ -89,6 +90,7 @@ return new class extends Migration {
 
             $table->timestamps();
         });
+        }
     }
 
     /**

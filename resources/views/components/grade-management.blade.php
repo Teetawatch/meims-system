@@ -164,8 +164,17 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-center">
-                                    <div
-                                        class="inline-flex items-center justify-center w-10 h-10 rounded-full {{ $grade->grade == 'A' || $grade->grade == '4.00' ? 'bg-emerald-50 text-emerald-600' : 'bg-blue-50 text-blue-600' }} font-black text-sm">
+                                    @php
+                                        $gv = $grade->grade !== null ? floatval($grade->grade) : null;
+                                        $gradeStyle = match(true) {
+                                            $gv === null => 'bg-slate-50 text-slate-400',
+                                            $gv >= 3 => 'bg-emerald-50 text-emerald-600',
+                                            $gv >= 2 => 'bg-blue-50 text-blue-600',
+                                            $gv >= 1 => 'bg-amber-50 text-amber-600',
+                                            default => 'bg-red-50 text-red-500',
+                                        };
+                                    @endphp
+                                    <div class="inline-flex items-center justify-center w-10 h-10 rounded-full {{ $gradeStyle }} font-black text-sm">
                                         {{ $grade->grade ?? '-' }}
                                     </div>
                                 </td>
@@ -396,8 +405,8 @@
                                         </li>
                                         <li class="flex items-center gap-2">
                                             <div class="w-1 h-1 bg-blue-400 rounded-full"></div> ข้อมูลเกรด: <code
-                                                class="bg-blue-100 px-1 rounded">score</code> (ตัวเลข), <code
-                                                class="bg-blue-100 px-1 rounded">grade</code> (อักษร)
+                                                class="bg-blue-100 px-1 rounded">score</code> (คะแนน 0-100), <code
+                                                class="bg-blue-100 px-1 rounded">grade</code> (ตัวเลข 0, 1, 1.5, 2, 2.5, 3, 3.5, 4)
                                         </li>
                                         <li class="flex items-center gap-2">
                                             <div class="w-1 h-1 bg-blue-400 rounded-full"></div>

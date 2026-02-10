@@ -1,288 +1,228 @@
-<div class="min-h-screen flex bg-gradient-to-br from-blue-50 via-indigo-50/30 to-violet-50/40 overflow-hidden">
+<div class="min-h-screen flex bg-slate-50 font-['Outfit','Anuphan']">
 
     <style>
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
-        }
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-        @keyframes blob {
-            0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-            50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(24px); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .animate-float { animation: float 6s ease-in-out infinite; }
-        .animate-float-delay { animation: float 6s ease-in-out 2s infinite; }
-        .animate-blob { animation: blob 8s ease-in-out infinite; }
-        .animate-blob-delay { animation: blob 8s ease-in-out 4s infinite; }
-        .animate-fade-in-up { animation: fadeInUp 0.6s ease-out both; }
-        .animate-fade-in-up-1 { animation: fadeInUp 0.6s ease-out 0.1s both; }
-        .animate-fade-in-up-2 { animation: fadeInUp 0.6s ease-out 0.2s both; }
-        .animate-fade-in-up-3 { animation: fadeInUp 0.6s ease-out 0.3s both; }
-        .animate-fade-in-up-4 { animation: fadeInUp 0.6s ease-out 0.4s both; }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-        }
-        .glass-card-strong {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-        }
-        .gradient-text {
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .shimmer-border {
-            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.1), transparent);
-            background-size: 200% 100%;
-            animation: shimmer 3s ease-in-out infinite;
-        }
-        .stat-card:hover .stat-icon {
-            transform: scale(1.15) rotate(-5deg);
-        }
-        .stat-card:hover .stat-value {
-            transform: scale(1.05);
-        }
+        .animate-fade-in { animation: fadeIn 0.5s ease-out both; }
+        .animate-fade-in-1 { animation: fadeIn 0.5s ease-out 0.08s both; }
+        .animate-fade-in-2 { animation: fadeIn 0.5s ease-out 0.16s both; }
+        .animate-fade-in-3 { animation: fadeIn 0.5s ease-out 0.24s both; }
+        .animate-fade-in-4 { animation: fadeIn 0.5s ease-out 0.32s both; }
     </style>
 
-    <!-- Sidebar Container -->
+    <!-- Sidebar -->
     <aside class="w-72 shrink-0 bg-white border-r border-slate-100 flex flex-col fixed inset-y-0 left-0 z-40 hidden lg:flex">
         <x-student-sidebar />
     </aside>
 
-    <main class="flex-1 lg:ml-72 relative p-6 md:p-10 overflow-y-auto">
+    <main class="flex-1 lg:ml-72 p-6 md:p-8 lg:p-10 overflow-y-auto relative">
+        <!-- Top Nav (Mobile Toggle & Notifications) -->
+        <div class="flex justify-between items-center mb-6 lg:mb-8 animate-fade-in">
+            <h2 class="text-xl font-bold text-slate-800 lg:hidden">MEIMS Student</h2>
+            <div class="ml-auto flex items-center gap-4">
+                <livewire:notification-dropdown />
+                
+                <div class="h-8 w-px bg-slate-200"></div>
+                
+                <div class="relative group">
+                    <button class="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
+                        <span>บัญชีผู้ใช้</span>
+                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <!-- Dropdown -->
+                    <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform origin-top-right z-50">
+                        <a href="{{ route('student.logout') }}" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">ออกจากระบบ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <!-- Hero Section -->
-        <div class="relative rounded-[2rem] overflow-hidden p-8 md:p-12 mb-8 animate-fade-in-up"
-             style="background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 30%, #ede9fe 60%, #fce7f3 100%);">
-
-            <!-- Decorative Blobs -->
-            <div class="absolute top-[-20%] right-[-10%] w-72 h-72 bg-blue-300/30 animate-blob" style="filter: blur(60px);"></div>
-            <div class="absolute bottom-[-20%] left-[-5%] w-64 h-64 bg-violet-300/30 animate-blob-delay" style="filter: blur(60px);"></div>
-            <div class="absolute top-[30%] left-[40%] w-48 h-48 bg-pink-200/20 animate-blob" style="filter: blur(50px); animation-delay: 2s;"></div>
-
-            <!-- Subtle Grid Pattern -->
-            <div class="absolute inset-0 opacity-[0.03]"
-                 style="background-image: radial-gradient(circle, #6366f1 1px, transparent 1px); background-size: 24px 24px;"></div>
-
-            <div class="relative z-10 flex flex-col md:flex-row items-center gap-8">
+        <!-- Header Section -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 md:p-8 mb-8 animate-fade-in-1">
+            <div class="flex flex-col md:flex-row items-center gap-6">
                 <!-- Profile Photo -->
-                <div class="relative group cursor-pointer">
-                    <div class="absolute -inset-1.5 bg-gradient-to-r from-blue-400 via-violet-400 to-pink-400 rounded-[2rem] opacity-60 group-hover:opacity-100 blur-sm transition-all duration-500"></div>
-                    <div class="relative w-28 h-28 md:w-36 md:h-36 rounded-[1.8rem] overflow-hidden ring-4 ring-white shadow-xl transition-transform duration-500 group-hover:scale-[1.03]">
+                <div class="relative shrink-0">
+                    <div class="w-24 h-24 md:w-28 md:h-28 rounded-2xl overflow-hidden border-2 border-slate-200 shadow-sm">
                         @if($student->photo_path)
-                            <img src="{{ asset('storage/' . $student->photo_path) }}" alt="Profile"
+                            <img src="{{ asset('storage/' . $student->photo_path) }}" alt="รูปโปรไฟล์"
                                 class="w-full h-full object-cover">
                         @else
-                            <div class="w-full h-full flex items-center justify-center text-white text-4xl md:text-5xl font-black"
-                                 style="background: linear-gradient(135deg, #3b82f6, #8b5cf6);">
+                            <div class="w-full h-full flex items-center justify-center bg-slate-700 text-white text-3xl md:text-4xl font-bold">
                                 {{ mb_substr($student->first_name_th, 0, 1) }}
                             </div>
                         @endif
                     </div>
-                    <!-- Online Indicator -->
-                    <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-emerald-400 rounded-full border-[3px] border-white shadow-lg"></div>
+                    <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full border-[3px] border-white" title="ออนไลน์"></div>
                 </div>
 
                 <div class="text-center md:text-left flex-1">
-                    <p class="text-sm font-bold text-violet-500/80 tracking-wide mb-1 uppercase">Student Dashboard</p>
-                    <h2 class="text-slate-800 text-3xl md:text-4xl lg:text-5xl font-black leading-tight mb-4 tracking-tight">
-                        สวัสดีครับ, <br class="hidden md:block"><span class="gradient-text">คุณ{{ $student->first_name_th }} {{ $student->last_name_th }}</span>
-                    </h2>
-                    <div class="flex flex-wrap justify-center md:justify-start gap-2.5">
-                        <span class="inline-flex items-center gap-2 px-4 py-2 glass-card rounded-xl text-slate-700 text-sm font-bold border border-white/60 shadow-sm">
-                            <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1">หน้าหลักนักเรียน</p>
+                    <h1 class="text-2xl md:text-3xl font-bold text-slate-800 leading-tight mb-3">
+                        สวัสดี, {{ $student->title_th }}{{ $student->first_name_th }} {{ $student->last_name_th }}
+                    </h1>
+                    <div class="flex flex-wrap justify-center md:justify-start gap-2">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-sm font-medium">
+                            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path>
                             </svg>
                             {{ $student->student_id }}
                         </span>
-                        <span class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold border shadow-sm"
-                              style="background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.08)); border-color: rgba(139,92,246,0.15); color: #6d28d9;">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                             </svg>
                             {{ $student->course->course_name_th ?? $student->course_name }}
                         </span>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-slate-600 rounded-lg text-sm font-medium">
+                            รุ่น {{ $student->batch }} • ปี {{ $student->fiscal_year }}
+                        </span>
                     </div>
+                </div>
+
+                <!-- Date/Time -->
+                <div class="hidden md:flex flex-col items-end text-right shrink-0">
+                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">วันที่</p>
+                    <p class="text-lg font-bold text-slate-700">{{ now()->locale('th')->translatedFormat('d F') }}</p>
+                    <p class="text-sm text-slate-400 font-medium">พ.ศ. {{ now()->year + 543 }}</p>
                 </div>
             </div>
         </div>
 
-        <!-- Quick Stats Grid -->
+        <!-- Stats Grid -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 mb-8">
-            <!-- Conduct Card -->
-            <div class="stat-card glass-card rounded-2xl p-6 border border-white/60 shadow-sm hover:shadow-lg hover:shadow-orange-100/50 transition-all duration-300 hover:-translate-y-1.5 cursor-pointer group animate-fade-in-up-1">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="stat-icon w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 shadow-sm"
-                         style="background: linear-gradient(135deg, #fed7aa, #fdba74); color: #c2410c;">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <!-- Conduct Score -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition-shadow duration-200 animate-fade-in-1">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                         </svg>
                     </div>
-                    <div class="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
-                    </div>
+                    <span class="text-xs font-semibold text-slate-400">/ 100</span>
                 </div>
-                <p class="text-slate-500 text-xs font-semibold mb-1">ความประพฤติ</p>
-                <h4 class="stat-value text-2xl md:text-3xl font-black text-slate-800 transition-transform duration-300">{{ $student->total_conduct_score }}</h4>
-                <div class="mt-2 h-1.5 bg-orange-100 rounded-full overflow-hidden">
-                    <div class="h-full rounded-full transition-all duration-1000" style="width: {{ min(($student->total_conduct_score / 100) * 100, 100) }}%; background: linear-gradient(90deg, #fb923c, #f97316);"></div>
+                <p class="text-xs font-semibold text-slate-500 mb-0.5">คะแนนความประพฤติ</p>
+                <h4 class="text-2xl font-bold text-slate-800">{{ $student->total_conduct_score }}</h4>
+                <div class="mt-3 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                    <div class="h-full rounded-full bg-amber-500 transition-all duration-700" style="width: {{ min(($student->total_conduct_score / 100) * 100, 100) }}%"></div>
                 </div>
             </div>
 
-            <!-- GPA Card -->
-            <div class="stat-card glass-card rounded-2xl p-6 border border-white/60 shadow-sm hover:shadow-lg hover:shadow-emerald-100/50 transition-all duration-300 hover:-translate-y-1.5 cursor-pointer group animate-fade-in-up-2">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="stat-icon w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 shadow-sm"
-                         style="background: linear-gradient(135deg, #a7f3d0, #6ee7b7); color: #047857;">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <!-- GPA -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition-shadow duration-200 animate-fade-in-2">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138z">
-                            </path>
+                                d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138z"></path>
                         </svg>
                     </div>
-                    <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
-                    </div>
+                    <span class="text-xs font-semibold text-slate-400">/ 4.00</span>
                 </div>
-                <p class="text-slate-500 text-xs font-semibold mb-1">GPA ล่าสุด</p>
-                <h4 class="stat-value text-2xl md:text-3xl font-black text-slate-800 transition-transform duration-300">
-                    {{ number_format($student->gpa_y1_t2 ?? $student->gpa_y1_t1, 2) }}
-                </h4>
-                <div class="mt-2 h-1.5 bg-emerald-100 rounded-full overflow-hidden">
-                    <div class="h-full rounded-full transition-all duration-1000" style="width: {{ min((($student->gpa_y1_t2 ?? $student->gpa_y1_t1) / 4) * 100, 100) }}%; background: linear-gradient(90deg, #34d399, #10b981);"></div>
+                <p class="text-xs font-semibold text-slate-500 mb-0.5">GPA ล่าสุด</p>
+                <h4 class="text-2xl font-bold text-slate-800">{{ number_format($student->gpa_y1_t2 ?? $student->gpa_y1_t1, 2) }}</h4>
+                <div class="mt-3 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                    <div class="h-full rounded-full bg-emerald-500 transition-all duration-700" style="width: {{ min((($student->gpa_y1_t2 ?? $student->gpa_y1_t1) / 4) * 100, 100) }}%"></div>
                 </div>
             </div>
 
-            <!-- Fiscal Year Card -->
-            <div class="stat-card glass-card rounded-2xl p-6 border border-white/60 shadow-sm hover:shadow-lg hover:shadow-blue-100/50 transition-all duration-300 hover:-translate-y-1.5 cursor-pointer group animate-fade-in-up-3">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="stat-icon w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 shadow-sm"
-                         style="background: linear-gradient(135deg, #bfdbfe, #93c5fd); color: #1d4ed8;">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <!-- Fiscal Year -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition-shadow duration-200 animate-fade-in-3">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
                     </div>
-                    <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
-                    </div>
                 </div>
-                <p class="text-slate-500 text-xs font-semibold mb-1">พุทธศักราช</p>
-                <h4 class="stat-value text-2xl md:text-3xl font-black text-slate-800 transition-transform duration-300">{{ $student->fiscal_year }}</h4>
-                <div class="mt-2 flex gap-1">
-                    <div class="h-1.5 flex-1 rounded-full" style="background: linear-gradient(90deg, #60a5fa, #3b82f6);"></div>
-                    <div class="h-1.5 flex-1 rounded-full bg-blue-100"></div>
-                </div>
+                <p class="text-xs font-semibold text-slate-500 mb-0.5">ปีการศึกษา</p>
+                <h4 class="text-2xl font-bold text-slate-800">{{ $student->fiscal_year }}</h4>
+                <p class="text-xs text-slate-400 mt-2 font-medium">พุทธศักราช</p>
             </div>
 
-            <!-- Batch Card -->
-            <div class="stat-card glass-card rounded-2xl p-6 border border-white/60 shadow-sm hover:shadow-lg hover:shadow-violet-100/50 transition-all duration-300 hover:-translate-y-1.5 cursor-pointer group animate-fade-in-up-4">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="stat-icon w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 shadow-sm"
-                         style="background: linear-gradient(135deg, #ddd6fe, #c4b5fd); color: #6d28d9;">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <!-- Batch -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition-shadow duration-200 animate-fade-in-4">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
-                            </path>
-                        </svg>
-                    </div>
-                    <div class="w-8 h-8 rounded-lg bg-violet-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <svg class="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
                         </svg>
                     </div>
                 </div>
-                <p class="text-slate-500 text-xs font-semibold mb-1">รุ่น / Batch</p>
-                <h4 class="stat-value text-2xl md:text-3xl font-black text-slate-800 transition-transform duration-300">{{ $student->batch }}</h4>
-                <div class="mt-2 flex gap-1">
-                    <div class="h-1.5 w-8 rounded-full" style="background: linear-gradient(90deg, #a78bfa, #8b5cf6);"></div>
-                    <div class="h-1.5 w-5 rounded-full bg-violet-200"></div>
-                    <div class="h-1.5 w-3 rounded-full bg-violet-100"></div>
-                </div>
+                <p class="text-xs font-semibold text-slate-500 mb-0.5">รุ่นที่</p>
+                <h4 class="text-2xl font-bold text-slate-800">{{ $student->batch }}</h4>
+                <p class="text-xs text-slate-400 mt-2 font-medium">Batch</p>
             </div>
         </div>
 
         <!-- Main Content Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-            <!-- My Classes -->
-            <div class="lg:col-span-2 animate-fade-in-up-3">
-                <div class="glass-card-strong rounded-2xl border border-white/60 shadow-sm overflow-hidden h-full">
-                    <div class="p-6 pb-4 flex justify-between items-center border-b border-slate-100/60">
+            <!-- Today's Schedule -->
+            <div class="lg:col-span-2 animate-fade-in-3">
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden h-full">
+                    <div class="px-6 py-5 flex justify-between items-center border-b border-slate-100">
                         <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-lg flex items-center justify-center shadow-sm"
-                                 style="background: linear-gradient(135deg, #bfdbfe, #93c5fd); color: #1d4ed8;">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                                 </svg>
                             </div>
-                            <h3 class="text-lg font-black text-slate-800">ตารางเรียนวันนี้</h3>
+                            <div>
+                                <h3 class="text-base font-bold text-slate-800">ตารางเรียนวันนี้</h3>
+                                <p class="text-xs text-slate-400 font-medium">{{ now()->locale('th')->translatedFormat('l d F Y') }}</p>
+                            </div>
                         </div>
                         <a href="{{ route('student.timetable') }}"
-                            class="inline-flex items-center gap-1.5 text-blue-600 text-sm font-bold hover:text-blue-700 transition-colors cursor-pointer group/link">
+                            class="inline-flex items-center gap-1.5 text-blue-600 text-sm font-semibold hover:text-blue-700 transition-colors">
                             ดูทั้งหมด
-                            <svg class="w-4 h-4 transition-transform group-hover/link:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                             </svg>
                         </a>
                     </div>
-                    <div class="p-4 space-y-2">
+                    <div class="p-4">
                         @php
-                            // Mock classes for now since we don't have a specific today structure yet
-                            // This would ideally fetch from a more complex Timetable model
                             $courses = $student->course ? $student->course->subjects->take(3) : [];
                         @endphp
 
                         @forelse($courses as $index => $subject)
-                            <div class="flex items-center gap-5 p-4 rounded-xl hover:bg-white/60 transition-all duration-200 border border-transparent hover:border-slate-100/80 hover:shadow-sm group cursor-pointer">
-                                <div class="w-14 h-14 rounded-xl flex flex-col items-center justify-center text-white font-black group-hover:scale-105 transition-transform duration-200 shadow-sm shrink-0"
-                                     style="background: linear-gradient(135deg, {{ ['#3b82f6, #2563eb', '#8b5cf6, #7c3aed', '#ec4899, #db2777'][$index % 3] }});">
-                                    <span class="text-[9px] opacity-70 uppercase tracking-wider">Code</span>
-                                    <span class="text-sm tracking-tight leading-none">{{ substr($subject->subject_code, 0, 3) }}</span>
+                            <div class="flex items-center gap-4 p-4 rounded-xl hover:bg-slate-50 transition-colors duration-150 border border-transparent hover:border-slate-100 {{ !$loop->last ? 'mb-1' : '' }}">
+                                <!-- Subject Code Badge -->
+                                <div class="w-12 h-12 rounded-xl flex flex-col items-center justify-center text-white font-bold shrink-0
+                                    {{ ['bg-blue-600', 'bg-indigo-600', 'bg-slate-700'][$index % 3] }}">
+                                    <span class="text-[9px] opacity-70 uppercase tracking-wider leading-none">Code</span>
+                                    <span class="text-sm tracking-tight leading-none mt-0.5">{{ substr($subject->subject_code, 0, 3) }}</span>
                                 </div>
+                                <!-- Subject Info -->
                                 <div class="flex-1 min-w-0">
-                                    <h5 class="font-bold text-slate-800 text-sm truncate">{{ $subject->subject_name_th }}</h5>
+                                    <h5 class="font-semibold text-slate-800 text-sm truncate">{{ $subject->subject_name_th }}</h5>
                                     <p class="text-xs text-slate-400 font-medium mt-0.5 flex items-center gap-1.5">
                                         <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                         </svg>
-                                        ห้องเรียน 402 • 09:00 - 11:00 น.
+                                        {{ $subject->subject_code }}
                                     </p>
                                 </div>
-                                <div class="text-right shrink-0">
-                                    <span class="inline-flex items-center px-3 py-1 rounded-lg text-[11px] font-bold border"
-                                          style="background: linear-gradient(135deg, rgba(99,102,241,0.05), rgba(139,92,246,0.05)); border-color: rgba(139,92,246,0.12); color: #6d28d9;">
+                                <!-- Credits -->
+                                <div class="shrink-0">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600">
                                         {{ $subject->credits }} หน่วยกิต
                                     </span>
                                 </div>
                             </div>
                         @empty
                             <div class="py-16 text-center">
-                                <div class="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center" style="background: linear-gradient(135deg, #ede9fe, #ddd6fe);">
-                                    <svg class="w-8 h-8 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-slate-100 flex items-center justify-center">
+                                    <svg class="w-7 h-7 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                                     </svg>
                                 </div>
-                                <p class="text-slate-400 font-medium text-sm">ไม่มีตารางเรียนในวันนี้</p>
-                                <p class="text-slate-300 text-xs mt-1">พักผ่อนให้เต็มที่นะ</p>
+                                <p class="text-slate-500 font-medium text-sm">ไม่มีตารางเรียนในวันนี้</p>
+                                <p class="text-slate-400 text-xs mt-1">ดูตารางเรียนทั้งหมดได้ที่หน้าตารางเรียน</p>
                             </div>
                         @endforelse
                     </div>
@@ -290,31 +230,30 @@
             </div>
 
             <!-- Recent Conduct -->
-            <div class="lg:col-span-1 animate-fade-in-up-4">
-                <div class="glass-card-strong rounded-2xl border border-white/60 shadow-sm h-full flex flex-col">
-                    <div class="p-6 pb-4 border-b border-slate-100/60">
+            <div class="lg:col-span-1 animate-fade-in-4">
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm h-full flex flex-col">
+                    <div class="px-6 py-5 border-b border-slate-100">
                         <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-lg flex items-center justify-center shadow-sm"
-                                 style="background: linear-gradient(135deg, #fed7aa, #fdba74); color: #c2410c;">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="w-9 h-9 rounded-lg bg-amber-50 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                                 </svg>
                             </div>
-                            <h3 class="text-lg font-black text-slate-800">ความประพฤติล่าสุด</h3>
+                            <h3 class="text-base font-bold text-slate-800">ประวัติความประพฤติ</h3>
                         </div>
                     </div>
-                    <div class="p-5 flex-1 space-y-4 overflow-y-auto max-h-[380px]">
+                    <div class="p-4 flex-1 space-y-1 overflow-y-auto max-h-[360px]">
                         @forelse($student->conductScores()->latest()->take(5)->get() as $score)
-                            <div class="flex items-start gap-3.5 p-3 rounded-xl hover:bg-white/50 transition-all duration-200 cursor-pointer">
+                            <div class="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors duration-150">
                                 <div class="mt-0.5 shrink-0">
                                     @if($score->score > 0)
-                                        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #d1fae5, #a7f3d0);">
+                                        <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center">
                                             <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
                                             </svg>
                                         </div>
                                     @else
-                                        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #fee2e2, #fecaca);">
+                                        <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center">
                                             <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
                                             </svg>
@@ -323,34 +262,30 @@
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <div class="flex justify-between items-start gap-2">
-                                        <h5 class="text-sm font-bold text-slate-700 truncate">{{ $score->description }}</h5>
-                                        <span class="text-xs font-black shrink-0 px-2 py-0.5 rounded-md {{ $score->score > 0 ? 'text-emerald-700 bg-emerald-50' : 'text-red-600 bg-red-50' }}">
+                                        <h5 class="text-sm font-semibold text-slate-700 truncate">{{ $score->description }}</h5>
+                                        <span class="text-xs font-bold shrink-0 px-2 py-0.5 rounded-md {{ $score->score > 0 ? 'text-emerald-700 bg-emerald-50' : 'text-red-600 bg-red-50' }}">
                                             {{ $score->score > 0 ? '+' : '' }}{{ $score->score }}
                                         </span>
                                     </div>
-                                    <p class="text-[11px] text-slate-400 font-medium mt-1">
+                                    <p class="text-xs text-slate-400 font-medium mt-1">
                                         {{ $score->created_at->format('d M Y') }}
                                     </p>
                                 </div>
                             </div>
                         @empty
                             <div class="h-full flex flex-col items-center justify-center py-12">
-                                <div class="w-14 h-14 mx-auto mb-3 rounded-2xl flex items-center justify-center" style="background: linear-gradient(135deg, #fef3c7, #fde68a);">
-                                    <svg class="w-7 h-7 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-slate-100 flex items-center justify-center">
+                                    <svg class="w-7 h-7 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                                     </svg>
                                 </div>
-                                <p class="text-slate-400 font-medium text-sm">ยังไม่มีประวัติความประพฤติ</p>
+                                <p class="text-slate-500 font-medium text-sm">ยังไม่มีประวัติความประพฤติ</p>
                             </div>
                         @endforelse
                     </div>
-                    <div class="p-4 border-t border-slate-100/60">
+                    <div class="p-4 border-t border-slate-100">
                         <a href="{{ route('student.conduct') }}"
-                            class="flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-sm transition-all duration-200 cursor-pointer text-violet-600 hover:text-white hover:shadow-md"
-                            style="background: linear-gradient(135deg, rgba(139,92,246,0.08), rgba(99,102,241,0.08));"
-                            onmouseover="this.style.background='linear-gradient(135deg, #8b5cf6, #6366f1)'"
-                            onmouseout="this.style.background='linear-gradient(135deg, rgba(139,92,246,0.08), rgba(99,102,241,0.08))'; this.style.color='#7c3aed'"
-                        >
+                            class="flex items-center justify-center gap-2 py-2.5 rounded-xl font-semibold text-sm text-blue-600 bg-blue-50 hover:bg-blue-100 transition-colors duration-150">
                             ดูประวัติทั้งหมด
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
@@ -361,72 +296,127 @@
             </div>
         </div>
 
+        <!-- Quick Navigation -->
+        <div class="mb-8 animate-fade-in-4">
+            <h3 class="text-base font-bold text-slate-800 mb-4">เมนูลัด</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                <a href="{{ route('student.grades') }}" class="group bg-white rounded-2xl border border-slate-200 p-5 text-center shadow-sm hover:shadow-md hover:border-blue-200 transition-all duration-200">
+                    <div class="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center mx-auto mb-3 group-hover:bg-blue-100 transition-colors">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                    <p class="text-sm font-semibold text-slate-700 group-hover:text-blue-700">ผลการเรียน</p>
+                </a>
+                <a href="{{ route('student.timetable') }}" class="group bg-white rounded-2xl border border-slate-200 p-5 text-center shadow-sm hover:shadow-md hover:border-indigo-200 transition-all duration-200">
+                    <div class="w-11 h-11 rounded-xl bg-indigo-50 flex items-center justify-center mx-auto mb-3 group-hover:bg-indigo-100 transition-colors">
+                        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <p class="text-sm font-semibold text-slate-700 group-hover:text-indigo-700">ตารางเรียน</p>
+                </a>
+                <a href="{{ route('student.conduct') }}" class="group bg-white rounded-2xl border border-slate-200 p-5 text-center shadow-sm hover:shadow-md hover:border-amber-200 transition-all duration-200">
+                    <div class="w-11 h-11 rounded-xl bg-amber-50 flex items-center justify-center mx-auto mb-3 group-hover:bg-amber-100 transition-colors">
+                        <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                    </div>
+                    <p class="text-sm font-semibold text-slate-700 group-hover:text-amber-700">ความประพฤติ</p>
+                </a>
+                <a href="{{ route('student.surveys') }}" class="group bg-white rounded-2xl border border-slate-200 p-5 text-center shadow-sm hover:shadow-md hover:border-emerald-200 transition-all duration-200">
+                    <div class="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center mx-auto mb-3 group-hover:bg-emerald-100 transition-colors">
+                        <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                        </svg>
+                    </div>
+                    <p class="text-sm font-semibold text-slate-700 group-hover:text-emerald-700">แบบสอบถาม</p>
+                </a>
+                <a href="{{ route('student.documents') }}" class="group bg-white rounded-2xl border border-slate-200 p-5 text-center shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-200">
+                    <div class="w-11 h-11 rounded-xl bg-slate-100 flex items-center justify-center mx-auto mb-3 group-hover:bg-slate-200 transition-colors">
+                        <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <p class="text-sm font-semibold text-slate-700 group-hover:text-slate-900">เอกสาร</p>
+                </a>
+                <a href="{{ route('student.profile') }}" class="group bg-white rounded-2xl border border-slate-200 p-5 text-center shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-200">
+                    <div class="w-11 h-11 rounded-xl bg-slate-100 flex items-center justify-center mx-auto mb-3 group-hover:bg-slate-200 transition-colors">
+                        <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                    </div>
+                    <p class="text-sm font-semibold text-slate-700 group-hover:text-slate-900">โปรไฟล์</p>
+                </a>
+            </div>
+        </div>
+
         <!-- Recent Documents -->
-        <div class="animate-fade-in-up-4">
-            <div class="glass-card-strong rounded-2xl border border-white/60 shadow-sm overflow-hidden">
-                <div class="p-6 pb-4 flex justify-between items-center border-b border-slate-100/60">
+        <div class="animate-fade-in-4">
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="px-6 py-5 flex justify-between items-center border-b border-slate-100">
                     <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-lg flex items-center justify-center shadow-sm"
-                             style="background: linear-gradient(135deg, #e0e7ff, #c7d2fe); color: #4338ca;">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
                         </div>
-                        <h3 class="text-lg font-black text-slate-800">เอกสารเผยแพร่ล่าสุด</h3>
+                        <div>
+                            <h3 class="text-base font-bold text-slate-800">เอกสารเผยแพร่ล่าสุด</h3>
+                            <p class="text-xs text-slate-400 font-medium">เอกสารที่สถาบันเผยแพร่ให้นักเรียน</p>
+                        </div>
                     </div>
                     <a href="{{ route('student.documents') }}"
-                        class="inline-flex items-center gap-1.5 text-indigo-600 text-sm font-bold hover:text-indigo-700 transition-colors cursor-pointer group/link">
-                        คลังเอกสารทั้งหมด
-                        <svg class="w-4 h-4 transition-transform group-hover/link:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        class="inline-flex items-center gap-1.5 text-blue-600 text-sm font-semibold hover:text-blue-700 transition-colors">
+                        ดูทั้งหมด
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
                     </a>
                 </div>
-                <div class="p-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    @forelse($recentDocuments as $index => $doc)
-                        <div class="group relative p-4 rounded-xl border border-slate-100/60 hover:border-indigo-200/60 hover:bg-white/60 hover:shadow-md hover:shadow-indigo-50/50 transition-all duration-300 cursor-pointer">
-                            <div class="flex items-start gap-3.5">
-                                <div class="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 shadow-sm"
-                                     style="background: linear-gradient(135deg, {{ ['#dbeafe, #bfdbfe', '#e0e7ff, #c7d2fe', '#ede9fe, #ddd6fe', '#fce7f3, #fbcfe8'][$index % 4] }});">
-                                    @if($doc->file_type == 'PDF')
-                                        <svg class="w-5 h-5 {{ ['text-blue-600', 'text-indigo-600', 'text-violet-600', 'text-pink-600'][$index % 4] }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z">
-                                            </path>
-                                        </svg>
-                                    @else
-                                        <svg class="w-5 h-5 {{ ['text-blue-600', 'text-indigo-600', 'text-violet-600', 'text-pink-600'][$index % 4] }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                                            </path>
-                                        </svg>
-                                    @endif
+                <div class="p-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        @forelse($recentDocuments as $index => $doc)
+                            <div class="group relative p-4 rounded-xl border border-slate-100 hover:border-blue-200 hover:bg-blue-50/30 hover:shadow-sm transition-all duration-200">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 {{ ['bg-red-50', 'bg-blue-50', 'bg-indigo-50', 'bg-slate-100'][$index % 4] }}">
+                                        @if($doc->file_type == 'PDF')
+                                            <svg class="w-5 h-5 {{ ['text-red-500', 'text-blue-500', 'text-indigo-500', 'text-slate-500'][$index % 4] }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                            </svg>
+                                        @else
+                                            <svg class="w-5 h-5 {{ ['text-red-500', 'text-blue-500', 'text-indigo-500', 'text-slate-500'][$index % 4] }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                            </svg>
+                                        @endif
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <h5 class="text-sm font-semibold text-slate-700 truncate group-hover:text-blue-700 transition-colors duration-150">
+                                            {{ $doc->title }}</h5>
+                                        <p class="text-xs text-slate-400 font-medium mt-1">{{ $doc->file_size }}</p>
+                                    </div>
                                 </div>
-                                <div class="flex-1 min-w-0">
-                                    <h5 class="text-sm font-bold text-slate-700 truncate group-hover:text-indigo-600 transition-colors duration-200">
-                                        {{ $doc->title }}</h5>
-                                    <p class="text-[11px] text-slate-400 font-semibold mt-1">
-                                        {{ $doc->file_size }}</p>
+                                <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank"
+                                    class="absolute top-3 right-3 w-8 h-8 rounded-lg flex items-center justify-center text-slate-300 hover:text-blue-600 hover:bg-blue-50 transition-all duration-150 opacity-0 group-hover:opacity-100">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        @empty
+                            <div class="col-span-full py-12 text-center">
+                                <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-slate-100 flex items-center justify-center">
+                                    <svg class="w-7 h-7 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
                                 </div>
+                                <p class="text-slate-500 font-medium text-sm">ยังไม่มีเอกสารในขณะนี้</p>
                             </div>
-                            <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank"
-                                class="absolute top-3 right-3 w-8 h-8 rounded-lg flex items-center justify-center text-slate-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-200 opacity-0 group-hover:opacity-100 cursor-pointer">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                                </svg>
-                            </a>
-                        </div>
-                    @empty
-                        <div class="col-span-full py-12 text-center">
-                            <div class="w-14 h-14 mx-auto mb-3 rounded-2xl flex items-center justify-center" style="background: linear-gradient(135deg, #e0e7ff, #c7d2fe);">
-                                <svg class="w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                </svg>
-                            </div>
-                            <p class="text-slate-400 font-medium text-sm">ยังไม่มีเอกสารใหม่ในขณะนี้</p>
-                        </div>
-                    @endforelse
+                        @endforelse
+                    </div>
                 </div>
             </div>
         </div>

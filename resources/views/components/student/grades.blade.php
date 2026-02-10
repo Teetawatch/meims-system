@@ -41,32 +41,56 @@
                     </thead>
                     <tbody class="divide-y divide-slate-50">
                         @php
-                            $course_subjects = $student->course ? $student->course->subjects : [];
+                            $studentGrades = \App\Models\Grade::where('student_id', $student->id)
+                                ->with('subject')
+                                ->latest()
+                                ->get();
                         @endphp
 
-                        @forelse($course_subjects as $subject)
+                        @forelse($studentGrades as $gradeRecord)
                             <tr class="group hover:bg-slate-50/50 transition-all">
                                 <td class="px-8 py-6">
-                                    <span class="font-black text-slate-700">{{ $subject->subject_code }}</span>
+                                    <span class="font-black text-slate-700">{{ $gradeRecord->subject->subject_code }}</span>
                                 </td>
                                 <td class="px-8 py-6">
-                                    <div class="font-bold text-slate-800">{{ $subject->subject_name_th }}</div>
+                                    <div class="font-bold text-slate-800">{{ $gradeRecord->subject->subject_name_th }}</div>
                                     <div class="text-[10px] text-slate-400 font-medium capitalize">
-                                        {{ $subject->subject_name_en }}</div>
+                                        {{ $gradeRecord->subject->subject_name_en }}</div>
                                 </td>
                                 <td class="px-8 py-6 text-center">
                                     <span
                                         class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-600 ring-1 ring-slate-400/10">
-                                        {{ $subject->credits }}
+                                        {{ $gradeRecord->subject->credits }}
                                     </span>
                                 </td>
                                 <td class="px-8 py-6 text-center">
-                                    <span class="text-lg font-black text-blue-600">
-                                        {{ ['A', 'B+', 'B', 'C+', 'C', 'D+', 'D'][rand(0, 6)] }}
-                                    </span>
+                                    @if($gradeRecord->grade !== null)
+                                        @php
+                                            $gVal = floatval($gradeRecord->grade);
+                                            $gradeColor = match(true) {
+                                                $gVal >= 3 => 'text-emerald-600',
+                                                $gVal >= 2 => 'text-blue-600',
+                                                $gVal >= 1 => 'text-amber-600',
+                                                default => 'text-red-500',
+                                            };
+                                        @endphp
+                                        <span class="text-lg font-black {{ $gradeColor }}">
+                                            {{ $gradeRecord->grade }}
+                                        </span>
+                                    @else
+                                        <span class="text-sm text-slate-300 font-medium">-</span>
+                                    @endif
                                 </td>
                                 <td class="px-8 py-6 text-right">
-                                    <span class="text-xs text-slate-400 font-medium italic">ผ่าน</span>
+                                    @if($gradeRecord->grade !== null)
+                                        @if(floatval($gradeRecord->grade) >= 1)
+                                            <span class="text-xs text-emerald-500 font-semibold">ผ่าน</span>
+                                        @else
+                                            <span class="text-xs text-red-500 font-semibold">ไม่ผ่าน</span>
+                                        @endif
+                                    @else
+                                        <span class="text-xs text-slate-300 font-medium italic">รอผล</span>
+                                    @endif
                                 </td>
                             </tr>
                         @empty
