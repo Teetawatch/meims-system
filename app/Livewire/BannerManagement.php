@@ -24,7 +24,10 @@ class BannerManagement extends Component
     public $existingImage;
     public $is_active = true;
 
-    protected $listeners = ['refresh' => '$refresh'];
+    protected $listeners = [
+        'refresh' => '$refresh',
+        'delete' => 'delete'
+    ];
 
     public function render()
     {
@@ -118,13 +121,24 @@ class BannerManagement extends Component
 
     public function delete($id)
     {
-        $banner = Banner::find($id['id']);
+        // รองรับทั้งการส่งมาแบบ id ตัวเดียว หรือแบบ array ['id' => value]
+        $targetId = is_array($id) ? ($id['id'] ?? null) : $id;
+        
+        if (!$targetId) return;
+
+        $banner = Banner::find($targetId);
         if ($banner) {
             if ($banner->image_path) {
                 // ตรวจสอบและลบ prefix 'banners/' หากมี (จากข้อมูลเก่า)
                 $cleanPath = str_replace('banners/', '', $banner->image_path);
-                if (Storage::disk('banners')->exists($cleanPath)) {
-                    Storage::disk('banners')->delete($cleanPath);
+                
+                // ลองลบไฟล์ (ถ้าลบไม่ได้อาจเป็นเรื่อง permission แต่จะไม่หยุดการทำงาน)
+                try {
+                    if (Storage::disk('banners')->exists($cleanPath)) {
+                        Storage::disk('banners')->delete($cleanPath);
+                    }
+                } catch (\Exception $e) {
+                    // Log error if needed: \Log::error($e->getMessage());
                 }
             }
             $banner->delete();
@@ -138,6 +152,7 @@ class BannerManagement extends Component
         
         $this->dispatch('refresh');
     }
+
 
     public function toggleStatus($id)
     {
