@@ -81,7 +81,8 @@ class BannerManagement extends Component
         ];
 
         if ($this->image) {
-            $path = $this->image->store('/', 'banners');
+            // ใช้ store('', 'banners') เพื่อเก็บไฟล์ที่ root ของ disk โดยไม่เพิ่มโฟลเดอร์ซ้ำ
+            $path = $this->image->store('', 'banners');
             $data['image_path'] = $path;
         }
 
@@ -118,16 +119,24 @@ class BannerManagement extends Component
     public function delete($id)
     {
         $banner = Banner::find($id['id']);
-        if ($banner->image_path) {
-            Storage::disk('banners')->delete($banner->image_path);
+        if ($banner) {
+            if ($banner->image_path) {
+                // ตรวจสอบและลบ prefix 'banners/' หากมี (จากข้อมูลเก่า)
+                $cleanPath = str_replace('banners/', '', $banner->image_path);
+                if (Storage::disk('banners')->exists($cleanPath)) {
+                    Storage::disk('banners')->delete($cleanPath);
+                }
+            }
+            $banner->delete();
         }
-        $banner->delete();
         
         $this->dispatch('swal:modal', [
             'type' => 'success',
             'title' => 'สำเร็จ',
             'text' => 'ลบแบนเนอร์เรียบร้อยแล้ว'
         ]);
+        
+        $this->dispatch('refresh');
     }
 
     public function toggleStatus($id)
