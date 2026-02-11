@@ -1,27 +1,34 @@
 <div class="w-full h-full flex flex-col bg-white">
     <!-- Profile Section -->
+@php
+    $student = auth('student')->user();
+@endphp
+
+@if($student)
     <div class="p-8 pb-6 text-center border-b border-slate-50">
         <div class="relative inline-block mx-auto mb-4 group">
             <div
                 class="w-24 h-24 rounded-3xl overflow-hidden ring-4 ring-blue-50 group-hover:ring-blue-100 transition-all shadow-xl">
-                @if(auth('student')->user()->photo_path)
-                    <img src="{{ asset('storage/' . auth('student')->user()->photo_path) }}" alt="Profile"
+                @if($student->photo_path)
+                    <img src="{{ asset('images/students/' . $student->photo_path) }}" alt="Profile"
                         class="w-full h-full object-cover">
                 @else
                     <div class="w-full h-full bg-blue-600 flex items-center justify-center text-white text-3xl font-black">
-                        {{ mb_substr(auth('student')->user()->first_name_th, 0, 1) }}
+                        {{ mb_substr($student->first_name_th, 0, 1) }}
                     </div>
                 @endif
             </div>
             <div class="absolute -bottom-1 -right-1 w-7 h-7 bg-green-500 border-4 border-white rounded-full"></div>
         </div>
-        <h3 class="font-bold text-slate-800 text-lg line-clamp-1">{{ auth('student')->user()->first_name_th }}
-            {{ auth('student')->user()->last_name_th }}
+        <h3 class="font-bold text-slate-800 text-lg line-clamp-1">{{ $student->first_name_th }}
+            {{ $student->last_name_th }}
         </h3>
         <p class="text-blue-600 text-xs font-bold mt-1 bg-blue-50 px-3 py-1 rounded-full inline-block">
-            {{ auth('student')->user()->student_id }}
+            {{ $student->student_id }}
         </p>
     </div>
+@endif
+
 
     <!-- Navigation -->
     <nav class="flex-1 px-4 py-8 space-y-2 overflow-y-auto custom-scrollbar">
@@ -61,22 +68,3 @@
         </div>
     </nav>
 </div>
-
-<script>
-    function confirmLogout() {
-        Swal.fire({
-            title: 'ต้องการออกจากระบบ?',
-            text: "คุณจะถูกนำกลับเข้าสู่หน้าเข้าสู่ระบบ",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#ef4444',
-            cancelButtonColor: '#94a3b8',
-            confirmButtonText: 'ยืนยันออกจากระบบ',
-            cancelButtonText: 'ยกเลิก'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = "{{ route('student.logout') }}";
-            }
-        })
-    }
-</script>

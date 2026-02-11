@@ -1,5 +1,4 @@
-<div class="min-h-screen flex bg-slate-50 font-['Outfit','Anuphan']">
-
+<div class="p-6 md:p-8 lg:p-10">
     <style>
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(12px); }
@@ -12,32 +11,7 @@
         .animate-fade-in-4 { animation: fadeIn 0.5s ease-out 0.32s both; }
     </style>
 
-    <!-- Sidebar -->
-    <aside class="w-72 shrink-0 bg-white border-r border-slate-100 flex flex-col fixed inset-y-0 left-0 z-40 hidden lg:flex">
-        <x-student-sidebar />
-    </aside>
 
-    <main class="flex-1 lg:ml-72 p-6 md:p-8 lg:p-10 overflow-y-auto relative">
-        <!-- Top Nav (Mobile Toggle & Notifications) -->
-        <div class="flex justify-between items-center mb-6 lg:mb-8 animate-fade-in">
-            <h2 class="text-xl font-bold text-slate-800 lg:hidden">MEIMS Student</h2>
-            <div class="ml-auto flex items-center gap-4">
-                <livewire:notification-dropdown />
-                
-                <div class="h-8 w-px bg-slate-200"></div>
-                
-                <div class="relative group">
-                    <button class="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
-                        <span>บัญชีผู้ใช้</span>
-                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </button>
-                    <!-- Dropdown -->
-                    <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform origin-top-right z-50">
-                        <a href="{{ route('student.logout') }}" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">ออกจากระบบ</a>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- Hero Banner Slider -->
         @if($banners->count() > 0)
@@ -486,5 +460,4 @@
                 </div>
             </div>
         </div>
-    </main>
 </div>

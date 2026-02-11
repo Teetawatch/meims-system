@@ -1,9 +1,5 @@
-<div class="min-h-screen flex bg-slate-50">
-    <!-- Sidebar Container -->
-    <aside class="w-72 shrink-0 bg-white border-r border-slate-100 flex flex-col fixed inset-y-0 left-0 z-40 hidden lg:flex">
-        <x-student-sidebar />
-    </aside>
-    <main class="flex-1 lg:ml-72 p-8 md:p-12 overflow-y-auto">
+<div class="p-8 md:p-12">
+
         <div class="max-w-3xl mx-auto">
             <header class="mb-10">
                 <a href="{{ route('student.evaluation') }}"
@@ -84,5 +80,4 @@
                 </div>
             </div>
         </div>
-    </main>
 </div>
