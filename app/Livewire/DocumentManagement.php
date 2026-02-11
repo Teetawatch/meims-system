@@ -91,11 +91,11 @@ class DocumentManagement extends Component
         if ($this->file) {
             // Delete old file if editing
             if ($this->isEditMode && $this->existingFilePath) {
-                Storage::disk('public')->delete($this->existingFilePath);
+                Storage::disk('public_docs')->delete($this->existingFilePath);
             }
 
             // Store new file
-            $filePath = $this->file->store('documents', 'public');
+            $filePath = $this->file->store('/', 'public_docs');
             $fileType = strtoupper($this->file->getClientOriginalExtension());
             $size = $this->file->getSize();
 
@@ -153,7 +153,7 @@ class DocumentManagement extends Component
     {
         $document = Document::findOrFail($id);
         if ($document->file_path) {
-            Storage::disk('public')->delete($document->file_path);
+            Storage::disk('public_docs')->delete($document->file_path);
         }
         $document->delete();
 

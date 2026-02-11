@@ -11,12 +11,21 @@ class Documents extends Component
     public function render()
     {
         $student = Auth::guard('student')->user();
+        $courseId = $student->course_id;
+
+        // Fallback: If course_id is null, try to find it by course_name (for imported data)
+        if (!$courseId && $student->course_name) {
+            $course = \App\Models\Course::where('course_name_th', $student->course_name)->first();
+            if ($course) {
+                $courseId = $course->id;
+            }
+        }
 
         // Fetch general documents and documents specific to the student's course
         $documents = Document::where('is_active', true)
-            ->where(function ($query) use ($student) {
+            ->where(function ($query) use ($courseId) {
                 $query->whereNull('course_id')
-                    ->orWhere('course_id', $student->course_id);
+                    ->orWhere('course_id', $courseId);
             })
             ->orderBy('category')
             ->orderBy('created_at', 'desc')
