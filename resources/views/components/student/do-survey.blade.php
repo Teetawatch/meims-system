@@ -28,8 +28,9 @@
                             <div class="grid grid-cols-5 gap-2 md:gap-4">
                                 @foreach(range(1, 5) as $score)
                                     <label class="cursor-pointer group">
-                                        <input type="radio" wire:model="answers.{{ $question->id }}" value="{{ $score }}"
+                                        <input type="radio" name="question_{{ $question->id }}" wire:model="answers.{{ $question->id }}" value="{{ $score }}"
                                             class="peer hidden">
+
                                         <div
                                             class="flex flex-col items-center justify-center p-4 rounded-xl border-2 border-slate-100 peer-checked:border-blue-500 peer-checked:bg-blue-50 hover:bg-slate-50 transition-all">
                                             <span
