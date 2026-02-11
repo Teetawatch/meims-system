@@ -80,6 +80,16 @@
                     <span class="font-bold text-sm">ประกาศข่าวสาร</span>
                 </a>
 
+                <a href="{{ route('banners.index') }}"
+                    class="flex items-center px-4 py-3 rounded-xl group transition-all {{ request()->routeIs('banners.index') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">
+                    <svg class="w-5 h-5 mr-3 {{ request()->routeIs('banners.index') ? '' : 'group-hover:text-blue-500 transition-colors' }}"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <span class="font-bold text-sm">จัดการ Hero Banner</span>
+                </a>
+
+
                 <a href="{{ route('courses.index') }}"
                     class="flex items-center px-4 py-3 rounded-xl group transition-all {{ request()->routeIs('courses.index') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">
                     <svg class="w-5 h-5 mr-3 {{ request()->routeIs('courses.index') ? '' : 'group-hover:text-pink-500 transition-colors' }}"

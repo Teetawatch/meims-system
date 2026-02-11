@@ -43,6 +43,8 @@ Route::get('/teachers', \App\Livewire\TeacherManagement::class)->name('teachers.
 Route::get('/reports/evaluations', \App\Livewire\EvaluationReport::class)->name('reports.evaluations')->middleware('auth');
 Route::get('/guardians', \App\Livewire\GuardianManagement::class)->name('guardians.index')->middleware('auth');
 Route::get('/announcements', \App\Livewire\AnnouncementManagement::class)->name('announcements.index')->middleware('auth');
+Route::get('/banners', \App\Livewire\BannerManagement::class)->name('banners.index')->middleware('auth');
+
 
 // Student Portal
 Route::get('/student/login', \App\Livewire\Student\Login::class)->name('student.login');

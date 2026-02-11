@@ -39,7 +39,73 @@
             </div>
         </div>
 
+        <!-- Hero Banner Slider -->
+        @if($banners->count() > 0)
+        <div class="mb-8 animate-fade-in" x-data="{ 
+            activeSlide: 0, 
+            slides: {{ $banners->count() }},
+            next() { this.activeSlide = (this.activeSlide + 1) % this.slides },
+            prev() { this.activeSlide = (this.activeSlide - 1 + this.slides) % this.slides },
+            init() {
+                setInterval(() => { this.next() }, 5000)
+            }
+        }">
+            <div class="relative h-[200px] md:h-[350px] bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-200">
+                <!-- Slides -->
+                @foreach($banners as $index => $banner)
+                <div x-show="activeSlide === {{ $index }}" 
+                     x-transition:enter="transition ease-out duration-700"
+                     x-transition:enter-start="opacity-0 transform scale-105"
+                     x-transition:enter-end="opacity-100 transform scale-100"
+                     x-transition:leave="transition ease-in duration-700"
+                     x-transition:leave-start="opacity-100 transform scale-100"
+                     x-transition:leave-end="opacity-0 transform scale-95"
+                     class="absolute inset-0"
+                     style="display: none;">
+                    <img src="{{ asset('storage/' . $banner->image_path) }}" class="w-full h-full object-cover">
+                    
+                    <!-- Overlay -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent flex flex-col justify-end p-6 md:p-10">
+                        <div class="max-w-2xl">
+                            @if($banner->title)
+                                <h2 class="text-white text-2xl md:text-4xl font-black mb-3 drop-shadow-lg leading-tight">{{ $banner->title }}</h2>
+                            @endif
+                            @if($banner->link_url)
+                                <a href="{{ $banner->link_url }}" target="_blank" 
+                                   class="inline-flex items-center gap-2 px-6 py-3 bg-white text-slate-900 rounded-xl font-bold hover:bg-blue-50 transition-all transform hover:scale-105 active:scale-95 shadow-lg">
+                                    รายละเอียดเพิ่มเติม
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7-7 7"></path></svg>
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+
+                <!-- Controls -->
+                @if($banners->count() > 1)
+                <button @click="prev()" class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-2xl hover:bg-white/20 transition-all group">
+                    <svg class="w-6 h-6 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <button @click="next()" class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-2xl hover:bg-white/20 transition-all group">
+                    <svg class="w-6 h-6 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+
+                <!-- Indicators -->
+                <div class="absolute bottom-6 left-6 flex gap-2.5">
+                    @foreach($banners as $index => $banner)
+                    <button @click="activeSlide = {{ $index }}" 
+                            :class="activeSlide === {{ $index }} ? 'bg-white w-10' : 'bg-white/40 w-2.5'"
+                            class="h-2.5 rounded-full transition-all duration-500"></button>
+                    @endforeach
+                </div>
+                @endif
+            </div>
+        </div>
+        @endif
+
         <!-- Header Section -->
+
         <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 md:p-8 mb-8 animate-fade-in-1">
             <div class="flex flex-col md:flex-row items-center gap-6">
                 <!-- Profile Photo -->
