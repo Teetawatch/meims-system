@@ -18,8 +18,11 @@ class Surveys extends Component
                 $query->whereDoesntHave('courses')
                     // OR surveys assigned to the student's course
                     ->orWhereHas('courses', function ($q) use ($student) {
-                        $q->where('courses.id', $student->course_id);
+                        $q->where('courses.id', $student->course_id)
+                          ->orWhere('courses.course_name_th', $student->course_name)
+                          ->orWhere('courses.course_code', $student->course_name);
                     });
+
             })
             ->latest()
             ->get();

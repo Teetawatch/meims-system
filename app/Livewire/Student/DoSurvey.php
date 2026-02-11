@@ -34,11 +34,18 @@ class DoSurvey extends Component
         $assignedCourses = $this->survey->courses;
         if ($assignedCourses->isNotEmpty()) {
             $studentCourseId = $this->student->course_id;
-            if (!$assignedCourses->contains('id', $studentCourseId)) {
+            $courseName = $this->student->course_name;
+            
+            $hasAccess = $assignedCourses->contains('id', $studentCourseId) || 
+                         $assignedCourses->contains('course_name_th', $courseName) ||
+                         $assignedCourses->contains('course_code', $courseName);
+
+            if (!$hasAccess) {
                 session()->flash('error', 'แบบสอบถามนี้ไม่ได้กำหนดให้หลักสูตรของคุณ');
                 return redirect()->route('student.surveys');
             }
         }
+
 
         // Initialize answers
         foreach ($this->survey->questions as $question) {
