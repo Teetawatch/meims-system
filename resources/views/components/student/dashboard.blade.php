@@ -46,7 +46,7 @@
                 <div class="relative shrink-0">
                     <div class="w-24 h-24 md:w-28 md:h-28 rounded-2xl overflow-hidden border-2 border-slate-200 shadow-sm">
                         @if($student->photo_path)
-                            <img src="{{ asset('storage/' . $student->photo_path) }}" alt="รูปโปรไฟล์"
+                            <img src="{{ asset('images/students/' . $student->photo_path) }}" alt="รูปโปรไฟล์"
                                 class="w-full h-full object-cover">
                         @else
                             <div class="w-full h-full flex items-center justify-center bg-slate-700 text-white text-3xl md:text-4xl font-bold">

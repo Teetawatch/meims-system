@@ -41,7 +41,7 @@
                     <div class="absolute top-0 left-0 w-full h-24 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
                     <div class="relative z-10">
                         @if($student->photo_path)
-                            <img src="{{ asset('storage/' . $student->photo_path) }}"
+                            <img src="{{ asset('images/students/' . $student->photo_path) }}"
                                 class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-md mx-auto mb-4">
                         @else
                             <div

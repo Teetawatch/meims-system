@@ -27,9 +27,13 @@
                 </button>
 
                 <!-- Import Button & Modal -->
-                <div x-data="{ showImportModal: false, uploading: false, progress: 0, fileName: null }">
+                <div x-data="{ showImportModal: false, uploading: false, progress: 0, fileName: null }"
+                     x-on:close-import-modal.window="showImportModal = false; fileName = null;"
+                     class="relative">
+                    
                     <!-- Trigger Button -->
-                    <button @click="showImportModal = true"
+                    <button @click="showImportModal = true; fileName = null;" 
+                        wire:click="$set('importFile', null)"
                         class="inline-flex items-center px-4 py-2 bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 text-sm font-medium rounded-xl transition-all shadow-sm">
                         <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -40,7 +44,7 @@
 
                     <!-- Modal Backdrop -->
                     <div x-show="showImportModal" x-transition.opacity
-                        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+                        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] flex items-center justify-center p-4"
                         style="display: none;">
                         
                         <!-- Modal Content -->
@@ -123,13 +127,22 @@
                                                         <span x-show="uploading" class="text-xs text-indigo-600 font-medium" x-text="`กำลังอัปโหลด... ${progress}%`"></span>
                                                         <span x-show="!uploading" class="text-xs text-green-600 font-medium">พร้อมนำเข้า</span>
                                                         
-                                                        <span x-show="!uploading" @click.prevent="fileName = null; document.getElementById('modalImportFile').value = '';" class="text-xs text-red-400 hover:text-red-600 cursor-pointer hover:underline">เปลี่ยนไฟล์</span>
+                                                        <span x-show="!uploading" 
+                                                              @click.prevent="fileName = null; document.getElementById('modalImportFile').value = '';" 
+                                                              wire:click="$set('importFile', null)"
+                                                              class="text-xs text-red-400 hover:text-red-600 cursor-pointer hover:underline">เปลี่ยนไฟล์</span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </label>
                                 </div>
+
+                                @error('importFile')
+                                    <div class="text-center p-2 bg-red-50 border border-red-100 rounded-xl text-red-600 text-xs font-bold animate-pulse">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
 
                                 <div class="bg-amber-50 border border-amber-100 rounded-xl p-4 flex gap-3">
                                     <div class="shrink-0 text-amber-500">
@@ -147,10 +160,13 @@
                             <!-- Footer -->
                             <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end space-x-3">
                                 <button @click="if(!uploading) { showImportModal = false; fileName = null; }" 
+                                    wire:click="$set('importFile', null)"
                                     class="px-5 py-2.5 text-slate-600 hover:bg-white hover:border-slate-300 border border-transparent font-medium rounded-xl text-sm transition-all"
                                     :disabled="uploading">
                                     ยกเลิก
                                 </button>
+                                
+                                <!-- Active Confirm Button: Visible when file is uploaded to server and not currently uploading -->
                                 <button x-show="fileName && !uploading"
                                     wire:click="import" 
                                     class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl text-sm transition-all shadow-lg shadow-indigo-500/30 flex items-center hover:-translate-y-0.5"
@@ -170,9 +186,11 @@
                                         กำลังนำเข้า...
                                     </span>
                                 </button>
-                                <button x-show="(!fileName || uploading)" disabled
-                                    class="px-4 py-2 bg-slate-200 text-slate-400 font-medium rounded-lg text-sm cursor-not-allowed">
-                                    <span x-show="uploading">กำลังอัปโหลด...</span>
+                                
+                                <!-- Disabled placeholder button: Visible when no file selected or file still uploading -->
+                                <button x-show="!fileName || uploading" disabled
+                                    class="px-5 py-2.5 bg-slate-200 text-slate-400 font-medium rounded-xl text-sm cursor-not-allowed">
+                                    <span x-show="uploading">กำลังอัปโหลดไฟล์...</span>
                                     <span x-show="!uploading">ยืนยันการนำเข้า</span>
                                 </button>
                             </div>
@@ -273,7 +291,7 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     @if($student->photo_path)
-                                        <img src="{{ asset('storage/' . $student->photo_path) }}"
+                                        <img src="{{ asset('images/students/' . $student->photo_path) }}"
                                             class="w-10 h-10 rounded-full object-cover border border-slate-200">
                                     @else
                                         <div

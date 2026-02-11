@@ -125,7 +125,7 @@
                                             @if ($photo)
                                                 <img src="{{ $photo->temporaryUrl() }}" class="w-full h-full object-cover">
                                             @elseif($student->photo_path)
-                                                <img src="{{ asset('storage/' . $student->photo_path) }}" class="w-full h-full object-cover">
+                                                <img src="{{ asset('images/students/' . $student->photo_path) }}" class="w-full h-full object-cover">
                                             @else
                                                 <svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24">

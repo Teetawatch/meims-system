@@ -80,7 +80,7 @@
                         <div class="flex items-center gap-4">
                             <div class="w-14 h-14 rounded-xl overflow-hidden border-2 border-slate-200 shrink-0">
                                 @if($student->photo_path)
-                                    <img src="{{ asset('storage/' . $student->photo_path) }}" alt="รูปภาพ" class="w-full h-full object-cover">
+                                    <img src="{{ asset('images/students/' . $student->photo_path) }}" alt="รูปภาพ" class="w-full h-full object-cover">
                                 @else
                                     <div class="w-full h-full bg-slate-700 flex items-center justify-center text-white text-xl font-bold">
                                         {{ mb_substr($student->first_name_th, 0, 1) }}

@@ -52,7 +52,7 @@
                                 @if($photo)
                                     <img src="{{ $photo->temporaryUrl() }}" class="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-110">
                                 @elseif($student->photo_path)
-                                    <img src="{{ asset('storage/' . $student->photo_path) }}" class="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-110">
+                                    <img src="{{ asset('images/students/' . $student->photo_path) }}" class="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-110">
                                 @else
                                     <div class="w-full h-full bg-blue-600 flex items-center justify-center text-white text-5xl font-black">
                                         {{ mb_substr($student->first_name_th, 0, 1) }}

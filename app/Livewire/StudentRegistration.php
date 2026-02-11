@@ -135,7 +135,7 @@ class StudentRegistration extends Component
 
         // Handle Photo Upload
         if ($this->photo) {
-            $data['photo_path'] = $this->photo->store('photos', 'public');
+            $data['photo_path'] = $this->photo->store('', 'students');
         }
 
         // Remove array fields that cause conversion errors

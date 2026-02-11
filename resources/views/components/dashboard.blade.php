@@ -179,7 +179,7 @@
                                             <div
                                                 class="w-10 h-10 md:w-12 md:h-12 bg-slate-100 rounded-xl md:rounded-2xl flex items-center justify-center text-slate-400 group-hover/row:bg-blue-600 group-hover/row:text-white transition-all duration-500 overflow-hidden shrink-0">
                                                 @if($student->photo_path)
-                                                    <img src="{{ asset('storage/' . $student->photo_path) }}"
+                                                    <img src="{{ asset('images/students/' . $student->photo_path) }}"
                                                         class="w-full h-full object-cover">
                                                 @else
                                                     <span

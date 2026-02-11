@@ -161,9 +161,9 @@ class StudentEdit extends Component
         if ($this->photo) {
             // Delete old photo if exists
             if ($this->student->photo_path) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($this->student->photo_path);
+                \Illuminate\Support\Facades\Storage::disk('students')->delete($this->student->photo_path);
             }
-            $data['photo_path'] = $this->photo->store('photos', 'public');
+            $data['photo_path'] = $this->photo->store('', 'students');
         } else {
             // Keep existing photo
             unset($data['photo_path']);
