@@ -81,7 +81,7 @@ class BannerManagement extends Component
         ];
 
         if ($this->image) {
-            $path = $this->image->store('banners', 'public');
+            $path = $this->image->store('/', 'banners');
             $data['image_path'] = $path;
         }
 
@@ -119,7 +119,7 @@ class BannerManagement extends Component
     {
         $banner = Banner::find($id['id']);
         if ($banner->image_path) {
-            Storage::disk('public')->delete($banner->image_path);
+            Storage::disk('banners')->delete($banner->image_path);
         }
         $banner->delete();
         
