@@ -190,6 +190,17 @@
                     </svg>
                     <span class="font-bold text-sm">ระบบแบบประเมิน</span>
                 </a>
+
+                <a href="{{ route('leave.index') }}"
+                    class="flex items-center px-4 py-3 rounded-xl group transition-all {{ request()->routeIs('leave.index') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">
+                    <svg class="w-5 h-5 mr-3 {{ request()->routeIs('leave.index') ? '' : 'group-hover:text-violet-500 transition-colors' }}"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                        </path>
+                    </svg>
+                    <span class="font-bold text-sm">ระบบการลา</span>
+                </a>
             </div>
         </div>
 

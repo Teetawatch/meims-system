@@ -93,6 +93,26 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        // Leave System Database Connection
+        'leave_db' => [
+            'driver' => 'mysql',
+            'host' => env('LEAVE_DB_HOST', env('DB_HOST', '127.0.0.1')),
+            'port' => env('LEAVE_DB_PORT', env('DB_PORT', '3306')),
+            'database' => env('LEAVE_DB_DATABASE', 'leave_system'),
+            'username' => env('LEAVE_DB_USERNAME', env('DB_USERNAME', 'forge')),
+            'password' => env('LEAVE_DB_PASSWORD', env('DB_PASSWORD', '')),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
     ],
 
     /*
@@ -125,7 +145,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
         ],
 
         'default' => [

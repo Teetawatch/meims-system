@@ -44,6 +44,7 @@ Route::get('/reports/evaluations', \App\Livewire\EvaluationReport::class)->name(
 Route::get('/guardians', \App\Livewire\GuardianManagement::class)->name('guardians.index')->middleware('auth');
 Route::get('/announcements', \App\Livewire\AnnouncementManagement::class)->name('announcements.index')->middleware('auth');
 Route::get('/banners', \App\Livewire\BannerManagement::class)->name('banners.index')->middleware('auth');
+Route::get('/leave', \App\Livewire\LeaveManagement::class)->name('leave.index')->middleware('auth');
 
 
 // Student Portal
