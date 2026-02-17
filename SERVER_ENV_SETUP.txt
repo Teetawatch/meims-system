@@ -1,0 +1,18 @@
+
+# ==========================================
+#  การตั้งค่าสำหรับ Server (Shared Hosting)
+# ==========================================
+# ให้ Copy ข้อมูลด้านล่างนี้ ไปวางไว้ในไฟล์ .env บน Server ของคุณ
+# (ต่อท้ายไฟล์ได้เลย)
+# ==========================================
+
+LEAVE_DB_HOST=127.0.0.1
+LEAVE_DB_PORT=3306
+LEAVE_DB_DATABASE=nassacth_leave
+LEAVE_DB_USERNAME=nassacth_leave
+LEAVE_DB_PASSWORD=XnRG4DuCRf9W4X49cnMW
+
+# ==========================================
+# หลังจากวางเสร็จแล้ว อย่าลืมรัน URL Setup:
+# https://your-domain.com/setup-meims/clear-cache
+# ==========================================

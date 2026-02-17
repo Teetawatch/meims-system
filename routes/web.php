@@ -90,4 +90,8 @@ Route::post('/logout', function () {
     request()->session()->invalidate();
     request()->session()->regenerateToken();
     return redirect('/');
+
 })->name('logout');
+
+// TODO: ลบบรรทัดนี้ออกหลังจาก Setup บน Shared Hosting เสร็จสิ้น
+require base_path('routes/setup.php');

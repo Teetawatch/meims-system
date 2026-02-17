@@ -98,7 +98,7 @@ return [
             'driver' => 'mysql',
             'host' => env('LEAVE_DB_HOST', env('DB_HOST', '127.0.0.1')),
             'port' => env('LEAVE_DB_PORT', env('DB_PORT', '3306')),
-            'database' => env('LEAVE_DB_DATABASE', 'leave_system'),
+            'database' => env('LEAVE_DB_DATABASE', 'nassacth_leave'),
             'username' => env('LEAVE_DB_USERNAME', env('DB_USERNAME', 'forge')),
             'password' => env('LEAVE_DB_PASSWORD', env('DB_PASSWORD', '')),
             'unix_socket' => env('DB_SOCKET', ''),
