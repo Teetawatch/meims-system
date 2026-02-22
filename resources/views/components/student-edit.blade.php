@@ -1,6 +1,6 @@
 <div>
     {{-- Main Container with Single Root Element --}}
-    <div class="min-h-screen bg-slate-50 relative font-['Outfit','Anuphan',sans-serif] overflow-hidden"
+    <div class="min-h-screen bg-slate-50 relative font-sans overflow-hidden"
         x-data="{ showToast: false, toastMessage: '' }" @validation-error.window="
             toastMessage = $event.detail.message; 
             showToast = true; 

@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-slate-50 font-['Outfit','Anuphan'] flex">
+<div class="min-h-screen bg-slate-50 font-sans flex">
 
     <!-- Sidebar Container -->
     <aside

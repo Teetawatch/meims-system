@@ -1,4 +1,4 @@
-<div class="min-h-screen flex bg-slate-50 font-['Outfit','Anuphan']">
+<div class="min-h-screen flex bg-slate-50 font-sans">
 
     <style>
         @keyframes fadeIn {

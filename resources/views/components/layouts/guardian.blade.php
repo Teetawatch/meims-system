@@ -9,7 +9,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Anuphan:wght@100..700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 
     <!-- SweetAlert2 -->
@@ -19,7 +19,7 @@
     @livewireStyles
 </head>
 
-<body class="bg-slate-50 font-['Outfit','Anuphan']">
+<body class="bg-slate-50 font-sans">
 
     {{ $slot }}
 

@@ -1,5 +1,5 @@
 <div
-    class="relative min-h-screen flex items-center justify-center overflow-hidden bg-slate-50 font-['Outfit','Anuphan']">
+    class="relative min-h-screen flex items-center justify-center overflow-hidden bg-slate-50 font-sans">
 
     <!-- Premium Animated Background -->
     <div class="absolute inset-0 w-full h-full overflow-hidden">

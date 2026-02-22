@@ -10,22 +10,69 @@
     --color-border: #A5F3FC;
 
     /* Spacing & Utilities */
-    --font-heading: "Outfit", "Anuphan", sans-serif;
-    --font-body: "Outfit", "Anuphan", sans-serif;
+    --font-heading: "Kanit", sans-serif;
+    --font-body: "Kanit", sans-serif;
+    --font-sans: "Kanit", sans-serif;
 }
 
 /* Base Styles */
 @layer base {
     body {
-        @apply bg-background text-text font-body;
+        font-family: 'Kanit', sans-serif;
+        font-size: 1rem;
+        font-weight: 300;
+        line-height: 1.8;
+        letter-spacing: 0.01em;
+        @apply bg-background text-text;
     }
 
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-        @apply font-heading font-semibold;
+    p {
+        font-size: 1rem;
+        font-weight: 300;
+        line-height: 1.8;
+        letter-spacing: 0.01em;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Kanit', sans-serif;
+        letter-spacing: -0.02em;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    h2 {
+        font-size: 2rem;
+        font-weight: 600;
+        line-height: 1.3;
+    }
+
+    h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        line-height: 1.4;
+    }
+
+    h4 {
+        font-size: 1.25rem;
+        font-weight: 500;
+        line-height: 1.4;
+    }
+
+    small, caption {
+        font-size: 0.875rem;
+        font-weight: 300;
+    }
+
+    button, label, .btn, .label {
+        font-size: 1rem;
+        font-weight: 500;
+    }
+
+    em, i {
+        font-style: normal;
     }
 }
