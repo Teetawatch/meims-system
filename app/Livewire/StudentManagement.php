@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Models\Student;
+use App\Models\Course;
 use App\Exports\StudentTemplateExport;
 use App\Imports\StudentsImport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -20,6 +21,12 @@ class StudentManagement extends Component
     public $selectAll = false;
     public $courseFilter = '';
     public $batchFilter = '';
+    public $assignCourseId = '';
+
+    public function updatingPage()
+    {
+        $this->selectAll = false;
+    }
 
     public function updatingSearch()
     {
@@ -42,10 +49,15 @@ class StudentManagement extends Component
 
     public function updatedSelectAll($value)
     {
+        $currentPageIds = collect($this->getFilteredQuery()->paginate(10)->items())
+            ->pluck('id')
+            ->map(fn($id) => (string) $id)
+            ->toArray();
+
         if ($value) {
-            $this->selectedStudents = $this->getFilteredQuery()->pluck('id')->map(fn($id) => (string) $id)->toArray();
+            $this->selectedStudents = array_values(array_unique(array_merge($this->selectedStudents, $currentPageIds)));
         } else {
-            $this->selectedStudents = [];
+            $this->selectedStudents = array_values(array_diff($this->selectedStudents, $currentPageIds));
         }
     }
 
@@ -64,6 +76,39 @@ class StudentManagement extends Component
             'type' => 'success',
             'title' => 'สำเร็จ!',
             'text' => "ลบข้อมูลนักเรียน {$count} คนเรียบร้อยแล้ว"
+        ]);
+    }
+
+    public function assignSelectedToCourse()
+    {
+        if (empty($this->selectedStudents) || empty($this->assignCourseId)) {
+            $this->dispatch('swal:modal', [
+                'type' => 'error',
+                'title' => 'ไม่สามารถดำเนินการได้',
+                'text' => 'กรุณาเลือกนักเรียนและหลักสูตรที่ต้องการ'
+            ]);
+            return;
+        }
+
+        $course = Course::find($this->assignCourseId);
+        if (!$course) {
+            return;
+        }
+
+        $count = count($this->selectedStudents);
+        Student::whereIn('id', $this->selectedStudents)->update([
+            'course_id' => $course->id,
+            'course_name' => $course->course_name_th
+        ]);
+
+        $this->selectedStudents = [];
+        $this->selectAll = false;
+        $this->assignCourseId = '';
+
+        $this->dispatch('swal:modal', [
+            'type' => 'success',
+            'title' => 'สำเร็จ!',
+            'text' => "กำหนดหลักสูตรให้นักเรียน {$count} คนเรียบร้อยแล้ว"
         ]);
     }
 
@@ -119,16 +164,16 @@ class StudentManagement extends Component
         try {
             Excel::import(new StudentsImport, $this->importFile);
             $this->reset('importFile');
-            
+
             $this->dispatch('swal:modal', [
                 'type' => 'success',
                 'title' => 'สำเร็จ!',
                 'text' => 'นำเข้าข้อมูลนักเรียนเรียบร้อยแล้ว'
             ]);
-            
+
             // Close the modal via event if needed, or rely on frontend state reset
             $this->dispatch('close-import-modal');
-            
+
         } catch (\Exception $e) {
             $this->dispatch('swal:modal', [
                 'type' => 'error',
@@ -153,10 +198,13 @@ class StudentManagement extends Component
             ->orderBy('batch', 'desc')
             ->pluck('batch');
 
+        $availableCourses = Course::where('is_active', true)->get();
+
         return view('components.student-management', [
             'students' => $students,
             'courses' => $courses,
             'batches' => $batches,
+            'availableCourses' => $availableCourses,
         ])->layout('components.layouts.app');
     }
 
