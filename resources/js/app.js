@@ -1,9 +1,6 @@
 import './bootstrap';
-import Alpine from 'alpinejs';
-import Swal from 'sweetalert2';
 
-window.Alpine = Alpine;
-window.Swal = Swal;
+// Alpine.js is bundled and managed by Livewire 3 automatically.
+// DO NOT import Alpine separately — it causes "multiple instances" conflict.
 
-// Alpine is automatically handled by Livewire 3
-// Alpine.start();
+// SweetAlert2 is loaded via CDN in the layout, no need to import here.

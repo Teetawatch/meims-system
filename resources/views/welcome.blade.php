@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
@@ -57,7 +57,7 @@
 
                 <div class="mt-4">
                     <a href="{{ route('student.register') }}"
-                        class="inline-block px-8 py-3 bg-blue-600 text-white font-semibold rounded-full shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all cursor-pointer">
+                        class="inline-block px-8 py-3 bg-primary text-white font-semibold rounded-full shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all cursor-pointer">
                         ลงทะเบียนนักเรียน (Student Registration)
                     </a>
                 </div>

@@ -8,6 +8,39 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class TranscriptController extends Controller
 {
+    public function index(Request $request)
+    {
+        $search = $request->input('search');
+        $courseFilter = $request->input('courseFilter');
+        $batchFilter = $request->input('batchFilter');
+        $yearFilter = $request->input('yearFilter');
+
+        $students = Student::query()
+            ->with('course')
+            ->when($search, function ($query) use ($search) {
+                $query->where('first_name_th', 'like', '%' . $search . '%')
+                    ->orWhere('last_name_th', 'like', '%' . $search . '%')
+                    ->orWhere('student_id', 'like', '%' . $search . '%');
+            })
+            ->when($courseFilter, function ($query) use ($courseFilter) {
+                $query->where('course_id', $courseFilter);
+            })
+            ->when($batchFilter, function ($query) use ($batchFilter) {
+                $query->where('batch', $batchFilter);
+            })
+            ->when($yearFilter, function ($query) use ($yearFilter) {
+                $query->where('fiscal_year', $yearFilter);
+            })
+            ->paginate(15)
+            ->withQueryString();
+
+        $courses = \App\Models\Course::where('is_active', true)->orderBy('course_name_th')->get();
+        $batches = Student::distinct()->pluck('batch');
+        $years = Student::distinct()->pluck('fiscal_year');
+
+        return view('transcripts.index', compact('students', 'courses', 'batches', 'years', 'search', 'courseFilter', 'batchFilter', 'yearFilter'));
+    }
+
     public function download(Request $request)
     {
         $query = Student::with(['grades.subject', 'course']);

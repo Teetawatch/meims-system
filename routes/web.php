@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Student\Auth\LoginController as StudentLoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,50 +26,61 @@ Route::get('/', function () {
     return redirect()->route('student.login');
 });
 
-Route::get('/student/register', \App\Livewire\StudentRegistration::class)->name('student.register');
+Route::get('/student/register', [\App\Http\Controllers\StudentRegistrationController::class, 'index'])->name('student.register');
+Route::post('/student/register', [\App\Http\Controllers\StudentRegistrationController::class, 'store'])->name('student.register.post');
 
-Route::get('/login', \App\Livewire\Auth\Login::class)->name('login')->middleware('guest');
-Route::get('/dashboard', \App\Livewire\Dashboard::class)->name('dashboard')->middleware('auth');
-Route::get('/students', \App\Livewire\StudentManagement::class)->name('students.index')->middleware('auth');
-Route::get('/students/conduct', \App\Livewire\StudentConduct::class)->name('students.conduct')->middleware('auth');
-Route::get('/students/{student}', \App\Livewire\StudentDetail::class)->name('students.show')->middleware('auth');
-Route::get('/surveys', \App\Livewire\SurveyManagement::class)->name('surveys.index')->middleware('auth');
-Route::get('/subjects', \App\Livewire\SubjectManagement::class)->name('subjects.index')->middleware('auth');
-Route::get('/timetables', \App\Livewire\TimetableManagement::class)->name('timetables.index')->middleware('auth');
-Route::get('/documents', \App\Livewire\DocumentManagement::class)->name('documents.index')->middleware('auth');
-Route::get('/grades', \App\Livewire\GradeManagement::class)->name('grades.index')->middleware('auth');
-Route::get('/transcripts', \App\Livewire\TranscriptManagement::class)->name('transcripts.index')->middleware('auth');
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login')->middleware('guest');
+Route::post('/login', [LoginController::class, 'login'])->name('login.post')->middleware('guest');
+Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
+Route::resource('courses', \App\Http\Controllers\CourseController::class)->except(['create', 'show', 'edit'])->middleware('auth');
+Route::get('/students/template', [\App\Http\Controllers\StudentController::class, 'downloadTemplate'])->name('students.template')->middleware('auth');
+Route::post('/students/import', [\App\Http\Controllers\StudentController::class, 'import'])->name('students.import')->middleware('auth');
+Route::delete('/students/destroySelected', [\App\Http\Controllers\StudentController::class, 'destroySelected'])->name('students.destroySelected')->middleware('auth');
+Route::resource('students', \App\Http\Controllers\StudentController::class)->except(['create', 'show', 'edit'])->middleware('auth');
+Route::get('/students/conduct', [\App\Http\Controllers\StudentConductController::class, 'index'])->name('students.conduct')->middleware('auth');
+Route::post('/students/conduct', [\App\Http\Controllers\StudentConductController::class, 'store'])->name('students.conduct.store')->middleware('auth');
+Route::delete('/students/conduct/{id}', [\App\Http\Controllers\StudentConductController::class, 'destroy'])->name('students.conduct.destroy')->middleware('auth');
+Route::get('/students/{student}', [\App\Http\Controllers\StudentController::class, 'show'])->name('students.show')->middleware('auth');
+Route::resource('surveys', \App\Http\Controllers\SurveyController::class)->middleware('auth');
+Route::get('/subjects/template', [\App\Http\Controllers\SubjectController::class, 'downloadTemplate'])->name('subjects.template')->middleware('auth');
+Route::post('/subjects/import', [\App\Http\Controllers\SubjectController::class, 'import'])->name('subjects.import')->middleware('auth');
+Route::resource('subjects', \App\Http\Controllers\SubjectController::class)->except(['create', 'show', 'edit'])->middleware('auth');
+Route::resource('timetables', \App\Http\Controllers\TimetableController::class)->except(['create', 'show', 'edit'])->middleware('auth');
+Route::resource('documents', \App\Http\Controllers\DocumentController::class)->except(['create', 'show', 'edit'])->middleware('auth');
+Route::get('/grades/template', [\App\Http\Controllers\GradeController::class, 'downloadTemplate'])->name('grades.template')->middleware('auth');
+Route::post('/grades/import', [\App\Http\Controllers\GradeController::class, 'import'])->name('grades.import')->middleware('auth');
+Route::resource('grades', \App\Http\Controllers\GradeController::class)->except(['create', 'show', 'edit'])->middleware('auth');
+Route::get('/transcripts', [\App\Http\Controllers\TranscriptController::class, 'index'])->name('transcripts.index')->middleware('auth');
 Route::get('/transcripts/download', [\App\Http\Controllers\TranscriptController::class, 'download'])->name('transcripts.download')->middleware('auth');
-Route::get('/teachers', \App\Livewire\TeacherManagement::class)->name('teachers.index')->middleware('auth');
-Route::get('/reports/evaluations', \App\Livewire\EvaluationReport::class)->name('reports.evaluations')->middleware('auth');
+Route::resource('teachers', \App\Http\Controllers\TeacherController::class)->except(['create', 'show', 'edit'])->middleware('auth');
+Route::get('/reports/evaluations', [\App\Http\Controllers\ReportController::class, 'evaluations'])->name('reports.evaluations')->middleware('auth');
+Route::post('/reports/evaluations/toggle', [\App\Http\Controllers\ReportController::class, 'togglePeerSetting'])->name('reports.evaluations.toggle')->middleware('auth');
 
 // Student Portal
-Route::get('/student/login', \App\Livewire\Student\Login::class)->name('student.login');
-Route::get('/student/logout', function () {
-    Auth::guard('student')->logout();
-    return redirect()->route('student.login');
-})->name('student.logout');
+Route::get('/student/login', [StudentLoginController::class, 'showLoginForm'])->name('student.login')->middleware('guest:student');
+Route::post('/student/login', [StudentLoginController::class, 'login'])->name('student.login.post')->middleware('guest:student');
+Route::get('/student/logout', [StudentLoginController::class, 'logout'])->name('student.logout');
 
 Route::middleware(['auth:student'])->prefix('student')->name('student.')->group(function () {
-    Route::get('/dashboard', \App\Livewire\Student\Dashboard::class)->name('dashboard');
-    Route::get('/profile', \App\Livewire\Student\Profile::class)->name('profile');
-    Route::get('/timetable', \App\Livewire\Student\Timetable::class)->name('timetable');
-    Route::get('/grades', \App\Livewire\Student\Grades::class)->name('grades');
-    Route::get('/conduct', \App\Livewire\Student\Conduct::class)->name('conduct');
-    Route::get('/surveys', \App\Livewire\Student\Surveys::class)->name('surveys');
-    Route::get('/surveys/{survey}', \App\Livewire\Student\DoSurvey::class)->name('surveys.do'); // Add this route
-    Route::get('/documents', \App\Livewire\Student\Documents::class)->name('documents');
-    Route::get('/evaluation', \App\Livewire\Student\Evaluation::class)->name('evaluation');
-    Route::get('/evaluation/teacher/{subjectId}', \App\Livewire\Student\TeacherEvaluation::class)->name('teacher-evaluation');
-    Route::get('/evaluation/peer/{studentId}', \App\Livewire\Student\PeerEvaluation::class)->name('peer-evaluation');
-    Route::get('/change-password', \App\Livewire\Student\ChangePassword::class)->name('change-password');
+    Route::get('/dashboard', [\App\Http\Controllers\Student\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/profile', [\App\Http\Controllers\Student\StudentPageController::class, 'profile'])->name('profile');
+    Route::post('/profile/photo', [\App\Http\Controllers\Student\StudentPageController::class, 'updateProfilePhoto'])->name('profile.updatePhoto');
+    Route::get('/timetable', [\App\Http\Controllers\Student\StudentPageController::class, 'timetable'])->name('timetable');
+    Route::get('/grades', [\App\Http\Controllers\Student\StudentPageController::class, 'grades'])->name('grades');
+    Route::get('/conduct', [\App\Http\Controllers\Student\StudentPageController::class, 'conduct'])->name('conduct');
+    Route::get('/surveys', [\App\Http\Controllers\Student\StudentSurveyController::class, 'index'])->name('surveys');
+    Route::get('/surveys/{survey}', [\App\Http\Controllers\Student\StudentSurveyController::class, 'show'])->name('surveys.do');
+    Route::post('/surveys/{survey}', [\App\Http\Controllers\Student\StudentSurveyController::class, 'store'])->name('surveys.store');
+    Route::get('/documents', [\App\Http\Controllers\Student\StudentPageController::class, 'documents'])->name('documents');
+    Route::get('/evaluation', [\App\Http\Controllers\Student\StudentEvaluationController::class, 'index'])->name('evaluation');
+    Route::get('/evaluation/teacher/{subjectId}', [\App\Http\Controllers\Student\StudentEvaluationController::class, 'teacherEvaluation'])->name('teacher-evaluation');
+    Route::post('/evaluation/teacher/{subjectId}', [\App\Http\Controllers\Student\StudentEvaluationController::class, 'storeTeacherEvaluation'])->name('teacher-evaluation.store');
+    Route::get('/evaluation/peer/{studentId}', [\App\Http\Controllers\Student\StudentEvaluationController::class, 'peerEvaluation'])->name('peer-evaluation');
+    Route::post('/evaluation/peer/{studentId}', [\App\Http\Controllers\Student\StudentEvaluationController::class, 'storePeerEvaluation'])->name('peer-evaluation.store');
+    Route::get('/change-password', [\App\Http\Controllers\Student\StudentPageController::class, 'changePasswordForm'])->name('change-password');
+    Route::post('/change-password', [\App\Http\Controllers\Student\StudentPageController::class, 'updatePassword'])->name('change-password.update');
 });
-Route::get('/reports/students', \App\Livewire\StudentReport::class)->name('reports.students')->middleware('auth');
-Route::get('/courses', \App\Livewire\CourseManagement::class)->name('courses.index')->middleware('auth');
+Route::get('/reports/students', [\App\Http\Controllers\ReportController::class, 'students'])->name('reports.students')->middleware('auth');
+Route::post('/reports/students/export', [\App\Http\Controllers\ReportController::class, 'exportStudents'])->name('reports.students.export')->middleware('auth');
 
-Route::post('/logout', function () {
-    auth()->logout();
-    request()->session()->invalidate();
-    request()->session()->regenerateToken();
-    return redirect('/');
-})->name('logout');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
