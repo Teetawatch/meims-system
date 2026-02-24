@@ -21,6 +21,11 @@ class SurveyTopic extends Model
         return $this->hasMany(SurveyResponse::class);
     }
 
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
+
     public function getAverageScoreAttribute()
     {
         // Calculate average from all related answers

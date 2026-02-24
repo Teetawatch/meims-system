@@ -41,52 +41,57 @@
                 </div>
 
                 <div class="space-y-4">
-                    @forelse($subjects as $subject)
-                        <div
-                            class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-border flex flex-col sm:flex-row justify-between items-center group hover:shadow-xl hover:shadow-blue-500/5 hover:-translate-y-1 transition-all gap-6 relative overflow-hidden">
-                            <!-- Background Decoration -->
+                    @php $hasTeachers = false; @endphp
+                    @foreach($subjects as $subject)
+                        @foreach($subject->teachers as $teacher)
+                            @php $hasTeachers = true; @endphp
                             <div
-                                class="absolute top-0 right-0 w-32 h-32 bg-info-light rounded-full blur-3xl -mr-16 -mt-16 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                            </div>
-
-                            <div class="flex items-center gap-4 w-full sm:w-auto z-10">
+                                class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-border flex flex-col sm:flex-row justify-between items-center group hover:shadow-xl hover:shadow-blue-500/5 hover:-translate-y-1 transition-all gap-6 relative overflow-hidden">
+                                <!-- Background Decoration -->
                                 <div
-                                    class="w-12 h-12 rounded-2xl bg-info-light text-primary-light flex items-center justify-center font-bold text-lg shadow-inner">
-                                    {{ substr($subject->subject_code, 0, 1) }}
+                                    class="absolute top-0 right-0 w-32 h-32 bg-info-light rounded-full blur-3xl -mr-16 -mt-16 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                                 </div>
-                                <div>
-                                    <div class="text-[10px] font-bold text-primary-light uppercase tracking-widest mb-1">
-                                        {{ $subject->subject_code }}</div>
-                                    <h3 class="text-lg font-bold text-text leading-tight">
-                                        {{ $subject->subject_name_th }}</h3>
-                                    <p class="text-sm text-text-disabled font-medium mt-1">
-                                        อ.{{ $subject->teacher ? $subject->teacher->first_name_th : 'ไม่ระบุ' }}</p>
-                                </div>
-                            </div>
 
-                            <div class="z-10 w-full sm:w-auto">
-                                @if(in_array($subject->id, $evaluatedTeachers))
-                                    <span
-                                        class="w-full sm:w-auto px-6 py-3 bg-surface-hover text-text-disabled text-xs font-bold rounded-xl flex items-center justify-center gap-2 cursor-default">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M5 13l4 4L19 7"></path>
-                                        </svg>
-                                        ประเมินแล้ว
-                                    </span>
-                                @else
-                                    <a href="{{ route('student.teacher-evaluation', $subject->id) }}"
-                                        class="w-full sm:w-auto px-6 py-3 bg-primary text-white text-xs font-bold rounded-xl hover:bg-primary-dark transition-all shadow-lg shadow-blue-500/20 transform active:scale-95 flex items-center justify-center gap-2">
-                                        เริ่มการประเมิน
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 5l7 7-7 7"></path>
-                                        </svg>
-                                    </a>
-                                @endif
+                                <div class="flex items-center gap-4 w-full sm:w-auto z-10">
+                                    <div
+                                        class="w-12 h-12 rounded-2xl bg-info-light text-primary-light flex items-center justify-center font-bold text-lg shadow-inner">
+                                        {{ substr($subject->subject_code, 0, 1) }}
+                                    </div>
+                                    <div>
+                                        <div class="text-[10px] font-bold text-primary-light uppercase tracking-widest mb-1">
+                                            {{ $subject->subject_code }}</div>
+                                        <h3 class="text-lg font-bold text-text leading-tight">
+                                            {{ $subject->subject_name_th }}</h3>
+                                        <p class="text-sm text-text-disabled font-medium mt-1">
+                                            อ.{{ $teacher->first_name_th }} {{ $teacher->last_name_th }}</p>
+                                    </div>
+                                </div>
+
+                                <div class="z-10 w-full sm:w-auto">
+                                    @if(in_array($subject->id . '_' . $teacher->id, $evaluatedTeachers))
+                                        <span
+                                            class="w-full sm:w-auto px-6 py-3 bg-surface-hover text-text-disabled text-xs font-bold rounded-xl flex items-center justify-center gap-2 cursor-default">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                            ประเมินแล้ว
+                                        </span>
+                                    @else
+                                        <a href="{{ route('student.teacher-evaluation', [$subject->id, $teacher->id]) }}"
+                                            class="w-full sm:w-auto px-6 py-3 bg-primary text-white text-xs font-bold rounded-xl hover:bg-primary-dark transition-all shadow-lg shadow-blue-500/20 transform active:scale-95 flex items-center justify-center gap-2">
+                                            เริ่มการประเมิน
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 5l7 7-7 7"></path>
+                                            </svg>
+                                        </a>
+                                    @endif
+                                </div>
                             </div>
-                        </div>
-                    @empty
+                        @endforeach
+                    @endforeach
+                    @if(!$hasTeachers)
                         <div
                             class="bg-white p-12 rounded-[2.5rem] text-center border border-dashed border-border flex flex-col items-center justify-center">
                             <div
@@ -101,7 +106,7 @@
                             <p class="text-text-disabled text-sm mt-1">คุณได้ทำการประเมินครบถ้วนแล้ว
                                 หรือยังไม่ถึงช่วงเวลาประเมิน</p>
                         </div>
-                    @endforelse
+                    @endif
                 </div>
             </section>
 

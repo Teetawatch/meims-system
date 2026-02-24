@@ -59,6 +59,17 @@
                     </div>
                     
                     <h3 class="text-xl font-bold text-slate-800 mb-2 line-clamp-2">{{ $topic->title }}</h3>
+                    
+                    <div class="mb-3">
+                        <span class="inline-flex px-2 py-1 text-xs font-medium rounded-md {{ $topic->course_id ? 'bg-indigo-50 text-indigo-700 border border-indigo-100' : 'bg-slate-50 text-slate-600 border border-slate-200' }}">
+                            @if($topic->course)
+                                {{ $topic->course->course_name_th }}
+                            @else
+                                ทุกหลักสูตร
+                            @endif
+                        </span>
+                    </div>
+
                     <p class="text-slate-500 text-sm mb-6 flex-1 line-clamp-3">{{ $topic->description ?? 'ไม่มีคำอธิบาย' }}</p>
 
                     <div class="pt-4 border-t border-slate-50 flex items-center justify-between">

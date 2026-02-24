@@ -27,6 +27,7 @@
     @livewireScripts
     <!-- Swal Scripts -->
     <script>
+        // Livewire Events
         window.addEventListener('swal:modal', event => {
             Swal.fire({
                 title: event.detail[0].title,
@@ -50,6 +51,75 @@
                     window.Livewire.dispatch(event.detail[0].method, { id: event.detail[0].id });
                 }
             });
+        });
+
+        // Global SweetAlert2 Handling
+        document.addEventListener('DOMContentLoaded', function () {
+            // 1. Convert native confirm() in forms to SweetAlert2
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                const onsubmitAttr = form.getAttribute('onsubmit');
+                if (onsubmitAttr && onsubmitAttr.includes('return confirm(')) {
+                    const match = onsubmitAttr.match(/return confirm\(['"](.*?)['"]\)/);
+                    if (match) {
+                        const message = match[1];
+                        form.removeAttribute('onsubmit'); // Remove default confirm
+                        form.addEventListener('submit', function (e) {
+                            e.preventDefault();
+                            Swal.fire({
+                                title: 'ยืนยันการทำรายการ?',
+                                text: message,
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#ef4444',
+                                cancelButtonColor: '#94a3b8',
+                                confirmButtonText: 'ยืนยัน',
+                                cancelButtonText: 'ยกเลิก',
+                                reverseButtons: true
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    form.submit();
+                                }
+                            });
+                        });
+                    }
+                }
+            });
+
+            // 2. Handle Session Flash Messages
+            @if(session()->has('success') || session()->has('message'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'สำเร็จ!',
+                    text: "{{ session('success') ?? session('message') }}",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                });
+            @endif
+
+            @if(session()->has('error') || $errors->any())
+                let errorMessage = "{{ session('error') ?? '' }}";
+                @if($errors->any())
+                    errorMessage = "{!! implode('\n', $errors->all()) !!}";
+                @endif
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'เกิดข้อผิดพลาด!',
+                    text: errorMessage,
+                    confirmButtonColor: '#ef4444',
+                });
+            @endif
+
+            @if(session()->has('warning'))
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'คำเตือน!',
+                    text: "{{ session('warning') }}",
+                    confirmButtonColor: '#f59e0b',
+                });
+            @endif
         });
     </script>
 </body>

@@ -17,7 +17,7 @@ class SubjectController extends Controller
         $searchCourse = $request->input('searchCourse');
 
         $subjects = Subject::query()
-            ->with('course')
+            ->with(['course', 'teachers'])
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('subject_code', 'like', '%' . $search . '%')
@@ -32,8 +32,9 @@ class SubjectController extends Controller
             ->paginate(10);
 
         $courses = Course::where('is_active', true)->orderBy('course_name_th')->get();
+        $allTeachers = \App\Models\Teacher::where('is_active', true)->orderBy('first_name_th')->get();
 
-        return view('subjects.index', compact('subjects', 'courses', 'search', 'searchCourse'));
+        return view('subjects.index', compact('subjects', 'courses', 'allTeachers', 'search', 'searchCourse'));
     }
 
     public function store(Request $request)
@@ -46,11 +47,17 @@ class SubjectController extends Controller
             'course_id' => 'required|exists:courses,id',
             'description' => 'nullable|string',
             'is_active' => 'boolean',
+            'teacher_ids' => 'nullable|array',
+            'teacher_ids.*' => 'exists:teachers,id',
         ]);
 
         $validated['is_active'] = $request->has('is_active');
 
-        Subject::create($validated);
+        $subject = Subject::create(\Illuminate\Support\Arr::except($validated, ['teacher_ids']));
+        
+        if ($request->has('teacher_ids')) {
+            $subject->teachers()->sync($request->teacher_ids);
+        }
 
         return redirect()->route('subjects.index')->with('message', 'เพิ่มรายวิชาใหม่เรียบร้อยแล้ว');
     }
@@ -65,11 +72,15 @@ class SubjectController extends Controller
             'course_id' => 'required|exists:courses,id',
             'description' => 'nullable|string',
             'is_active' => 'boolean',
+            'teacher_ids' => 'nullable|array',
+            'teacher_ids.*' => 'exists:teachers,id',
         ]);
 
         $validated['is_active'] = $request->has('is_active');
 
-        $subject->update($validated);
+        $subject->update(\Illuminate\Support\Arr::except($validated, ['teacher_ids']));
+        
+        $subject->teachers()->sync($request->teacher_ids ?? []);
 
         return redirect()->route('subjects.index')->with('message', 'อัปเดตข้อมูลรายวิชาเรียบร้อยแล้ว');
     }

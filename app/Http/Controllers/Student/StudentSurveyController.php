@@ -14,7 +14,15 @@ class StudentSurveyController extends Controller
     public function index()
     {
         $student = Auth::guard('student')->user();
-        $surveys = SurveyTopic::where('is_active', true)->latest()->get();
+        
+        $surveys = SurveyTopic::where('is_active', true)
+            ->where(function ($query) use ($student) {
+                $query->whereNull('course_id')
+                      ->orWhere('course_id', $student->course_id);
+            })
+            ->latest()
+            ->get();
+            
         $completedSurveyIds = SurveyResponse::where('student_id', $student->id)
             ->pluck('survey_topic_id')
             ->toArray();

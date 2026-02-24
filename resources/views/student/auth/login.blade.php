@@ -104,6 +104,13 @@
                     <div class="absolute inset-0 bg-gradient-to-r from-indigo-600 to-blue-700 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-700"></div>
                 </button>
             </form>
+
+            <div class="mt-8 pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-center gap-2">
+                <span class="text-sm font-medium text-text-muted">ยังไม่มีบัญชีผู้ใช้?</span>
+                <a href="{{ route('student.register') }}" class="text-sm font-bold text-primary hover:text-indigo-700 hover:underline underline-offset-4 transition-all uppercase tracking-wide">
+                    สมัครสมาชิกนักเรียน
+                </a>
+            </div>
         </div>
 
         <!-- Footer -->

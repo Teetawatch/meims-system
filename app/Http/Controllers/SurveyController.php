@@ -17,6 +17,7 @@ class SurveyController extends Controller
                 $query->where('title', 'like', '%' . $search . '%');
             })
             ->withCount('responses')
+            ->with('course')
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
@@ -25,7 +26,8 @@ class SurveyController extends Controller
 
     public function create()
     {
-        return view('surveys.form', ['topic' => new SurveyTopic(), 'isEdit' => false]);
+        $courses = \App\Models\Course::where('is_active', true)->orderBy('course_name_th')->get();
+        return view('surveys.form', ['topic' => new SurveyTopic(), 'isEdit' => false, 'courses' => $courses]);
     }
 
     public function store(Request $request)
@@ -33,6 +35,7 @@ class SurveyController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'course_id' => 'nullable|exists:courses,id',
             'questions' => 'required|array',
             'questions.*' => 'required|string|distinct|min:3',
         ], [
@@ -43,6 +46,7 @@ class SurveyController extends Controller
         $topic = SurveyTopic::create([
             'title' => $request->title,
             'description' => $request->description,
+            'course_id' => $request->course_id,
             'is_active' => $request->has('is_active'),
         ]);
 
@@ -56,7 +60,8 @@ class SurveyController extends Controller
     public function edit(SurveyTopic $survey)
     {
         $survey->load('questions');
-        return view('surveys.form', ['topic' => $survey, 'isEdit' => true]);
+        $courses = \App\Models\Course::where('is_active', true)->orderBy('course_name_th')->get();
+        return view('surveys.form', ['topic' => $survey, 'isEdit' => true, 'courses' => $courses]);
     }
 
     public function update(Request $request, SurveyTopic $survey)
@@ -64,6 +69,7 @@ class SurveyController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'course_id' => 'nullable|exists:courses,id',
             'questions' => 'required|array',
             'questions.*' => 'required|string|distinct|min:3',
         ], [
@@ -74,6 +80,7 @@ class SurveyController extends Controller
         $survey->update([
             'title' => $request->title,
             'description' => $request->description,
+            'course_id' => $request->course_id,
             'is_active' => $request->has('is_active'),
         ]);
 

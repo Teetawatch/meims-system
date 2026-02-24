@@ -11,8 +11,10 @@
             subject_name_en: '',
             credits: '',
             course_id: '',
+            course_id: '',
             description: '',
-            is_active: true
+            is_active: true,
+            teacher_ids: []
         },
         openCreateModal() {
             this.isEditMode = false;
@@ -23,7 +25,9 @@
             this.form.credits = '';
             this.form.course_id = '';
             this.form.description = '';
+            this.form.description = '';
             this.form.is_active = true;
+            this.form.teacher_ids = [];
             this.isModalOpen = true;
         },
         openEditModal(subject) {
@@ -35,7 +39,9 @@
             this.form.credits = subject.credits;
             this.form.course_id = subject.course_id;
             this.form.description = subject.description;
+            this.form.description = subject.description;
             this.form.is_active = subject.is_active;
+            this.form.teacher_ids = subject.teachers ? subject.teachers.map(t => t.id) : [];
             this.isModalOpen = true;
         }
     }">
@@ -155,6 +161,17 @@
                                     <div class="font-medium text-slate-800">{{ $subject->subject_name_th }}</div>
                                     @if($subject->subject_name_en)
                                         <div class="text-xs text-slate-400 capitalize">{{ $subject->subject_name_en }}</div>
+                                    @endif
+                                    @if($subject->teachers->count() > 0)
+                                        <div class="mt-2 flex flex-wrap gap-1">
+                                            @foreach($subject->teachers as $teacher)
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-indigo-50 text-indigo-700">
+                                                    อ.{{ $teacher->first_name_th }}
+                                                </span>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        <div class="mt-2 text-[10px] text-slate-400">ยังไม่กำหนดผู้สอน</div>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4">
@@ -287,6 +304,16 @@
                                         <option value="{{ $course->id }}">{{ $course->course_name_th }}</option>
                                     @endforeach
                                 </select>
+                            </div>
+
+                            <div class="col-span-2">
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">อาจารย์ผู้สอนประจำวิชา (เลือกได้มากกว่า 1 ท่าน)</label>
+                                <select name="teacher_ids[]" x-model="form.teacher_ids" multiple class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all cursor-pointer h-32">
+                                    @foreach($allTeachers as $teacher)
+                                        <option value="{{ $teacher->id }}">{{ $teacher->first_name_th }} {{ $teacher->last_name_th }}</option>
+                                    @endforeach
+                                </select>
+                                <p class="text-xs text-slate-500 mt-1">กด Ctrl (หรือ Cmd บน Mac) ค้างไว้เพื่อเลือกหลายรายการ</p>
                             </div>
 
                             <div class="col-span-2">

@@ -20,12 +20,13 @@ class StudentEvaluationController extends Controller
         // Find subjects in student's course
         $subjects = Subject::where('course_id', $student->course_id)
             ->where('is_active', true)
-            ->with('teacher')
+            ->with('teachers')
             ->get();
 
         // Check which have been evaluated
         $evaluatedTeachers = TeacherEvaluationModel::where('student_id', $student->id)
-            ->pluck('subject_id')
+            ->get()
+            ->map(function($ev) { return $ev->subject_id . '_' . $ev->teacher_id; })
             ->toArray();
 
         // Check if peer evaluation is enabled by admin
@@ -49,26 +50,29 @@ class StudentEvaluationController extends Controller
         return view('student.evaluation', compact('subjects', 'evaluatedTeachers', 'classmates', 'evaluatedPeers', 'peerEvaluationEnabled'));
     }
 
-    public function teacherEvaluation($subjectId)
+    public function teacherEvaluation($subjectId, $teacherId)
     {
-        $subject = Subject::with('teacher')->findOrFail($subjectId);
+        $subject = Subject::findOrFail($subjectId);
+        $teacher = \App\Models\Teacher::findOrFail($teacherId);
 
         // Check if already evaluated
         $studentId = Auth::guard('student')->id();
         $exists = TeacherEvaluationModel::where('student_id', $studentId)
             ->where('subject_id', $subjectId)
+            ->where('teacher_id', $teacherId)
             ->exists();
 
         if ($exists) {
-            return redirect()->route('student.evaluation')->with('error', 'คุณได้ทำการประเมินวิชานี้ไปแล้ว');
+            return redirect()->route('student.evaluation')->with('error', 'คุณได้ทำการประเมินวิชานี้กับอาจารย์ท่านนี้ไปแล้ว');
         }
 
-        return view('student.teacher-evaluation', compact('subject', 'subjectId'));
+        return view('student.teacher-evaluation', compact('subject', 'subjectId', 'teacher', 'teacherId'));
     }
 
-    public function storeTeacherEvaluation(Request $request, $subjectId)
+    public function storeTeacherEvaluation(Request $request, $subjectId, $teacherId)
     {
         $subject = Subject::findOrFail($subjectId);
+        $teacher = \App\Models\Teacher::findOrFail($teacherId);
 
         $request->validate([
             'rating_knowledge' => 'required|integer|min:1|max:5',
@@ -81,7 +85,7 @@ class StudentEvaluationController extends Controller
 
         TeacherEvaluationModel::create([
             'student_id' => Auth::guard('student')->id(),
-            'teacher_id' => $subject->teacher_id,
+            'teacher_id' => $teacher->id,
             'subject_id' => $subjectId,
             'semester' => '1/2567', // Should be dynamic depending on settings
             'rating_knowledge' => $request->rating_knowledge,

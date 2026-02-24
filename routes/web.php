@@ -75,8 +75,8 @@ Route::middleware(['auth:student'])->prefix('student')->name('student.')->group(
     Route::post('/surveys/{survey}', [\App\Http\Controllers\Student\StudentSurveyController::class, 'store'])->name('surveys.store');
     Route::get('/documents', [\App\Http\Controllers\Student\StudentPageController::class, 'documents'])->name('documents');
     Route::get('/evaluation', [\App\Http\Controllers\Student\StudentEvaluationController::class, 'index'])->name('evaluation');
-    Route::get('/evaluation/teacher/{subjectId}', [\App\Http\Controllers\Student\StudentEvaluationController::class, 'teacherEvaluation'])->name('teacher-evaluation');
-    Route::post('/evaluation/teacher/{subjectId}', [\App\Http\Controllers\Student\StudentEvaluationController::class, 'storeTeacherEvaluation'])->name('teacher-evaluation.store');
+    Route::get('/evaluation/teacher/{subjectId}/{teacherId}', [\App\Http\Controllers\Student\StudentEvaluationController::class, 'teacherEvaluation'])->name('teacher-evaluation');
+    Route::post('/evaluation/teacher/{subjectId}/{teacherId}', [\App\Http\Controllers\Student\StudentEvaluationController::class, 'storeTeacherEvaluation'])->name('teacher-evaluation.store');
     Route::get('/evaluation/peer/{studentId}', [\App\Http\Controllers\Student\StudentEvaluationController::class, 'peerEvaluation'])->name('peer-evaluation');
     Route::post('/evaluation/peer/{studentId}', [\App\Http\Controllers\Student\StudentEvaluationController::class, 'storePeerEvaluation'])->name('peer-evaluation.store');
     Route::get('/change-password', [\App\Http\Controllers\Student\StudentPageController::class, 'changePasswordForm'])->name('change-password');

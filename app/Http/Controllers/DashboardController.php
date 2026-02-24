@@ -21,9 +21,15 @@ class DashboardController extends Controller
 
         $recentStudents = Student::latest()->take(5)->get();
 
+        $studentsByCourse = Course::withCount('students')
+            ->having('students_count', '>', 0)
+            ->orderByDesc('students_count')
+            ->get();
+
         return view('dashboard', [
             'stats' => $stats,
-            'recentStudents' => $recentStudents
+            'recentStudents' => $recentStudents,
+            'studentsByCourse' => $studentsByCourse
         ]);
     }
 }

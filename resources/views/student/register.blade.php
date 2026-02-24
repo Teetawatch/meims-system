@@ -1,6 +1,6 @@
 <x-layouts.app>
 <div class="min-h-screen bg-surface-hover relative font-['Outfit','Anuphan',sans-serif] overflow-hidden"
-    x-data="{ currentStep: 1, totalSteps: 6, previewPhoto: null, showToast: false, toastMessage: '' }">
+    x-data="studentRegistrationData()">
 
     {{-- Background Effects --}}
     <div class="fixed inset-0 w-full h-full pointer-events-none z-0">
@@ -83,7 +83,7 @@
                 {{-- Steps Navigation (Bento Grid Style) --}}
                 <div class="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-4 mb-10">
                     <template x-for="step in totalSteps" :key="step">
-                        <button type="button" @click="currentStep = step"
+                        <button type="button" @click="goToStep(step)"
                             :class="{ 
                                 'bg-primary border-blue-600 text-white shadow-lg scale-105': currentStep === step,
                                 'bg-surface border-blue-200 text-blue-600': currentStep !== step && currentStep > step,
@@ -126,7 +126,7 @@
                     @csrf
 
                     {{-- Step 1: Account --}}
-                    <div x-show="currentStep === 1" class="space-y-6 animate-fade-in">
+                    <div x-show="currentStep === 1" id="step1" class="space-y-6 animate-fade-in">
                         <h2 class="text-2xl font-bold text-text border-l-4 border-blue-500 pl-4">ข้อมูลบัญชีผู้ใช้</h2>
 
                         {{-- Photo Upload --}}
@@ -200,7 +200,7 @@
                     </div>
 
                     {{-- Step 2: Personal --}}
-                    <div x-show="currentStep === 2" class="space-y-6 animate-fade-in" style="display:none;">
+                    <div x-show="currentStep === 2" id="step2" class="space-y-6 animate-fade-in" style="display:none;">
                         <h2 class="text-2xl font-bold text-text border-l-4 border-blue-500 pl-4">ข้อมูลส่วนตัว
                         </h2>
 
@@ -276,7 +276,7 @@
                     </div>
 
                     {{-- Step 3: Address --}}
-                    <div x-show="currentStep === 3" class="space-y-6 animate-fade-in" style="display:none;">
+                    <div x-show="currentStep === 3" id="step3" class="space-y-6 animate-fade-in" style="display:none;">
                         <h2 class="text-2xl font-bold text-text border-l-4 border-blue-500 pl-4">ที่อยู่และการติดต่อ</h2>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -323,7 +323,7 @@
                     </div>
 
                     {{-- Step 4: Family --}}
-                    <div x-show="currentStep === 4" class="space-y-6 animate-fade-in" style="display:none;">
+                    <div x-show="currentStep === 4" id="step4" class="space-y-6 animate-fade-in" style="display:none;">
                         <h2 class="text-2xl font-bold text-text border-l-4 border-blue-500 pl-4">ข้อมูลครอบครัว</h2>
 
                         <div class="p-6 bg-surface-hover rounded-2xl border border-border">
@@ -386,7 +386,7 @@
                     </div>
 
                     {{-- Step 5: Education --}}
-                    <div x-show="currentStep === 5" class="space-y-6 animate-fade-in" style="display:none;">
+                    <div x-show="currentStep === 5" id="step5" class="space-y-6 animate-fade-in" style="display:none;">
                         <h2 class="text-2xl font-bold text-text border-l-4 border-blue-500 pl-4">ประวัติการศึกษา</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="flex flex-col gap-1 group">
@@ -419,7 +419,7 @@
                     </div>
 
                     {{-- Step 6: Health --}}
-                    <div x-show="currentStep === 6" class="space-y-6 animate-fade-in" style="display:none;">
+                    <div x-show="currentStep === 6" id="step6" class="space-y-6 animate-fade-in" style="display:none;">
                         <h2 class="text-2xl font-bold text-text border-l-4 border-blue-500 pl-4">ข้อมูลสุขภาพ</h2>
                         <div class="grid grid-cols-2 gap-6">
                             <div class="flex flex-col gap-1 group">
@@ -458,13 +458,13 @@
 
                         <div class="flex gap-4">
                             <div x-show="currentStep < totalSteps">
-                                <button type="button" @click="currentStep++"
+                                <button type="button" @click="nextStep()"
                                     class="px-8 py-3 rounded-xl bg-primary text-white font-bold shadow-md shadow-primary/20 hover:bg-primary-dark transition-all hover:scale-105 active:scale-95">
                                     ถัดไป
                                 </button>
                             </div>
                             <div x-show="currentStep === totalSteps">
-                                <button type="submit"
+                                <button type="submit" @click="submitForm($event)"
                                     class="px-8 py-3 rounded-xl bg-green-600 text-white font-bold shadow-lg shadow-green-500/30 hover:bg-green-700 transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -487,5 +487,91 @@
 
     {{-- SweetAlert2 Integration --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function studentRegistrationData() {
+            return {
+                currentStep: 1, 
+                totalSteps: 6, 
+                previewPhoto: null,
+                
+                goToStep(step) {
+                    if (step < this.currentStep) {
+                        this.currentStep = step;
+                    } else if (step > this.currentStep) {
+                        let canProceed = true;
+                        for(let i = this.currentStep; i < step; i++) {
+                            if (!this.validateStep(i)) {
+                                this.currentStep = i; // Switch to failing step
+                                canProceed = false;
+                                break;
+                            }
+                        }
+                        if (canProceed) {
+                            this.currentStep = step;
+                        }
+                    }
+                },
+
+                nextStep() {
+                    if (this.validateStep(this.currentStep)) {
+                        this.currentStep++;
+                    }
+                },
+                
+                validateStep(step) {
+                    const stepEl = document.getElementById('step' + step);
+                    if (!stepEl) return true;
+                    
+                    const requiredFields = stepEl.querySelectorAll('input[required], select[required], textarea[required]');
+                    let isValid = true;
+                    
+                    requiredFields.forEach(field => {
+                        if (!field.value.trim()) {
+                            isValid = false;
+                            
+                            // Visual error cue
+                            field.classList.remove('focus:border-primary', 'focus:ring-primary/20', 'border-border');
+                            field.classList.add('border-error', 'bg-red-50/50', 'ring-1', 'ring-error');
+                            
+                            // Remove error styling on user input
+                            const removeError = function() {
+                                if (this.value.trim()) {
+                                    this.classList.remove('border-error', 'bg-red-50/50', 'ring-1', 'ring-error');
+                                    this.classList.add('focus:border-primary', 'focus:ring-primary/20', 'border-border');
+                                    this.removeEventListener('input', removeError);
+                                    this.removeEventListener('change', removeError);
+                                }
+                            };
+                            field.addEventListener('input', removeError);
+                            field.addEventListener('change', removeError);
+                        }
+                    });
+                    
+                    if (!isValid) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'ข้อมูลไม่ครบถ้วน',
+                            text: 'กรุณากรอกข้อมูลในช่องที่มีเครื่องหมายดอกจัน (*) ให้ครบถ้วนเพื่อดำเนินการต่อ',
+                            confirmButtonColor: '#3b82f6',
+                            confirmButtonText: 'ตกลง'
+                        });
+                    }
+                    
+                    return isValid;
+                },
+                
+                submitForm(e) {
+                    // Final validation over all tabs before submit guarantees browser won't silently fail
+                    for(let i = 1; i <= this.totalSteps; i++) {
+                        if (!this.validateStep(i)) {
+                            this.currentStep = i;
+                            e.preventDefault();
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 </div>
 </x-layouts.app>

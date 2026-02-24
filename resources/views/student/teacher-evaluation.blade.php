@@ -25,18 +25,18 @@
                     <div class="flex items-center gap-6 mb-12 pb-8 border-b border-border/50">
                         <div
                             class="w-20 h-20 bg-info-light rounded-3xl flex items-center justify-center text-primary font-bold text-2xl">
-                            {{ mb_substr($subject->teacher->first_name_th ?? 'อ', 0, 1) }}
+                            {{ mb_substr($teacher->first_name_th ?? 'อ', 0, 1) }}
                         </div>
                         <div>
                             <p class="text-xs font-bold text-text-disabled uppercase tracking-widest mb-1">อาจารย์ผู้สอน
                             </p>
                             <h2 class="text-2xl font-bold text-text">
-                                อ.{{ $subject->teacher ? $subject->teacher->title_th . $subject->teacher->first_name_th . ' ' . $subject->teacher->last_name_th : 'ไม่ระบุ' }}
+                                อ.{{ $teacher->title_th . $teacher->first_name_th . ' ' . $teacher->last_name_th }}
                             </h2>
                         </div>
                     </div>
 
-                    <form action="{{ route('student.teacher-evaluation.store', $subjectId) }}" method="POST" class="space-y-10">
+                    <form action="{{ route('student.teacher-evaluation.store', [$subjectId, $teacherId]) }}" method="POST" class="space-y-10">
                         @csrf
                         @php
                             $criteria = [

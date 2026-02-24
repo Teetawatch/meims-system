@@ -25,6 +25,19 @@
                     </div>
 
                     <div>
+                        <label class="block text-sm font-medium text-text-secondary text-sm mb-2">หลักสูตรเป้าหมาย (เว้นว่างหากให้ประเมินได้ทุกหลักสูตร)</label>
+                        <select name="course_id" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all appearance-none cursor-pointer">
+                            <option value="">-- ประเมินได้ทุกหลักสูตร --</option>
+                            @foreach($courses as $course)
+                                <option value="{{ $course->id }}" {{ old('course_id', $topic->course_id) == $course->id ? 'selected' : '' }}>
+                                    {{ $course->course_name_th }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('course_id') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div>
                         <label class="block text-sm font-medium text-text-secondary text-sm mb-2">คำอธิบาย (Optional)</label>
                         <textarea name="description" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all">{{ old('description', $topic->description) }}</textarea>
                          @error('description') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
