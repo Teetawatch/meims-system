@@ -19,13 +19,11 @@
         <div class="flex flex-col items-center text-center mb-12">
             <div class="inline-flex relative mb-8">
                 <div class="absolute inset-0 bg-blue-500 blur-2xl opacity-20 animate-pulse"></div>
-                <div class="relative inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[2.5rem] shadow-2xl shadow-blue-500/40 mb-2 group transition-all hover:scale-105 active:scale-95 duration-500">
-                    <svg class="w-12 h-12 text-white transform group-hover:rotate-12 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                    </svg>
+                <div class="relative inline-flex items-center justify-center group transition-all hover:scale-110 active:scale-95 duration-500">
+                    <img src="{{ asset('images/logo.webp') }}" class="w-24 h-24 md:w-26 md:h-26 object-contain drop-shadow-2xl" alt="Logo">
                 </div>
             </div>
-            <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-text whitespace-nowrap">ระบบบริหารจัดการข้อมูลสารสนเทศด้านการศึกษา : MEIMS</h1>
+            <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-text whitespace-nowrap tracking-tight">ระบบบริหารจัดการข้อมูลสารสนเทศด้านการศึกษา</h1>
             <div class="flex items-center justify-center gap-3 mt-3">
                 <span class="h-px w-6 bg-slate-200"></span>
                 <p class="text-text-muted font-bold uppercase tracking-[0.2em] text-[10px]">โรงเรียนพลาธิการ กรมพลาธิการทหารเรือ</p>
@@ -110,8 +108,7 @@
 
         <!-- Footer -->
         <div class="mt-12 text-center text-text-disabled">
-            <p class="text-[11px] font-bold uppercase tracking-[0.2em] mb-4">MEIMS &copy; {{ date('Y') }} • All Rights Reserved</p>
-            <p class="text-xs font-bold leading-relaxed opacity-60">หากพบปัญหาการเข้าใช้งาน กรุณาติดต่อกองทะเบียนและวัดผล<br>โรงเรียนพลาธิการ กรมพลาธิการทหารเรือ</p>
+            <p class="text-[11px] font-bold uppercase tracking-[0.2em] mb-4">โรงเรียนพลาธิการ กรมพลาธิการทหารเรือ &copy; {{ date('Y') }} • All Rights Reserved</p>
         </div>
     </div>
 

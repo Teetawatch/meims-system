@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Teacher;
+use App\Exports\TeacherTemplateExport;
+use App\Imports\TeachersImport;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TeacherController extends Controller
 {
@@ -63,5 +66,24 @@ class TeacherController extends Controller
     {
         $teacher->delete();
         return redirect()->route('teachers.index')->with('message', 'ลบข้อมูลอาจารย์เรียบร้อยแล้ว');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'importFile' => 'required|mimes:xlsx,xls,csv',
+        ]);
+
+        try {
+            Excel::import(new TeachersImport, $request->file('importFile')->getRealPath());
+            return redirect()->route('teachers.index')->with('message', 'นำเข้าข้อมูลอาจารย์เรียบร้อยแล้ว');
+        } catch (\Exception $e) {
+            return redirect()->route('teachers.index')->withErrors(['importFile' => 'ไม่สามารถนำเข้าข้อมูลได้: ' . $e->getMessage()]);
+        }
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new TeacherTemplateExport, 'teacher_template.xlsx');
     }
 }

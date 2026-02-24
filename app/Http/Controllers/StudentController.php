@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\Course;
 use App\Exports\StudentTemplateExport;
 use App\Imports\StudentsImport;
 use Illuminate\Http\Request;
@@ -88,5 +89,46 @@ class StudentController extends Controller
     public function show(Student $student)
     {
         return view('students.show', compact('student'));
+    }
+
+    public function edit(Student $student)
+    {
+        $courses = Course::all();
+        return view('students.edit', compact('student', 'courses'));
+    }
+
+    public function update(Request $request, Student $student)
+    {
+        $validated = $request->validate([
+            'student_id' => 'required|unique:students,student_id,' . $student->id,
+            'username' => 'required|unique:students,username,' . $student->id,
+            'first_name_th' => 'required|string',
+            'last_name_th' => 'required|string',
+            'batch' => 'nullable|string',
+            'course_id' => 'nullable|exists:courses,id',
+            'email' => 'nullable|email|unique:students,email,' . $student->id,
+            'phone' => 'nullable|string',
+            'current_address' => 'nullable|string',
+            'subdistrict' => 'nullable|string',
+            'district' => 'nullable|string',
+            'province' => 'nullable|string',
+            'zip_code' => 'nullable|string',
+        ]);
+
+        if ($request->filled('password')) {
+            $validated['password'] = bcrypt($request->password);
+        }
+
+        $student->update($validated);
+
+        // Update course_name if course_id changed
+        if ($request->filled('course_id')) {
+            $course = Course::find($request->course_id);
+            if ($course) {
+                $student->update(['course_name' => $course->course_name_th]);
+            }
+        }
+
+        return redirect()->route('students.index')->with('message', 'อัปเดตข้อมูลนักเรียนเรียบร้อยแล้ว');
     }
 }

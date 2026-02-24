@@ -4,6 +4,8 @@
         isModalOpen: false, 
         isEditMode: false, 
         teacherId: null,
+        showImportModal: false,
+        fileName: null,
         form: {
             teacher_code: '',
             title_th: '',
@@ -51,7 +53,21 @@
                 <p class="text-text-muted text-sm font-medium mt-1">จัดการรายชื่ออาจารย์ผู้สอนและการตั้งค่าต่างๆ</p>
             </div>
 
-            <div class="flex gap-3">
+            <div class="flex flex-wrap gap-2">
+                <a href="{{ route('teachers.template') }}"
+                    class="inline-flex items-center px-4 py-2.5 bg-surface text-text-secondary border border-border hover:bg-surface-hover text-sm font-semibold rounded-xl transition-all duration-200 shadow-sm cursor-pointer">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    โหลดฟอร์ม
+                </a>
+                <button @click="showImportModal = true"
+                    class="inline-flex items-center px-4 py-2.5 bg-info-light text-primary border border-blue-200 hover:bg-blue-100 text-sm font-semibold rounded-xl transition-all duration-200 shadow-sm cursor-pointer">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                    </svg>
+                    นำเข้าข้อมูล
+                </button>
                 <button @click="openCreateModal()"
                     class="inline-flex items-center px-5 py-2.5 bg-primary hover:bg-primary-dark text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-md shadow-primary/20 cursor-pointer active:scale-95">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -61,6 +77,19 @@
                 </button>
             </div>
         </header>
+
+        <!-- Error handling for import -->
+        @if ($errors->has('importFile'))
+        <div class="mb-6 p-4 rounded-xl bg-red-50 text-red-700 border border-red-200 flex items-start gap-3">
+            <svg class="w-5 h-5 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <div>
+                <p class="font-bold text-sm">การนำเข้าข้อมูลล้มเหลว</p>
+                <p class="text-xs mt-1">{{ $errors->first('importFile') }}</p>
+            </div>
+        </div>
+        @endif
 
         <!-- Search Section -->
         <div class="bg-surface p-5 rounded-2xl shadow-card border border-border mb-6">
@@ -280,6 +309,96 @@
                     </div>
                 </form>
             </div>
+        </div>
+    </div>
+    <!-- Import Modal -->
+    <div x-show="showImportModal" x-transition.opacity
+        class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[110] flex items-center justify-center p-4"
+        style="display: none;">
+        
+        <div x-show="showImportModal" 
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 scale-95"
+            x-transition:enter-end="opacity-100 scale-100"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100 scale-100"
+            x-transition:leave-end="opacity-0 scale-95"
+            @click.away="showImportModal = false"
+            class="bg-surface rounded-2xl shadow-xl max-w-md w-full overflow-hidden border border-border">
+            
+            <form action="{{ route('teachers.import') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="px-6 py-5 border-b border-border flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-info-light rounded-xl text-primary">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-text">นำเข้าข้อมูลอาจารย์</h3>
+                            <p class="text-sm text-text-muted">อัปโหลดไฟล์ (.xlsx, .xls, .csv)</p>
+                        </div>
+                    </div>
+                    <button type="button" @click="showImportModal = false" class="text-text-muted hover:text-text p-1.5 rounded-lg hover:bg-surface-hover">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="p-6 space-y-4">
+                    <div class="relative">
+                        <input type="file" name="importFile" id="teacherImportFile" class="hidden" accept=".xlsx,.xls,.csv" required
+                                x-on:change="fileName = $event.target.files[0] ? $event.target.files[0].name : null">
+                        
+                        <label for="teacherImportFile" 
+                                class="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-border rounded-2xl hover:bg-info-light/30 hover:border-primary/40 transition-all duration-200 cursor-pointer group bg-surface-hover/50">
+                            
+                            <div x-show="!fileName" class="flex flex-col items-center text-center p-6">
+                                <div class="w-14 h-14 bg-surface shadow-sm border border-border rounded-xl flex items-center justify-center mb-4 text-primary">
+                                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                    </svg>
+                                </div>
+                                <h4 class="text-sm font-semibold text-text">คลิกเพื่อเลือกไฟล์</h4>
+                                <p class="text-xs text-text-disabled mt-2">.xlsx, .xls, .csv</p>
+                            </div>
+
+                            <div x-show="fileName" class="flex flex-col items-center w-full h-full justify-center p-6 bg-surface" style="display: none;">
+                                <div class="w-full max-w-sm bg-surface-hover border border-border rounded-xl p-4 flex items-center">
+                                    <div class="w-10 h-10 bg-surface rounded-lg flex items-center justify-center text-success mr-3">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-semibold text-text truncate" x-text="fileName"></p>
+                                        <span class="text-xs text-success font-medium">พร้อมนำเข้า</span>
+                                    </div>
+                                </div>
+                                <p @click.stop="fileName = null; document.getElementById('teacherImportFile').value = '';" class="mt-3 text-xs text-error hover:underline cursor-pointer">เปลี่ยนไฟล์</p>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="bg-warning-light border border-amber-200 rounded-xl p-4 flex gap-3 text-xs text-amber-800">
+                        <svg class="w-5 h-5 shrink-0 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p>กรุณาใช้ไฟล์แบบฟอร์มที่กำหนด หากรหัสอาจารย์ซ้ำ ระบบจะทำอัปเดตข้อมูลเป็นปัจจุบัน</p>
+                    </div>
+                </div>
+
+                <div class="px-6 py-4 bg-surface-hover/50 border-t border-border flex justify-end gap-3">
+                    <button type="button" @click="showImportModal = false; fileName = null;" class="px-5 py-2.5 text-text-secondary font-medium rounded-xl text-sm transition-all hover:bg-surface border border-transparent">
+                        ยกเลิก
+                    </button>
+                    <button type="submit" x-show="fileName" class="px-5 py-2.5 bg-primary hover:bg-primary-dark text-white font-medium rounded-xl text-sm transition-all shadow-md shadow-primary/20">
+                        ยืนยันการนำเข้า
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

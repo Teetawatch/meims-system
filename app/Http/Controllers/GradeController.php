@@ -64,7 +64,7 @@ class GradeController extends Controller
         $years = Student::distinct()->pluck('fiscal_year')->filter();
         $semesters = Grade::distinct()->pluck('semester')->filter();
 
-        $allowedGrades = ['0', '1', '1.5', '2', '2.5', '3', '3.5', '4', 'A', 'B+', 'B', 'C+', 'C', 'D+', 'D', 'F', 'S', 'U']; // Added letters just in case, based on UI
+        $allowedGrades = ['4', '3.5', '3', '2.5', '2', '1.5', '1', '0'];
 
         return view('grades.index', compact(
             'grades', 'courses', 'subjects', 'students', 'batches', 'years', 'semesters', 'allowedGrades',

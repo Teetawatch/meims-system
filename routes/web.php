@@ -36,7 +36,7 @@ Route::resource('courses', \App\Http\Controllers\CourseController::class)->excep
 Route::get('/students/template', [\App\Http\Controllers\StudentController::class, 'downloadTemplate'])->name('students.template')->middleware('auth');
 Route::post('/students/import', [\App\Http\Controllers\StudentController::class, 'import'])->name('students.import')->middleware('auth');
 Route::delete('/students/destroySelected', [\App\Http\Controllers\StudentController::class, 'destroySelected'])->name('students.destroySelected')->middleware('auth');
-Route::resource('students', \App\Http\Controllers\StudentController::class)->except(['create', 'show', 'edit'])->middleware('auth');
+Route::resource('students', \App\Http\Controllers\StudentController::class)->except(['create', 'show'])->middleware('auth');
 Route::get('/students/conduct', [\App\Http\Controllers\StudentConductController::class, 'index'])->name('students.conduct')->middleware('auth');
 Route::post('/students/conduct', [\App\Http\Controllers\StudentConductController::class, 'store'])->name('students.conduct.store')->middleware('auth');
 Route::delete('/students/conduct/{id}', [\App\Http\Controllers\StudentConductController::class, 'destroy'])->name('students.conduct.destroy')->middleware('auth');
@@ -52,6 +52,8 @@ Route::post('/grades/import', [\App\Http\Controllers\GradeController::class, 'im
 Route::resource('grades', \App\Http\Controllers\GradeController::class)->except(['create', 'show', 'edit'])->middleware('auth');
 Route::get('/transcripts', [\App\Http\Controllers\TranscriptController::class, 'index'])->name('transcripts.index')->middleware('auth');
 Route::get('/transcripts/download', [\App\Http\Controllers\TranscriptController::class, 'download'])->name('transcripts.download')->middleware('auth');
+Route::get('/teachers/template', [\App\Http\Controllers\TeacherController::class, 'downloadTemplate'])->name('teachers.template')->middleware('auth');
+Route::post('/teachers/import', [\App\Http\Controllers\TeacherController::class, 'import'])->name('teachers.import')->middleware('auth');
 Route::resource('teachers', \App\Http\Controllers\TeacherController::class)->except(['create', 'show', 'edit'])->middleware('auth');
 Route::get('/reports/evaluations', [\App\Http\Controllers\ReportController::class, 'evaluations'])->name('reports.evaluations')->middleware('auth');
 Route::post('/reports/evaluations/toggle', [\App\Http\Controllers\ReportController::class, 'togglePeerSetting'])->name('reports.evaluations.toggle')->middleware('auth');

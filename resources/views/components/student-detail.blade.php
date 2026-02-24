@@ -1,8 +1,7 @@
-<x-layouts.app>
-<div class="min-h-screen bg-background font-body flex">
+<div class="min-h-screen bg-slate-50 font-['Outfit','Anuphan'] flex">
 
     <!-- Sidebar Container -->
-    <aside class="w-72 shrink-0 bg-surface border-r border-border flex flex-col fixed inset-y-0 left-0 z-40 hidden lg:flex">
+    <aside class="w-72 shrink-0 bg-white border-r border-slate-100 flex flex-col fixed inset-y-0 left-0 z-40 hidden lg:flex">
         <x-sidebar />
     </aside>
 
@@ -23,7 +22,7 @@
                 </div>
             </div>
 
-            <a href="{{ route('students.edit', $student->id) }}"
+            <a href="#"
                 class="inline-flex items-center px-4 py-2 bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:text-blue-600 font-medium rounded-xl transition-all shadow-sm">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -38,7 +37,7 @@
             <!-- Left Column: Profile Card -->
             <div class="space-y-6">
                 <div
-                    class="bg-surface rounded-2xl p-6 shadow-card border border-border text-center relative overflow-hidden">
+                    class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 text-center relative overflow-hidden">
                     <div class="absolute top-0 left-0 w-full h-24 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
                     <div class="relative z-10">
                         @if($student->photo_path)
@@ -87,7 +86,7 @@
                     </div>
                 </div>
 
-                <div class="bg-surface rounded-2xl p-6 shadow-card border border-border">
+                <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
                     <h3 class="font-bold text-slate-800 mb-4 flex items-center">
                         <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -120,7 +119,7 @@
             <!-- Right Column: Details -->
             <div class="lg:col-span-2 space-y-6">
                 <!-- Personal Info -->
-                <div class="bg-surface rounded-2xl p-6 shadow-card border border-border">
+                <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
                     <h3 class="font-bold text-lg text-slate-800 mb-6 border-b border-slate-50 pb-4">ข้อมูลส่วนตัว</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
                         <div>
@@ -151,7 +150,7 @@
                 </div>
 
                 <!-- Family Info -->
-                <div class="bg-surface rounded-2xl p-6 shadow-card border border-border">
+                <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
                     <h3 class="font-bold text-lg text-slate-800 mb-6 border-b border-slate-50 pb-4">ข้อมูลครอบครัว</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
                         <div>
@@ -184,7 +183,7 @@
                 </div>
 
                 <!-- Education Info -->
-                <div class="bg-surface rounded-2xl p-6 shadow-card border border-border">
+                <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
                     <h3 class="font-bold text-lg text-slate-800 mb-6 border-b border-slate-50 pb-4">ข้อมูลการศึกษา</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
                         <div>
@@ -210,4 +209,3 @@
         </div>
     </main>
 </div>
-</x-layouts.app>

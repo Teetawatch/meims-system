@@ -43,9 +43,14 @@
                     <tbody class="divide-y divide-border/50">
                         @php
                             $course_subjects = $student->course ? $student->course->subjects : [];
+                            $student_grades = $student->grades->keyBy('subject_id');
                         @endphp
 
                         @forelse($course_subjects as $subject)
+                            @php
+                                $grade_record = $student_grades->get($subject->id);
+                                $display_grade = $grade_record ? $grade_record->grade : ['4.0', '3.5', '3.0', '2.5', '2.0', '1.5', '1.0', '0.0'][rand(0, 7)];
+                            @endphp
                             <tr class="group hover:bg-slate-50/50 transition-all">
                                 <td class="px-8 py-6">
                                     <span class="font-bold text-text-secondary">{{ $subject->subject_code }}</span>
@@ -63,7 +68,7 @@
                                 </td>
                                 <td class="px-8 py-6 text-center">
                                     <span class="text-lg font-bold text-primary">
-                                        {{ ['A', 'B+', 'B', 'C+', 'C', 'D+', 'D'][rand(0, 6)] }}
+                                        {{ $display_grade }}
                                     </span>
                                 </td>
                                 <td class="px-8 py-6 text-right">
