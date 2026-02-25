@@ -21,7 +21,13 @@ Route::get('/debug/setup', function () {
         \Illuminate\Support\Facades\Artisan::call('optimize:clear');
         \Illuminate\Support\Facades\Artisan::call('view:clear');
         \Illuminate\Support\Facades\Artisan::call('cache:clear');
-        return "System Optimized and All Caches Cleared Successfully! <br><br> <a href='/admin/registration'>คลิกที่นี่เพื่อกลับไปหน้าจัดการ</a>";
+        
+        // Reset OPcache if available
+        if (function_exists('opcache_reset')) {
+            opcache_reset();
+        }
+        
+        return "System Optimized, All Caches Cleared, and OPcache Reset Successfully! <br><br> <a href='/admin/registration'>คลิกที่นี่เพื่อกลับไปหน้าจัดการ</a>";
     } catch (\Exception $e) {
         return "Error: " . $e->getMessage();
     }
