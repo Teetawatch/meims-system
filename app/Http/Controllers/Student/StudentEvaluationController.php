@@ -53,7 +53,7 @@ class StudentEvaluationController extends Controller
                 ->toArray();
         }
 
-        return view('student.evaluation', compact('subjects', 'evaluatedTeachers', 'classmates', 'evaluatedPeers', 'peerEvaluationEnabled'));
+        return view('student.evaluation', compact('subjects', 'evaluatedTeachers', 'classmates', 'evaluatedPeers', 'peerEvaluationEnabled', 'teacherEvaluationEnabled'));
     }
 
     public function teacherEvaluation($subjectId, $teacherId)
