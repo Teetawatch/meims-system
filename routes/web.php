@@ -12,9 +12,19 @@ use App\Http\Controllers\Student\Auth\LoginController as StudentLoginController;
 |
 | Here is where you can register web routes for your application. These
 | routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
 |
 */
+
+// Temporary Setup Route for Shared Hosting
+Route::get('/debug/setup', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        return "System Optimized and Migrated Successfully!";
+    } catch (\Exception $e) {
+        return "Error: " . $e->getMessage();
+    }
+});
 
 Route::get('/', function () {
     if (Auth::guard('student')->check()) {
