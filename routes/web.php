@@ -15,24 +15,6 @@ use App\Http\Controllers\Student\Auth\LoginController as StudentLoginController;
 |
 */
 
-// Temporary Setup Route for Shared Hosting
-Route::get('/debug/setup', function () {
-    try {
-        \Illuminate\Support\Facades\Artisan::call('optimize:clear');
-        \Illuminate\Support\Facades\Artisan::call('view:clear');
-        \Illuminate\Support\Facades\Artisan::call('cache:clear');
-        
-        // Reset OPcache if available
-        if (function_exists('opcache_reset')) {
-            opcache_reset();
-        }
-        
-        return "System Optimized, All Caches Cleared, and OPcache Reset Successfully! <br><br> <a href='/admin/registration'>คลิกที่นี่เพื่อกลับไปหน้าจัดการ</a>";
-    } catch (\Exception $e) {
-        return "Error: " . $e->getMessage();
-    }
-});
-
 Route::get('/', function () {
     if (Auth::guard('student')->check()) {
         return redirect()->route('student.dashboard');
