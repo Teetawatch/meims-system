@@ -8,8 +8,11 @@ use Illuminate\Support\Facades\Artisan;
 
 Route::get('/debug/migrate', function() {
     try {
-        Artisan::call('migrate', ["--force" => true]);
-        return "Migration successful: <br><pre>" . Artisan::output() . "</pre>";
+        Artisan::call('migrate', [
+            "--path" => "/database/migrations/2026_02_25_135343_add_academic_year_and_fiscal_year_to_courses_table.php",
+            "--force" => true
+        ]);
+        return "Migration successful for latest file: <br><pre>" . Artisan::output() . "</pre>";
     } catch (\Exception $e) {
         return "Migration failed: " . $e->getMessage();
     }
