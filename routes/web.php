@@ -15,6 +15,20 @@ use App\Http\Controllers\Student\Auth\LoginController as StudentLoginController;
 |
 */
 
+// ⚠️ TEMPORARY: Run teacher evaluation migration — DELETE AFTER USE
+Route::get('/debug/migrate-evaluation', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_02_25_120000_update_teacher_evaluations_add_new_criteria.php',
+            '--force' => true,
+        ]);
+        $output = \Illuminate\Support\Facades\Artisan::output();
+        return "✅ Migration สำเร็จ!<br><pre>{$output}</pre><br><a href='/admin'>กลับหน้าแอดมิน</a>";
+    } catch (\Exception $e) {
+        return "❌ Error: " . $e->getMessage();
+    }
+});
+
 Route::get('/', function () {
     if (Auth::guard('student')->check()) {
         return redirect()->route('student.dashboard');
