@@ -9,6 +9,8 @@
             course_name_th: '',
             course_name_en: '',
             duration: '',
+            academic_year: '',
+            fiscal_year_batch: '',
             is_active: true
         },
         openCreateModal() {
@@ -18,6 +20,8 @@
             this.form.course_name_th = '';
             this.form.course_name_en = '';
             this.form.duration = '';
+            this.form.academic_year = '';
+            this.form.fiscal_year_batch = '';
             this.form.is_active = true;
             this.isModalOpen = true;
         },
@@ -28,6 +32,8 @@
             this.form.course_name_th = course.course_name_th;
             this.form.course_name_en = course.course_name_en;
             this.form.duration = course.duration;
+            this.form.academic_year = course.academic_year || '';
+            this.form.fiscal_year_batch = course.fiscal_year_batch || '';
             this.form.is_active = course.is_active;
             this.isModalOpen = true;
         }
@@ -112,6 +118,8 @@
                             class="text-text-muted text-xs font-semibold uppercase tracking-wider border-b border-border">
                             <th class="px-6 py-4">รหัสหลักสูตร</th>
                             <th class="px-6 py-4">ชื่อหลักสูตร (TH)</th>
+                            <th class="px-6 py-4">ปีการศึกษา</th>
+                            <th class="px-6 py-4">รุ่นปี งป.</th>
                             <th class="px-6 py-4">Duration</th>
                             <th class="px-6 py-4">สถานะ</th>
                             <th class="px-6 py-4 text-right">จัดการ</th>
@@ -127,6 +135,8 @@
                                         <div class="text-xs text-slate-400">{{ $course->course_name_en }}</div>
                                     @endif
                                 </td>
+                                <td class="px-6 py-4 text-text-muted text-sm font-medium">{{ $course->academic_year ?? '-' }}</td>
+                                <td class="px-6 py-4 text-text-muted text-sm font-medium">{{ $course->fiscal_year_batch ?? '-' }}</td>
                                 <td class="px-6 py-4 text-text-muted text-sm font-medium">{{ $course->duration ?? '-' }}</td>
                                 <td class="px-6 py-4">
                                     @if($course->is_active)
@@ -209,26 +219,40 @@
                                 <div class="mt-6 space-y-4">
                                     <!-- Code -->
                                     <div>
-                                        <label class="block text-sm font-medium text-text-secondary text-sm mb-1">รหัสหลักสูตร <span class="text-red-500">*</span></label>
+                                        <label class="block text-sm font-medium text-text-secondary mb-1">รหัสหลักสูตร <span class="text-red-500">*</span></label>
                                         <input type="text" name="course_code" x-model="form.course_code" required class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all">
                                     </div>
                                     
                                     <!-- Name TH -->
                                     <div>
-                                        <label class="block text-sm font-medium text-text-secondary text-sm mb-1">ชื่อหลักสูตร (TH) <span class="text-red-500">*</span></label>
+                                        <label class="block text-sm font-medium text-text-secondary mb-1">ชื่อหลักสูตร (TH) <span class="text-red-500">*</span></label>
                                         <input type="text" name="course_name_th" x-model="form.course_name_th" required class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all">
                                     </div>
 
                                     <!-- Name EN -->
                                     <div>
-                                        <label class="block text-sm font-medium text-text-secondary text-sm mb-1">ชื่อหลักสูตร (EN)</label>
+                                        <label class="block text-sm font-medium text-text-secondary mb-1">ชื่อหลักสูตร (EN)</label>
                                         <input type="text" name="course_name_en" x-model="form.course_name_en" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all">
                                     </div>
 
                                     <!-- Duration -->
                                     <div>
-                                        <label class="block text-sm font-medium text-text-secondary text-sm mb-1">ระยะเวลา</label>
+                                        <label class="block text-sm font-medium text-text-secondary mb-1">ระยะเวลา</label>
                                         <input type="text" name="duration" x-model="form.duration" placeholder="เช่น 4 เดือน, 1 ปี" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all">
+                                    </div>
+
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <!-- Academic Year -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-text-secondary mb-1">ประจำปีการศึกษา</label>
+                                            <input type="text" name="academic_year" x-model="form.academic_year" placeholder="เช่น 2567" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all">
+                                        </div>
+
+                                        <!-- Fiscal Year Batch -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-text-secondary mb-1">รุ่นปี งป.</label>
+                                            <input type="text" name="fiscal_year_batch" x-model="form.fiscal_year_batch" placeholder="เช่น 67" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all">
+                                        </div>
                                     </div>
 
                                     <!-- Status -->

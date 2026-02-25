@@ -41,7 +41,8 @@ class StudentRegistrationController extends Controller
 
         // Handle Photo Upload
         if ($request->hasFile('photo')) {
-            $data['photo_path'] = $request->file('photo')->store('photos', 'public');
+            $path = $request->file('photo')->store('', 'images');
+            $data['photo_path'] = 'images/' . $path;
         }
 
         // Handle Password
@@ -94,6 +95,6 @@ class StudentRegistrationController extends Controller
 
         Student::create($data);
 
-        return redirect()->back()->with('success', 'ลงทะเบียนนักเรียนใหม่เรียบร้อยแล้ว');
+        return redirect()->route('student.login')->with('success', 'ลงทะเบียนนักเรียนใหม่เรียบร้อยแล้ว กรุณาเข้าสู่ระบบ');
     }
 }

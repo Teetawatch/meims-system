@@ -90,27 +90,51 @@
                                 {{-- Course Selection --}}
                                 <div class="md:col-span-2 space-y-2">
                                     <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">หลักสูตรที่ต้องการลงทะเบียน</label>
-                                    <select name="course_id" required class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-4 focus:ring-blue-500/10 transition-all font-bold text-slate-700 appearance-none shadow-sm">
+                                    <select name="course_id" required x-model="selectedCourseId" @change="handleCourseChange($event)" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-4 focus:ring-blue-500/10 transition-all font-bold text-slate-700 appearance-none shadow-sm">
                                         <option value="">เลือกหลักสูตร...</option>
                                         @foreach($courses as $course)
-                                            <option value="{{ $course->id }}">{{ $course->course_name_th }}</option>
+                                            <option value="{{ $course->id }}" 
+                                                    data-academic-year="{{ $course->academic_year }}" 
+                                                    data-fiscal-year="{{ $course->fiscal_year_batch }}">
+                                                {{ $course->course_name_th }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
 
                                 <div class="space-y-2">
                                     <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">ประจำปีการศึกษา</label>
-                                    <input type="text" name="academic_year" placeholder="เช่น 2567" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-4 focus:ring-blue-500/10 transition-all font-bold shadow-sm">
+                                    <input type="text" name="academic_year" x-model="academicYear" placeholder="เช่น 2567" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-4 focus:ring-blue-500/10 transition-all font-bold shadow-sm">
                                 </div>
 
                                 <div class="space-y-2">
                                     <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">รุ่นปี งป.</label>
-                                    <input type="text" name="fiscal_year_batch" placeholder="เช่น 67" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-4 focus:ring-blue-500/10 transition-all font-bold shadow-sm">
+                                    <input type="text" name="fiscal_year_batch" x-model="fiscalYearBatch" placeholder="เช่น 67" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-4 focus:ring-blue-500/10 transition-all font-bold shadow-sm">
                                 </div>
 
                                 <div class="space-y-2">
                                     <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">ชั้นยศ</label>
-                                    <input type="text" name="rank" placeholder="เช่น พ.ท." class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-4 focus:ring-blue-500/10 transition-all font-bold shadow-sm">
+                                    <select name="rank" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-4 focus:ring-blue-500/10 transition-all font-bold text-slate-700 appearance-none shadow-sm">
+                                        <option value="">เลือกชั้นยศ...</option>
+                                        <option value="น.อ.">น.อ.</option>
+                                        <option value="น.ท.">น.ท.</option>
+                                        <option value="น.ต.">น.ต.</option>
+                                        <option value="ร.อ.">ร.อ.</option>
+                                        <option value="ร.ท.">ร.ท.</option>
+                                        <option value="ร.ต.">ร.ต.</option>
+                                        <option value="พ.จ.อ.(พิเศษ)">พ.จ.อ.(พิเศษ)</option>
+                                        <option value="พ.จ.อ.">พ.จ.อ.</option>
+                                        <option value="พ.จ.ท.">พ.จ.ท.</option>
+                                        <option value="พ.จ.ต.">พ.จ.ต.</option>
+                                        <option value="จ.อ.">จ.อ.</option>
+                                        <option value="จ.ท.">จ.ท.</option>
+                                        <option value="จ.ต.">จ.ต.</option>
+                                        <option value="พลฯ">พลฯ</option>
+                                        <option value="นรจ.">นรจ.</option>
+                                        <option value="นาย">นาย</option>
+                                        <option value="นาง">นาง</option>
+                                        <option value="นางสาว">นางสาว</option>
+                                    </select>
                                 </div>
 
                                 <div class="space-y-2">
@@ -163,11 +187,11 @@
                             </div>
                             <div class="space-y-2">
                                 <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">วันที่บรรจุรับราชการ</label>
-                                <input type="date" name="enlistment_date" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-4 focus:ring-blue-500/10 transition-all font-bold shadow-sm">
+                                <input type="date" name="enlistment_date" x-model="enlistmentDate" @change="updateServiceAge()" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-4 focus:ring-blue-500/10 transition-all font-bold shadow-sm">
                             </div>
                             <div class="space-y-2">
                                 <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">อายุราชการ</label>
-                                <input type="text" name="service_age" placeholder="เช่น 10 ปี 5 เดือน" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-4 focus:ring-blue-500/10 transition-all font-bold shadow-sm">
+                                <input type="text" name="service_age" x-model="serviceAge" placeholder="จะคำนวณให้อัตโนมัติ" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-4 focus:ring-blue-500/10 transition-all font-bold shadow-sm">
                             </div>
                         </div>
 
@@ -240,7 +264,86 @@
                             </div>
                             <div class="space-y-2">
                                 <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">จังหวัด</label>
-                                <input type="text" name="province" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-4 focus:ring-blue-500/10 transition-all font-bold shadow-sm">
+                                <input type="text" name="province" list="province_list" placeholder="ค้นหาจังหวัด..." class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-4 focus:ring-blue-500/10 transition-all font-bold shadow-sm">
+                                <datalist id="province_list">
+                                    <option value="กรุงเทพมหานคร">
+                                    <option value="กระบี่">
+                                    <option value="กาญจนบุรี">
+                                    <option value="กาฬสินธุ์">
+                                    <option value="กำแพงเพชร">
+                                    <option value="ขอนแก่น">
+                                    <option value="จันทบุรี">
+                                    <option value="ฉะเชิงเทรา">
+                                    <option value="ชลบุรี">
+                                    <option value="ชัยนาท">
+                                    <option value="ชัยภูมิ">
+                                    <option value="ชุมพร">
+                                    <option value="เชียงราย">
+                                    <option value="เชียงใหม่">
+                                    <option value="ตรัง">
+                                    <option value="ตราด">
+                                    <option value="ตาก">
+                                    <option value="นครนายก">
+                                    <option value="นครปฐม">
+                                    <option value="นครพนม">
+                                    <option value="นครราชสีมา">
+                                    <option value="นครศรีธรรมราช">
+                                    <option value="นครสวรรค์">
+                                    <option value="นนทบุรี">
+                                    <option value="นราธิวาส">
+                                    <option value="น่าน">
+                                    <option value="บึงกาฬ">
+                                    <option value="บุรีรัมย์">
+                                    <option value="ปทุมธานี">
+                                    <option value="ประจวบคีรีขันธ์">
+                                    <option value="ปราจีนบุรี">
+                                    <option value="ปัตตานี">
+                                    <option value="พระนครศรีอยุธยา">
+                                    <option value="พะเยา">
+                                    <option value="พังงา">
+                                    <option value="พัทลุง">
+                                    <option value="พิจิตร">
+                                    <option value="พิษณุโลก">
+                                    <option value="เพชรบุรี">
+                                    <option value="เพชรบูรณ์">
+                                    <option value="แพร่">
+                                    <option value="ภูเก็ต">
+                                    <option value="มหาสารคาม">
+                                    <option value="มุกดาหาร">
+                                    <option value="แม่ฮ่องสอน">
+                                    <option value="ยโสธร">
+                                    <option value="ยะลา">
+                                    <option value="ร้อยเอ็ด">
+                                    <option value="ระนอง">
+                                    <option value="ระยอง">
+                                    <option value="ราชบุรี">
+                                    <option value="ลพบุรี">
+                                    <option value="ลำปาง">
+                                    <option value="ลำพูน">
+                                    <option value="เลย">
+                                    <option value="ศรีสะเกษ">
+                                    <option value="สกลนคร">
+                                    <option value="สงขลา">
+                                    <option value="สตูล">
+                                    <option value="สมุทรปราการ">
+                                    <option value="สมุทรสงคราม">
+                                    <option value="สมุทรสาคร">
+                                    <option value="สระแก้ว">
+                                    <option value="สระบุรี">
+                                    <option value="สิงห์บุรี">
+                                    <option value="สุโขทัย">
+                                    <option value="สุพรรณบุรี">
+                                    <option value="สุราษฎร์ธานี">
+                                    <option value="สุรินทร์">
+                                    <option value="หนองคาย">
+                                    <option value="หนองบัวลำภู">
+                                    <option value="อ่างทอง">
+                                    <option value="อำนาจเจริญ">
+                                    <option value="อุดรธานี">
+                                    <option value="อุตรดิตถ์">
+                                    <option value="อุทัยธานี">
+                                    <option value="อุบลราชธานี">
+                                </datalist>
                             </div>
                             <div class="space-y-2">
                                 <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">รหัสไปรษณีย์</label>
@@ -291,7 +394,7 @@
                             <label class="flex items-start gap-4 cursor-pointer">
                                 <input type="checkbox" required class="w-6 h-6 rounded-lg border-2 border-blue-200 text-blue-600 focus:ring-blue-500 mt-1">
                                 <span class="text-xs font-bold text-slate-600 leading-relaxed">
-                                    ข้าพเจ้าขอรับรองว่าข้อมูลการลงทะเบียนทั้งหมดเป็นความจริงทุกประการ หากตรวจสอบพบว่าไม่เป็นความจริง ข้าพเจ้ายอมรับการพิจารณาตามระเบียบของระบบ MEIMS ต่อไป
+                                    ข้าพเจ้าขอรับรองว่าข้อมูลการลงทะเบียนทั้งหมดเป็นความจริงทุกประการ หากตรวจสอบพบว่าไม่เป็นความจริง ข้าพเจ้ายอมรับการพิจารณาตามระเบียบของโรงเรียนพลาธิการ กรมพลาธิการทหารเรือต่อไป
                                 </span>
                             </label>
                         </div>
@@ -342,6 +445,53 @@
                 totalSteps: 4,
                 previewPhoto: null,
                 selectedCourseId: el.getAttribute('data-old-course') || '',
+                academicYear: '',
+                fiscalYearBatch: '',
+                enlistmentDate: '',
+                serviceAge: '',
+
+                updateServiceAge() {
+                    if (!this.enlistmentDate) {
+                        this.serviceAge = '';
+                        return;
+                    }
+
+                    const start = new Date(this.enlistmentDate);
+                    const end = new Date();
+                    
+                    if (start > end) {
+                        this.serviceAge = '0 ปี 0 เดือน';
+                        return;
+                    }
+
+                    let years = end.getFullYear() - start.getFullYear();
+                    let months = end.getMonth() - start.getMonth();
+
+                    if (months < 0) {
+                        years--;
+                        months += 12;
+                    }
+
+                    let result = '';
+                    if (years > 0) result += years + ' ปี ';
+                    if (months > 0) result += months + ' เดือน';
+                    if (years === 0 && months === 0) result = '0 ปี 0 เดือน';
+
+                    this.serviceAge = result.trim();
+                },
+
+                handleCourseChange(event) {
+                    const select = event.target;
+                    const selectedOption = select.options[select.selectedIndex];
+                    
+                    if (selectedOption.value) {
+                        this.academicYear = selectedOption.getAttribute('data-academic-year') || '';
+                        this.fiscalYearBatch = selectedOption.getAttribute('data-fiscal-year') || '';
+                    } else {
+                        this.academicYear = '';
+                        this.fiscalYearBatch = '';
+                    }
+                },
 
                 goToStep(step) {
                     if (step < this.currentStep) {

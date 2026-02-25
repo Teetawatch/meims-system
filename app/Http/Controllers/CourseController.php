@@ -30,6 +30,8 @@ class CourseController extends Controller
             'course_name_th' => 'required|string|max:255',
             'course_name_en' => 'nullable|string|max:255',
             'duration' => 'nullable|string|max:255',
+            'academic_year' => 'nullable|string|max:255',
+            'fiscal_year_batch' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'is_active' => 'boolean',
         ]);
@@ -48,6 +50,8 @@ class CourseController extends Controller
             'course_name_th' => 'required|string|max:255',
             'course_name_en' => 'nullable|string|max:255',
             'duration' => 'nullable|string|max:255',
+            'academic_year' => 'nullable|string|max:255',
+            'fiscal_year_batch' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'is_active' => 'boolean',
         ]);

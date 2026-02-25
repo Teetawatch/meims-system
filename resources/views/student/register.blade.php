@@ -188,13 +188,13 @@
 
                             <div class="flex flex-col gap-1 group">
                                 <label class="text-sm font-bold text-text-secondary ml-1">รุ่น (Batch)</label>
-                                <input type="text" name="batch" value="{{ old('batch') }}"
+                                <input type="text" name="batch" x-model="batch" value="{{ old('batch') }}"
                                     class="w-full px-4 py-3 rounded-xl border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none">
                             </div>
 
                             <div class="flex flex-col gap-1 group">
                                 <label class="text-sm font-bold text-text-secondary ml-1">ปีงบประมาณ</label>
-                                <input type="text" name="fiscal_year" value="{{ old('fiscal_year') }}"
+                                <input type="text" name="fiscal_year" x-model="fiscalYear" value="{{ old('fiscal_year') }}"
                                     class="w-full px-4 py-3 rounded-xl border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none">
                             </div>
                         </div>
@@ -312,8 +312,87 @@
                             </div>
                             <div class="flex flex-col gap-1 group">
                                 <label class="text-sm font-bold text-text-secondary ml-1">จังหวัด</label>
-                                <input type="text" name="province" value="{{ old('province') }}"
+                                <input type="text" name="province" list="province_list" value="{{ old('province') }}" placeholder="ค้นหาจังหวัด..."
                                     class="w-full px-4 py-3 rounded-xl border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none">
+                                <datalist id="province_list">
+                                    <option value="กรุงเทพมหานคร">
+                                    <option value="กระบี่">
+                                    <option value="กาญจนบุรี">
+                                    <option value="กาฬสินธุ์">
+                                    <option value="กำแพงเพชร">
+                                    <option value="ขอนแก่น">
+                                    <option value="จันทบุรี">
+                                    <option value="ฉะเชิงเทรา">
+                                    <option value="ชลบุรี">
+                                    <option value="ชัยนาท">
+                                    <option value="ชัยภูมิ">
+                                    <option value="ชุมพร">
+                                    <option value="เชียงราย">
+                                    <option value="เชียงใหม่">
+                                    <option value="ตรัง">
+                                    <option value="ตราด">
+                                    <option value="ตาก">
+                                    <option value="นครนายก">
+                                    <option value="นครปฐม">
+                                    <option value="นครพนม">
+                                    <option value="นครราชสีมา">
+                                    <option value="นครศรีธรรมราช">
+                                    <option value="นครสวรรค์">
+                                    <option value="นนทบุรี">
+                                    <option value="นราธิวาส">
+                                    <option value="น่าน">
+                                    <option value="บึงกาฬ">
+                                    <option value="บุรีรัมย์">
+                                    <option value="ปทุมธานี">
+                                    <option value="ประจวบคีรีขันธ์">
+                                    <option value="ปราจีนบุรี">
+                                    <option value="ปัตตานี">
+                                    <option value="พระนครศรีอยุธยา">
+                                    <option value="พะเยา">
+                                    <option value="พังงา">
+                                    <option value="พัทลุง">
+                                    <option value="พิจิตร">
+                                    <option value="พิษณุโลก">
+                                    <option value="เพชรบุรี">
+                                    <option value="เพชรบูรณ์">
+                                    <option value="แพร่">
+                                    <option value="ภูเก็ต">
+                                    <option value="มหาสารคาม">
+                                    <option value="มุกดาหาร">
+                                    <option value="แม่ฮ่องสอน">
+                                    <option value="ยโสธร">
+                                    <option value="ยะลา">
+                                    <option value="ร้อยเอ็ด">
+                                    <option value="ระนอง">
+                                    <option value="ระยอง">
+                                    <option value="ราชบุรี">
+                                    <option value="ลพบุรี">
+                                    <option value="ลำปาง">
+                                    <option value="ลำพูน">
+                                    <option value="เลย">
+                                    <option value="ศรีสะเกษ">
+                                    <option value="สกลนคร">
+                                    <option value="สงขลา">
+                                    <option value="สตูล">
+                                    <option value="สมุทรปราการ">
+                                    <option value="สมุทรสงคราม">
+                                    <option value="สมุทรสาคร">
+                                    <option value="สระแก้ว">
+                                    <option value="สระบุรี">
+                                    <option value="สิงห์บุรี">
+                                    <option value="สุโขทัย">
+                                    <option value="สุพรรณบุรี">
+                                    <option value="สุราษฎร์ธานี">
+                                    <option value="สุรินทร์">
+                                    <option value="หนองคาย">
+                                    <option value="หนองบัวลำภู">
+                                    <option value="อ่างทอง">
+                                    <option value="อำนาจเจริญ">
+                                    <option value="อุดรธานี">
+                                    <option value="อุตรดิตถ์">
+                                    <option value="อุทัยธานี">
+                                    <option value="อุบลราชธานี">
+                                </datalist>
                             </div>
                             <div class="flex flex-col gap-1 group">
                                 <label class="text-sm font-bold text-text-secondary ml-1">รหัสไปรษณีย์</label>
@@ -402,12 +481,16 @@
                             </div>
                             <div class="flex flex-col gap-1 group md:col-span-2">
                                 <label class="text-sm font-bold text-text-secondary ml-1">หลักสูตรที่สมัคร <span class="text-error">*</span></label>
-                                <select name="course_id" required x-model="selectedCourseId"
+                                <select name="course_id" required x-model="selectedCourseId" @change="handleCourseChange($event)"
                                     class="w-full px-4 py-3 rounded-xl border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none appearance-none bg-surface">
                                     <option value="">เลือกหลักสูตร...</option>
                                     @foreach($courses as $course)
-                                        <option value="{{ $course->id }}" {{ old('course_id') == $course->id ? 'selected' : '' }}>
-                                            {{ $course->course_code }} - {{ $course->course_name_th }}</option>
+                                        <option value="{{ $course->id }}" 
+                                                data-batch="{{ $course->fiscal_year_batch }}"
+                                                data-fiscal="{{ $course->academic_year }}"
+                                                {{ old('course_id') == $course->id ? 'selected' : '' }}>
+                                            {{ $course->course_code }} - {{ $course->course_name_th }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -539,6 +622,21 @@
                 totalSteps: 6, 
                 previewPhoto: null,
                 selectedCourseId: el.getAttribute('data-old-course') || '',
+                batch: '',
+                fiscalYear: '',
+
+                handleCourseChange(event) {
+                    const select = event.target;
+                    const selectedOption = select.options[select.selectedIndex];
+                    
+                    if (selectedOption.value) {
+                        this.batch = selectedOption.getAttribute('data-batch') || '';
+                        this.fiscalYear = selectedOption.getAttribute('data-fiscal') || '';
+                    } else {
+                        this.batch = '';
+                        this.fiscalYear = '';
+                    }
+                },
                 
                 goToStep(step) {
                     if (step < this.currentStep) {

@@ -40,11 +40,28 @@ class CourseRegistrationController extends Controller
         try {
             DB::beginTransaction();
 
-            $data = $request->except(['_token', 'photo']);
+            $data = $request->except([
+                '_token', 
+                'photo', 
+                'fiscal_year_batch', 
+                'academic_year',
+                'children', 
+                'mil_edu', 
+                'past_pos', 
+                'address_no', 
+                'village_no', 
+                'soi', 
+                'road',
+                'full_name',
+                'age',
+                'highest_education'
+            ]);
             
             // Handle Photo
             if ($request->hasFile('photo')) {
-                $data['photo_path'] = $request->file('photo')->store('photos', 'public');
+                // Store in public/images directory
+                $path = $request->file('photo')->store('', 'images');
+                $data['photo_path'] = 'images/' . $path; // Store relative to public root
             }
 
             // Authentication data
@@ -54,6 +71,8 @@ class CourseRegistrationController extends Controller
             // Map form fields to base student table
             $data['batch'] = $request->fiscal_year_batch ?? date('Y');
             $data['fiscal_year'] = $request->academic_year ?? date('Y');
+            $data['academic_year'] = $request->academic_year ?? date('Y');
+            $data['degree_level'] = $request->highest_education;
             
             // Name handling
             $names = explode(' ', $request->full_name, 2);
@@ -82,7 +101,7 @@ class CourseRegistrationController extends Controller
             Student::create($data);
 
             DB::commit();
-            return redirect()->back()->with('success', 'ลงทะเบียนหลักสูตรพิเศษเรียบร้อยแล้ว');
+            return redirect()->route('student.login')->with('success', 'ลงทะเบียนหลักสูตรพิเศษเรียบร้อยแล้ว กรุณาเข้าสู่ระบบ');
 
         } catch (\Exception $e) {
             DB::rollBack();

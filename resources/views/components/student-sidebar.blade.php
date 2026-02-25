@@ -5,7 +5,7 @@
             <div
                 class="w-24 h-24 rounded-3xl overflow-hidden ring-4 ring-blue-50 group-hover:ring-blue-100 transition-all shadow-xl">
                 @if(auth('student')->user()->photo_path)
-                    <img src="{{ asset('storage/' . auth('student')->user()->photo_path) }}" alt="Profile"
+                    <img src="{{ asset(auth('student')->user()->photo_path) }}" alt="Profile"
                         class="w-full h-full object-cover">
                 @else
                     <div class="w-full h-full bg-blue-600 flex items-center justify-center text-white text-3xl font-black">

@@ -209,11 +209,15 @@
     <div class="p-4 border-t border-slate-100 shrink-0">
         <div class="bg-gradient-to-r from-slate-100 to-slate-50 p-4 rounded-2xl flex items-center space-x-3">
             <div
-                class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 overflow-hidden">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                </svg>
+                class="w-10 h-10 rounded-full bg-slate-200 border border-slate-300 flex items-center justify-center text-slate-500 overflow-hidden shadow-inner">
+                @if(isset(auth()->user()->photo_path))
+                    <img src="{{ asset(auth()->user()->photo_path) }}" class="w-full h-full object-cover">
+                @else
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                @endif
             </div>
             <div class="flex-1 min-w-0">
                 <p class="text-sm font-bold text-slate-900 truncate">ผู้บริหารระบบ</p>

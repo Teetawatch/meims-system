@@ -82,7 +82,7 @@
                     <div class="absolute -inset-1.5 bg-gradient-to-r from-blue-400 via-violet-400 to-pink-400 rounded-[2rem] opacity-60 group-hover:opacity-100 blur-sm transition-all duration-500"></div>
                     <div class="relative w-28 h-28 md:w-36 md:h-36 rounded-[1.8rem] overflow-hidden ring-4 ring-white shadow-xl transition-transform duration-500 group-hover:scale-[1.03]">
                         @if($student->photo_path)
-                            <img src="{{ asset('storage/' . $student->photo_path) }}" alt="Profile"
+                            <img src="{{ asset($student->photo_path) }}" alt="Profile"
                                 class="w-full h-full object-cover">
                         @else
                             <div class="w-full h-full flex items-center justify-center text-white text-4xl md:text-5xl font-bold"

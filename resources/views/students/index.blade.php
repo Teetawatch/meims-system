@@ -187,8 +187,8 @@
                                 </td>
                                 <td class="px-5 py-4">
                                     @if($student->photo_path)
-                                        <img src="{{ asset('storage/' . $student->photo_path) }}"
-                                            class="w-10 h-10 rounded-xl object-cover border border-border"
+                                        <img src="{{ asset($student->photo_path) }}"
+                                            class="w-10 h-10 rounded-xl object-cover border border-border group-hover:scale-110 transition-transform duration-300"
                                             alt="{{ $student->first_name_th }}">
                                     @else
                                         <div class="w-10 h-10 rounded-xl bg-surface-hover flex items-center justify-center text-text-muted">

@@ -197,7 +197,7 @@
                                     <div class="flex items-center gap-4">
                                         <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center text-slate-500 font-black shadow-inner border border-white overflow-hidden shrink-0 group-hover:scale-105 group-hover:text-blue-600 transition-all duration-300">
                                             @if($student->photo_path)
-                                                <img src="{{ asset('storage/' . $student->photo_path) }}" class="w-full h-full object-cover" alt="Profile">
+                                                <img src="{{ asset($student->photo_path) }}" class="w-full h-full object-cover" alt="Profile">
                                             @else
                                                 <span class="text-sm">{{ mb_substr($student->first_name_th, 0, 1) }}</span>
                                             @endif
