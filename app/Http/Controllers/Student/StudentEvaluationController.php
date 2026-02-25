@@ -75,25 +75,31 @@ class StudentEvaluationController extends Controller
         $teacher = \App\Models\Teacher::findOrFail($teacherId);
 
         $request->validate([
-            'rating_knowledge' => 'required|integer|min:1|max:5',
-            'rating_method' => 'required|integer|min:1|max:5',
-            'rating_attitude' => 'required|integer|min:1|max:5',
-            'rating_timeliness' => 'required|integer|min:1|max:5',
-            'rating_support' => 'required|integer|min:1|max:5',
-            'comment' => 'nullable|string|max:1000'
+            'rating_knowledge'     => 'required|integer|min:1|max:5', // ข้อ 1
+            'rating_method'        => 'required|integer|min:1|max:5', // ข้อ 2
+            'rating_content_order' => 'required|integer|min:1|max:5', // ข้อ 3
+            'rating_motivation'    => 'required|integer|min:1|max:5', // ข้อ 4
+            'rating_qa'            => 'required|integer|min:1|max:5', // ข้อ 5
+            'rating_media'         => 'required|integer|min:1|max:5', // ข้อ 6
+            'rating_documents'     => 'required|integer|min:1|max:5', // ข้อ 7
+            'comment'              => 'nullable|string|max:2000',
+            'problems_suggestions' => 'nullable|string|max:2000',
         ]);
 
         TeacherEvaluationModel::create([
-            'student_id' => Auth::guard('student')->id(),
-            'teacher_id' => $teacher->id,
-            'subject_id' => $subjectId,
-            'semester' => '1/2567', // Should be dynamic depending on settings
-            'rating_knowledge' => $request->rating_knowledge,
-            'rating_method' => $request->rating_method,
-            'rating_attitude' => $request->rating_attitude,
-            'rating_timeliness' => $request->rating_timeliness,
-            'rating_support' => $request->rating_support,
-            'comment' => $request->comment,
+            'student_id'           => Auth::guard('student')->id(),
+            'teacher_id'           => $teacher->id,
+            'subject_id'           => $subjectId,
+            'semester'             => '1/2567',
+            'rating_knowledge'     => $request->rating_knowledge,
+            'rating_method'        => $request->rating_method,
+            'rating_content_order' => $request->rating_content_order,
+            'rating_motivation'    => $request->rating_motivation,
+            'rating_qa'            => $request->rating_qa,
+            'rating_media'         => $request->rating_media,
+            'rating_documents'     => $request->rating_documents,
+            'comment'              => $request->comment,
+            'problems_suggestions' => $request->problems_suggestions,
         ]);
 
         return redirect()->route('student.evaluation')->with('success', 'ส่งผลการประเมินเรียบร้อยแล้ว');
