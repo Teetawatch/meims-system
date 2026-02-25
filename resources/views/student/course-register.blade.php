@@ -5,8 +5,8 @@
 
     {{-- Premium Aurora Background Effects --}}
     <div class="fixed inset-0 z-0 pointer-events-none">
-        <div class="absolute top-[-10%] left-[-5%] w-[600px] h-[600px] bg-linear-to-br from-blue-400/20 to-indigo-500/15 rounded-full blur-[120px] animate-blob"></div>
-        <div class="absolute bottom-[-10%] right-[-5%] w-[600px] h-[600px] bg-linear-to-tr from-purple-400/20 to-pink-400/15 rounded-full blur-[120px] animate-blob animation-delay-4000"></div>
+        <div class="absolute top-[-10%] left-[-5%] w-[600px] h-[600px] bg-gradient-to-br from-blue-400/20 to-indigo-500/15 rounded-full blur-[120px] animate-blob"></div>
+        <div class="absolute bottom-[-10%] right-[-5%] w-[600px] h-[600px] bg-gradient-to-tr from-purple-400/20 to-pink-400/15 rounded-full blur-[120px] animate-blob animation-delay-4000"></div>
         <div class="absolute inset-0 bg-white/40 backdrop-blur-[2px]"></div>
     </div>
 
@@ -14,14 +14,14 @@
         {{-- Header Section --}}
         <div class="text-center mb-16 animate-fade-in">
             <div class="inline-flex p-4 bg-white rounded-3xl shadow-2xl shadow-blue-500/10 mb-6 transform -rotate-3 hover:rotate-0 transition-all duration-500 border border-white">
-                <div class="w-16 h-16 bg-linear-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg">
+                <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg">
                     <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                     </svg>
                 </div>
             </div>
             <h1 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-4">
-                ลงทะเบียน <span class="bg-clip-text text-transparent bg-linear-to-r from-blue-600 to-indigo-600">หลักสูตรนักเรียน</span>
+                ลงทะเบียน <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">หลักสูตรนักเรียน</span>
             </h1>
             <p class="text-slate-500 font-bold text-lg max-w-2xl mx-auto leading-relaxed">
                 ระบบบริหารจัดการข้อมูลนักเรียน
@@ -33,8 +33,8 @@
             
             {{-- Progress Indicator --}}
             <div class="relative h-2 w-full bg-slate-100">
-                <div class="absolute inset-0 bg-linear-to-r from-blue-500 via-indigo-600 to-purple-600 transition-all duration-700 ease-in-out"
-                    :style="`width: ${((currentStep) / totalSteps) * 100}%` shadow: '0 0 20px rgba(79, 70, 229, 0.4)'">
+                <div class="absolute inset-0 bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-600 transition-all duration-700 ease-in-out"
+                    :style="`width: ${((currentStep) / totalSteps) * 100}%; box-shadow: 0 0 20px rgba(79, 70, 229, 0.4)`">
                 </div>
             </div>
 
@@ -317,7 +317,7 @@
                             </div>
                             <div x-show="currentStep === totalSteps">
                                 <button type="submit"
-                                    class="px-10 py-4 rounded-2xl bg-linear-to-r from-blue-600 to-indigo-600 text-white font-black text-xs uppercase tracking-widest shadow-xl shadow-blue-600/25 hover:scale-[1.05] active:scale-[0.98] transition-all flex items-center gap-2">
+                                    class="px-10 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black text-xs uppercase tracking-widest shadow-xl shadow-blue-600/25 hover:scale-[1.05] active:scale-[0.98] transition-all flex items-center gap-2">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                     ลงทะเบียนข้อมูลทั้งหมด
                                 </button>

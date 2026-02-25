@@ -32,7 +32,7 @@
                     </svg>
                 </button>
                 <div>
-                    <h2 class="text-2xl font-black bg-clip-text text-transparent bg-linear-to-r from-slate-900 via-slate-800 to-slate-600 tracking-tight">จัดการการลงทะเบียน</h2>
+                    <h2 class="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-slate-800 to-slate-600 tracking-tight">จัดการการลงทะเบียน</h2>
                     <div class="flex items-center gap-2 mt-0.5">
                         <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
                         <p class="text-[10px] font-bold text-slate-400">ศูนย์ควบคุมการลงทะเบียน</p>
@@ -103,7 +103,7 @@
                                 
                                 <button type="submit" 
                                     class="w-full relative group/btn overflow-hidden rounded-[1.5rem] p-1 transition-all duration-500 hover:scale-[1.02] active:scale-95 shadow-lg {{ $registrationEnabled ? 'shadow-rose-500/20' : 'shadow-indigo-500/20' }}">
-                                    <div class="absolute inset-0 transition-all duration-500 group-hover/btn:scale-110 {{ $registrationEnabled ? 'bg-linear-to-r from-rose-500 via-red-600 to-rose-700' : 'bg-linear-to-r from-indigo-600 via-blue-600 to-indigo-700' }}"></div>
+                                    <div class="absolute inset-0 transition-all duration-500 group-hover/btn:scale-110 {{ $registrationEnabled ? 'bg-gradient-to-r from-rose-500 via-red-600 to-rose-700' : 'bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-700' }}"></div>
                                     <div class="relative bg-white group-hover/btn:bg-transparent transition-colors duration-500 rounded-[1.25rem] py-5 px-6 flex items-center justify-center gap-3">
                                         <span class="font-black text-sm {{ $registrationEnabled ? 'text-rose-600 group-hover/btn:text-white' : 'text-indigo-600 group-hover/btn:text-white' }} transition-colors">
                                             {{ $registrationEnabled ? 'กดเพื่อปิดการลงทะเบียน' : 'กดเพื่อเปิดการลงทะเบียน' }}
@@ -228,8 +228,12 @@
                                             </div>
                                         </td>
                                         <td class="py-6 px-10 text-right">
-                                            <p class="text-xs font-black text-slate-900 leading-none mb-1">{{ $student->created_at->format('d/m/Y') }}</p>
-                                            <p class="text-[10px] font-bold text-slate-400 leading-none">{{ $student->created_at->format('H:i') }} น.</p>
+                                            @if($student->created_at)
+                                                <p class="text-xs font-black text-slate-900 leading-none mb-1">{{ $student->created_at->format('d/m/Y') }}</p>
+                                                <p class="text-[10px] font-bold text-slate-400 leading-none">{{ $student->created_at->format('H:i') }} น.</p>
+                                            @else
+                                                <p class="text-xs font-black text-slate-400 leading-none">-</p>
+                                            @endif
                                         </td>
                                     </tr>
                                     @empty
