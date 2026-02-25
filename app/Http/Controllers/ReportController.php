@@ -57,6 +57,7 @@ class ReportController extends Controller
     {
         $type = $request->input('type', 'teacher'); // teacher or peer
         $peerEvaluationEnabled = SystemSetting::isPeerEvaluationEnabled();
+        $teacherEvaluationEnabled = SystemSetting::isTeacherEvaluationEnabled();
 
         if ($type == 'teacher') {
             $reportData = Teacher::withCount('evaluations')
@@ -85,13 +86,20 @@ class ReportController extends Controller
                 });
         }
 
-        return view('reports.evaluations', compact('reportData', 'type', 'peerEvaluationEnabled'));
+        return view('reports.evaluations', compact('reportData', 'type', 'peerEvaluationEnabled', 'teacherEvaluationEnabled'));
     }
 
     public function togglePeerSetting(Request $request)
     {
         $enabled = $request->input('enabled');
-        SystemSetting::set('peer_evaluation_enabled', $enabled ? '1' : '0');
-        return redirect()->route('reports.evaluations', ['type' => 'peer'])->with('success', 'สถานะการประเมินเพื่อนอัปเดตแล้ว');
+        $type = $request->input('type', 'peer');
+        
+        if ($type == 'teacher') {
+            SystemSetting::set('teacher_evaluation_enabled', $enabled ? '1' : '0');
+            return redirect()->route('reports.evaluations', ['type' => 'teacher'])->with('success', 'สถานะการประเมินอาจารย์อัปเดตแล้ว');
+        } else {
+            SystemSetting::set('peer_evaluation_enabled', $enabled ? '1' : '0');
+            return redirect()->route('reports.evaluations', ['type' => 'peer'])->with('success', 'สถานะการประเมินเพื่อนอัปเดตแล้ว');
+        }
     }
 }

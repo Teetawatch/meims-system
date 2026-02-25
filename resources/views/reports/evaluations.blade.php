@@ -27,32 +27,40 @@
             </div>
         </header>
 
-        <!-- Peer Evaluation Toggle -->
+        <!-- Evaluation Toggle -->
+        @php
+            $isEnabled = $type == 'teacher' ? $teacherEvaluationEnabled : $peerEvaluationEnabled;
+            $label = $type == 'teacher' ? 'อาจารย์' : 'เพื่อนร่วมห้อง';
+        @endphp
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-2xl flex items-center justify-center {{ $peerEvaluationEnabled ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-400' }} transition-colors">
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center {{ $isEnabled ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-400' }} transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        @if($type == 'teacher')
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        @else
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        @endif
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-sm font-bold text-slate-800">เปิด/ปิด ระบบประเมินเพื่อนร่วมห้อง</h3>
+                    <h3 class="text-sm font-bold text-slate-800">เปิด/ปิด ระบบประเมิน{{ $label }}</h3>
                     <p class="text-xs text-slate-400 font-medium mt-0.5">
-                        @if($peerEvaluationEnabled)
-                            <span class="text-emerald-600 font-bold">เปิดอยู่</span> — นักเรียนสามารถเข้าประเมินเพื่อนร่วมห้องได้
+                        @if($isEnabled)
+                            <span class="text-emerald-600 font-bold">เปิดอยู่</span> — นักเรียนสามารถเข้าประเมิน{{ $label }}ได้
                         @else
-                            <span class="text-red-500 font-bold">ปิดอยู่</span> — นักเรียนจะไม่เห็นส่วนประเมินเพื่อนร่วมห้อง
+                            <span class="text-red-500 font-bold">ปิดอยู่</span> — นักเรียนจะไม่เห็นส่วนประเมิน{{ $label }}
                         @endif
                     </p>
                 </div>
             </div>
             <form action="{{ route('reports.evaluations.toggle') }}" method="POST">
                 @csrf
-                <input type="hidden" name="enabled" value="{{ $peerEvaluationEnabled ? '0' : '1' }}">
+                <input type="hidden" name="type" value="{{ $type }}">
+                <input type="hidden" name="enabled" value="{{ $isEnabled ? '0' : '1' }}">
                 <button type="submit"
-                    class="px-6 py-2.5 rounded-xl text-sm font-bold transition-all transform active:scale-95 shadow-sm {{ $peerEvaluationEnabled ? 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-100' : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-emerald-500/20' }}">
-                    @if($peerEvaluationEnabled)
+                    class="px-6 py-2.5 rounded-xl text-sm font-bold transition-all transform active:scale-95 shadow-sm {{ $isEnabled ? 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-100' : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-emerald-500/20' }}">
+                    @if($isEnabled)
                         ปิดระบบประเมิน
                     @else
                         เปิดระบบประเมิน

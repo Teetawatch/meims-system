@@ -42,6 +42,14 @@ class SystemSetting extends Model
     }
 
     /**
+     * Check if teacher evaluation is enabled.
+     */
+    public static function isTeacherEvaluationEnabled(): bool
+    {
+        return static::get('teacher_evaluation_enabled', '0') === '1';
+    }
+
+    /**
      * Check if student registration is enabled.
      */
     public static function isRegistrationEnabled(): bool

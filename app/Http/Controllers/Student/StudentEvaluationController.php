@@ -17,11 +17,17 @@ class StudentEvaluationController extends Controller
     {
         $student = Auth::guard('student')->user();
 
+        // Check if teacher evaluation is enabled
+        $teacherEvaluationEnabled = SystemSetting::isTeacherEvaluationEnabled();
+
         // Find subjects in student's course
-        $subjects = Subject::where('course_id', $student->course_id)
-            ->where('is_active', true)
-            ->with('teachers')
-            ->get();
+        $subjects = collect();
+        if ($teacherEvaluationEnabled) {
+            $subjects = Subject::where('course_id', $student->course_id)
+                ->where('is_active', true)
+                ->with('teachers')
+                ->get();
+        }
 
         // Check which have been evaluated
         $evaluatedTeachers = TeacherEvaluationModel::where('student_id', $student->id)
