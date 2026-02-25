@@ -3,7 +3,7 @@
     <div class="h-20 flex items-center px-8 border-b border-slate-100 justify-between shrink-0">
         <div class="flex items-center">
             <div
-                class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-500/30 mr-3">
+                class="w-10 h-10 rounded-xl bg-linear-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-500/30 mr-3">
                 M</div>
             <span class="text-xl font-bold text-slate-800 tracking-tight">MEIMS</span>
         </div>
@@ -81,6 +81,16 @@
                         </path>
                     </svg>
                     <span class="font-bold text-sm">รายวิชาเรียน</span>
+                </a>
+
+                <a href="{{ route('admin.registration.index') }}"
+                    class="flex items-center px-4 py-3 rounded-xl group transition-all {{ request()->routeIs('admin.registration.index') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">
+                    <svg class="w-5 h-5 mr-3 {{ request()->routeIs('admin.registration.index') ? '' : 'group-hover:text-blue-500 transition-colors' }}"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                    </svg>
+                    <span class="font-bold text-sm">เปิดรับลงทะเบียน</span>
                 </a>
             </div>
         </div>
@@ -197,7 +207,7 @@
 
     <!-- Profile -->
     <div class="p-4 border-t border-slate-100 shrink-0">
-        <div class="bg-gradient-to-r from-slate-100 to-slate-50 p-4 rounded-2xl flex items-center space-x-3">
+        <div class="bg-linear-to-r from-slate-100 to-slate-50 p-4 rounded-2xl flex items-center space-x-3">
             <div
                 class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 overflow-hidden">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -207,7 +217,7 @@
             </div>
             <div class="flex-1 min-w-0">
                 <p class="text-sm font-bold text-slate-900 truncate">ผู้บริหารระบบ</p>
-                <p class="text-[10px] text-slate-500 truncate font-medium uppercase tracking-widest text-[8px]">
+                <p class="text-[10px] text-slate-500 truncate font-medium uppercase tracking-widest">
                     Administrator</p>
             </div>
             <form method="POST" action="{{ route('logout') }}" class="ml-auto">

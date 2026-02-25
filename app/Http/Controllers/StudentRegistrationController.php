@@ -12,12 +12,19 @@ class StudentRegistrationController extends Controller
 {
     public function index()
     {
+        if (!\App\Models\SystemSetting::isRegistrationEnabled()) {
+            return view('student.registration-closed');
+        }
+
         $courses = Course::where('is_active', true)->get();
         return view('student.register', compact('courses'));
     }
 
     public function store(Request $request)
     {
+        if (!\App\Models\SystemSetting::isRegistrationEnabled()) {
+            return redirect()->route('student.register')->with('error', 'การลงทะเบียนปิดอยู่ในขณะนี้');
+        }
         $validatedData = $request->validate([
             'username' => 'required|unique:students,username',
             'password' => 'required|min:6',

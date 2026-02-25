@@ -29,6 +29,9 @@ Route::get('/', function () {
 Route::get('/student/register', [\App\Http\Controllers\StudentRegistrationController::class, 'index'])->name('student.register');
 Route::post('/student/register', [\App\Http\Controllers\StudentRegistrationController::class, 'store'])->name('student.register.post');
 
+Route::get('/student/course-register', [\App\Http\Controllers\CourseRegistrationController::class, 'index'])->name('student.course-register');
+Route::post('/student/course-register', [\App\Http\Controllers\CourseRegistrationController::class, 'store'])->name('student.course-register.post');
+
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post')->middleware('guest');
 Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
@@ -57,6 +60,10 @@ Route::post('/teachers/import', [\App\Http\Controllers\TeacherController::class,
 Route::resource('teachers', \App\Http\Controllers\TeacherController::class)->except(['create', 'show', 'edit'])->middleware('auth');
 Route::get('/reports/evaluations', [\App\Http\Controllers\ReportController::class, 'evaluations'])->name('reports.evaluations')->middleware('auth');
 Route::post('/reports/evaluations/toggle', [\App\Http\Controllers\ReportController::class, 'togglePeerSetting'])->name('reports.evaluations.toggle')->middleware('auth');
+
+// Registration Management
+Route::get('/admin/registration', [\App\Http\Controllers\RegistrationManagementController::class, 'index'])->name('admin.registration.index')->middleware('auth');
+Route::post('/admin/registration/toggle', [\App\Http\Controllers\RegistrationManagementController::class, 'toggle'])->name('admin.registration.toggle')->middleware('auth');
 
 // Student Portal
 Route::get('/student/login', [StudentLoginController::class, 'showLoginForm'])->name('student.login')->middleware('guest:student');

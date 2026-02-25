@@ -1,6 +1,7 @@
 <x-layouts.app>
 <div class="min-h-screen bg-surface-hover relative font-['Outfit','Anuphan',sans-serif] overflow-hidden"
-    x-data="studentRegistrationData()">
+    x-data="studentRegistrationData($el)"
+    data-old-course="{{ old('course_id', '') }}">
 
     {{-- Background Effects --}}
     <div class="fixed inset-0 w-full h-full pointer-events-none z-0">
@@ -74,7 +75,7 @@
 
             {{-- Progress Bar --}}
             <div class="h-1.5 w-full bg-surface-hover">
-                <div class="h-full bg-gradient-to-r from-blue-600 to-indigo-600 transition-all duration-500 ease-out"
+                <div class="h-full bg-linear-to-r from-blue-600 to-indigo-600 transition-all duration-500 ease-out"
                     :style="`width: ${((currentStep) / totalSteps) * 100}%`">
                 </div>
             </div>
@@ -400,8 +401,8 @@
                                     class="w-full px-4 py-3 rounded-xl border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none">
                             </div>
                             <div class="flex flex-col gap-1 group md:col-span-2">
-                                <label class="text-sm font-bold text-text-secondary ml-1">หลักสูตร <span class="text-error">*</span></label>
-                                <select name="course_id" required
+                                <label class="text-sm font-bold text-text-secondary ml-1">หลักสูตรที่สมัคร <span class="text-error">*</span></label>
+                                <select name="course_id" required x-model="selectedCourseId"
                                     class="w-full px-4 py-3 rounded-xl border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none appearance-none bg-surface">
                                     <option value="">เลือกหลักสูตร...</option>
                                     @foreach($courses as $course)
@@ -409,6 +410,50 @@
                                             {{ $course->course_code }} - {{ $course->course_name_th }}</option>
                                     @endforeach
                                 </select>
+                            </div>
+
+                            {{-- Dynamic Fields Example --}}
+                            <div x-show="selectedCourseId" x-transition class="md:col-span-2 pt-4 space-y-6">
+                                {{-- For Course ID 1 (Example: Graphic Design) --}}
+                                <template x-if="selectedCourseId == '1'">
+                                    <div class="p-6 bg-blue-50 rounded-2xl border border-blue-100 animate-fade-in">
+                                        <h3 class="text-sm font-bold text-blue-600 mb-4 flex items-center gap-2">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                            ข้อมูลเพิ่มเติมสำหรับสาขากราฟิก
+                                        </h3>
+                                        <div class="space-y-4">
+                                            <div class="flex flex-col gap-1">
+                                                <label class="text-sm font-bold text-text-secondary">ลิงก์ผลงาน (Portfolio)</label>
+                                                <input type="url" name="portfolio_url" placeholder="https://..."
+                                                    class="w-full px-4 py-3 rounded-xl border border-blue-200 focus:ring-2 focus:ring-blue-100 transition-all outline-none">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                {{-- For Course ID 2 (Example: IT) --}}
+                                <template x-if="selectedCourseId == '2'">
+                                    <div class="p-6 bg-indigo-50 rounded-2xl border border-indigo-100 animate-fade-in">
+                                        <h3 class="text-sm font-bold text-indigo-600 mb-4 flex items-center gap-2">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                                            ข้อมูลเพิ่มเติมสำหรับสาขาไอที
+                                        </h3>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div class="flex flex-col gap-1">
+                                                <label class="text-sm font-bold text-text-secondary">ทักษะคอมพิวเตอร์ที่ถนัด</label>
+                                                <input type="text" name="computer_skills" placeholder="เช่น Word, Excel, Coding"
+                                                    class="w-full px-4 py-3 rounded-xl border border-indigo-200 focus:ring-2 focus:ring-indigo-100 transition-all outline-none">
+                                            </div>
+                                            <div class="flex flex-col gap-1">
+                                                <label class="text-sm font-bold text-text-secondary">โน้ตบุ๊กส่วนตัว</label>
+                                                <select name="has_laptop" class="w-full px-4 py-3 rounded-xl border border-indigo-200 focus:ring-2 focus:ring-indigo-100 transition-all outline-none">
+                                                    <option value="yes">มี</option>
+                                                    <option value="no">ไม่มี</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
                             </div>
                             <div class="flex flex-col gap-1 group">
                                 <label class="text-sm font-bold text-text-secondary ml-1">เกรดเฉลี่ย (ถ้ามี)</label>
@@ -488,11 +533,12 @@
     {{-- SweetAlert2 Integration --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        function studentRegistrationData() {
+        function studentRegistrationData(el) {
             return {
                 currentStep: 1, 
                 totalSteps: 6, 
                 previewPhoto: null,
+                selectedCourseId: el.getAttribute('data-old-course') || '',
                 
                 goToStep(step) {
                     if (step < this.currentStep) {

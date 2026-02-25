@@ -40,4 +40,12 @@ class SystemSetting extends Model
     {
         return static::get('peer_evaluation_enabled', '0') === '1';
     }
+
+    /**
+     * Check if student registration is enabled.
+     */
+    public static function isRegistrationEnabled(): bool
+    {
+        return static::get('student_registration_enabled', '0') === '1';
+    }
 }
