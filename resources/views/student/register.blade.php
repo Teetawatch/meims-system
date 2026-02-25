@@ -75,7 +75,7 @@
 
             {{-- Progress Bar --}}
             <div class="h-1.5 w-full bg-surface-hover">
-                <div class="h-full bg-linear-to-r from-blue-600 to-indigo-600 transition-all duration-500 ease-out"
+                <div class="h-full bg-gradient-to-r from-blue-600 to-indigo-600 transition-all duration-500 ease-out"
                     :style="`width: ${((currentStep) / totalSteps) * 100}%`">
                 </div>
             </div>

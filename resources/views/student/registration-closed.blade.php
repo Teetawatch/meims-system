@@ -11,8 +11,8 @@
     
     <!-- Premium Aurora Background -->
     <div class="fixed inset-0 z-0 pointer-events-none">
-        <div class="absolute top-[-10%] left-[-5%] w-[700px] h-[700px] bg-linear-to-br from-blue-400/20 to-indigo-500/15 rounded-full blur-[120px] animate-pulse"></div>
-        <div class="absolute bottom-[-10%] right-[-5%] w-[700px] h-[700px] bg-linear-to-tr from-purple-400/20 to-pink-400/15 rounded-full blur-[120px] animate-pulse delay-700"></div>
+        <div class="absolute top-[-10%] left-[-5%] w-[700px] h-[700px] bg-gradient-to-br from-blue-400/20 to-indigo-500/15 rounded-full blur-[120px] animate-pulse"></div>
+        <div class="absolute bottom-[-10%] right-[-5%] w-[700px] h-[700px] bg-gradient-to-tr from-purple-400/20 to-pink-400/15 rounded-full blur-[120px] animate-pulse delay-700"></div>
         <div class="absolute inset-0 bg-white/40 backdrop-blur-[2px]"></div>
     </div>
 
@@ -29,7 +29,7 @@
             </div>
 
             <h1 class="text-4xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight leading-tight">
-                ขออภัย <br><span class="bg-clip-text text-transparent bg-linear-to-r from-rose-600 to-red-500">ปิดการลงทะเบียน</span>
+                ขออภัย <br><span class="bg-clip-text text-transparent bg-gradient-to-r from-rose-600 to-red-500">ปิดการลงทะเบียน</span>
             </h1>
             
             <p class="text-slate-500 font-bold text-lg mb-12 leading-relaxed max-w-md mx-auto">

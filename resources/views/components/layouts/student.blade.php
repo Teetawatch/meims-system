@@ -49,7 +49,9 @@
                 cancelButtonText: 'ยกเลิก'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.Livewire.dispatch(event.detail[0].method, { id: event.detail[0].id });
+                    // Submit the closest form if Livewire is not available
+                    const form = document.getElementById(event.detail[0].method);
+                    if (form) form.submit();
                 }
             });
         });

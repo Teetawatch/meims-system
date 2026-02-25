@@ -3,7 +3,7 @@
     <div class="h-20 flex items-center px-8 border-b border-slate-100 justify-between shrink-0">
         <div class="flex items-center">
             <div
-                class="w-10 h-10 rounded-xl bg-linear-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-500/30 mr-3">
+                class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-500/30 mr-3">
                 M</div>
             <span class="text-xl font-bold text-slate-800 tracking-tight">MEIMS</span>
         </div>
@@ -207,7 +207,7 @@
 
     <!-- Profile -->
     <div class="p-4 border-t border-slate-100 shrink-0">
-        <div class="bg-linear-to-r from-slate-100 to-slate-50 p-4 rounded-2xl flex items-center space-x-3">
+        <div class="bg-gradient-to-r from-slate-100 to-slate-50 p-4 rounded-2xl flex items-center space-x-3">
             <div
                 class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 overflow-hidden">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
