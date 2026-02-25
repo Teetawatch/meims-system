@@ -18,13 +18,11 @@
 
     <!-- Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @livewireStyles
 </head>
 
 <body class="font-body antialiased bg-slate-50 text-slate-800">
     {{ $slot }}
 
-    @livewireScripts
     <script>
         // Livewire Events
         window.addEventListener('swal:modal', event => {
