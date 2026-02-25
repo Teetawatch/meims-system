@@ -98,7 +98,7 @@ class SubjectController extends Controller
         ]);
 
         try {
-            Excel::import(new SubjectsImport, $request->file('importFile')->getRealPath());
+            Excel::import(new SubjectsImport, $request->file('importFile'));
             return redirect()->route('subjects.index')->with('message', 'นำเข้าข้อมูลรายวิชาเรียบร้อยแล้ว');
         } catch (\Exception $e) {
             return redirect()->route('subjects.index')->withErrors(['importFile' => 'ไม่สามารถนำเข้าข้อมูลได้ ตรวจสอบรูปแบบไฟล์ให้ถูกต้อง (' . $e->getMessage() . ')']);

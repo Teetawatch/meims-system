@@ -74,7 +74,7 @@ class StudentController extends Controller
         ]);
 
         try {
-            Excel::import(new StudentsImport, $request->file('importFile')->getRealPath());
+            Excel::import(new StudentsImport, $request->file('importFile'));
             return redirect()->route('students.index')->with('message', 'นำเข้าข้อมูลนักเรียนเรียบร้อยแล้ว');
         } catch (\Exception $e) {
             return redirect()->route('students.index')->withErrors(['importFile' => 'ไม่สามารถนำเข้าข้อมูลได้: ' . $e->getMessage()]);
