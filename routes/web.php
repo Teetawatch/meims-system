@@ -19,8 +19,12 @@ use App\Http\Controllers\Student\Auth\LoginController as StudentLoginController;
 Route::get('/debug/setup', function () {
     try {
         \Illuminate\Support\Facades\Artisan::call('optimize:clear');
-        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-        return "System Optimized and Migrated Successfully!";
+        // Only run the specific migration file to avoid "table already exists" error
+        \Illuminate\Support\Facades\Artisan::call('migrate', [
+            '--path' => 'database/migrations/2026_02_25_102514_add_military_fields_to_students_table.php',
+            '--force' => true
+        ]);
+        return "System Optimized and Specific Migration Finished Successfully! <br><br> <a href='/admin/registration'>คลิกที่นี่เพื่อกลับไปหน้าจัดการ</a>";
     } catch (\Exception $e) {
         return "Error: " . $e->getMessage();
     }
